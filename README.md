@@ -2,14 +2,15 @@ Chorégraphie
 ============
 
 An open source AngularJS app to watch and understand the behavior of applications hosted in a datacenter. Can be used alone or alongside Kibana.
-
 This NodeJS application can be connected to ElasticSearch, MongoDB or any RDBMS by a module system.
+
+The first version of Chorégraphie is allready used in some datacenter.
 
 #Purpose:
 
 Chorégraphie's goal is to:
 
--  untangle the call's web between your applications
+-  untangle the web of calls between your applications
 -  plot an history of their values
 -  warn you when an the behaviour of an application has changed
 
@@ -24,3 +25,8 @@ You have the charge of managing a lot of applications in a complex structure. Un
 Data of a particular application:
 ![img](https://raw.github.com/ggeoffrey/Choregraphie/master/readme/history.png)
 
+# Where is the code?
+
+Chorégraphie v1 is using Symfony + PostgreSQL. This repository will be used for the v2.
+The v2 will use NodeJS and will be pluggable to any DBMS.
+The code will come soon  ;)
