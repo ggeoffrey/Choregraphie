@@ -1,0 +1,42 @@
+//- events.jade
+
+.row
+	.well.row.controls
+		.col-md-11.form-inline
+			input.form-control(type='search', ng-model='vm.codeappFilter', placeholder='Application')
+			input.form-control(type='search', ng-model='vm.couloirFilter', placeholder='Couloir')
+			select.form-control(ng-model='vm.typeFilter')
+				option(value='', selected='selected') Tous
+				option(value='appels') Appels
+				option(value='erreurs') Erreurs
+				option(value='tendance') Tendance
+
+		.col-md-1
+			button.btn.btn-info(ng-click='vm.load()')
+				span.glyphicon.glyphicon-refresh
+				| Actualiser
+.row
+	.col-md-12
+		.event.animate.col-md-4(ng-repeat="event in vm.events | filter: {codeapp: vm.codeappFilter, couloir: vm.couloirFilter, type: vm.typeFilter} | limitTo:100", ng-click='vm.selectEvent(event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
+			.event-wrapper(ng-style='vm.getStyleOf(event)')
+				div(style='float: right;') [[event.couloir]]
+				div [[event.codeapp]][[vm.getDescriptionOf(event)]]
+				div(am-time-ago='event.start_time')
+				.details(ng-show='event.selected')
+					div
+						| Le
+						b [[event.start_time.toLocaleString()]] 
+					div
+						| Concerne:
+						b [[event.codetype]]
+					div
+						| Valeur:
+						b [[event.oldValue]]→[[event.value]]
+					hr
+					span
+						| Vu:
+						input(type='checkbox', ng-model='event.seen', ng-change='vm.setEventSeen(event)')
+						| [[event.seen ? 'Oui': 'Non']]
+						a.btn.btn-default.push-right(target='_blank', ng-href='#/casParCas/[[event.codeapp]]/[[event.couloir]]')
+							span.glyphicon.glyphicon-arrow-right
+							| Aller au diagramme

@@ -1,0 +1,42 @@
+extends layout
+
+block content
+	snap-content
+			div(snap-dragger='right')
+				include navbar.jade
+			#view(ng-view='ng-view')
+		div(snap-drawer='right')
+			#conf-container(ng-controller='configController')
+				.row
+					button.btn.btn-warning(snap-close='snap-close', ng-click='vm.toggle()')
+						span.glyphicon.glyphicon-arrow-left
+					img#logo(style='width: 72%;', src='/images/logo.png')
+				#conf-content
+					.row
+						.col-md-12
+							.row
+								.col-md-6
+									b Couloirs
+									.btn-group-vertical
+										input.form-control(type='text', placeholder='Nom', ng-model="vm.nouveauCouloir", ng-change="bloqueAjoutCouloir = vm.verifierExistant(vm.nouveauCouloir, 'couloir')")
+										button.btn.btn-default.form-control(type='button', ng-disabled='bloqueAjoutCouloir', ng-click='vm.ajouteCouloir(vm.nouveauCouloir)') Ajouter
+									.row.settings-item(ng-repeat='couloir in vm.couloirs | filter:vm.nouveauCouloir')
+										.col-xs-1.remove-item
+											button.btn.btn-default.btn-xs(ng-click='vm.supprimeCouloir(couloir)')
+												| ✗
+										.col-xs-5 [[couloir]]
+								.col-md-6
+									b Applications
+									.btn-group-vertical
+										input.form-control(type='text', placeholder='Nom', ng-model='vm.nouvelleApplication', ng-change='bloqueAjoutAppli = vm.verifierExistant(vm.nouvelleApplication, \'application\')')
+										button.btn.btn-default.from-control(type='button', ng-disabled='bloqueAjoutAppli', ng-click='vm.ajouteApplication(vm.nouvelleApplication)') Ajouter
+
+									.row.settings-item(ng-repeat='application in vm.applications | filter:vm.nouvelleApplication')
+										.col-xs-1.remove-item
+											button.btn.btn-default.btn-xs(ng-click='vm.supprimeApplication(application)')
+												| ✗
+										.col-xs-5 [[application]]
+	span#snap-dragger .
+	script(src="/socket.io/socket.io.js")
+	script(type='text/javascript', src='/javascripts/vendors.js')
+	script(type='text/javascript', src='/javascripts/choregraphie.js')

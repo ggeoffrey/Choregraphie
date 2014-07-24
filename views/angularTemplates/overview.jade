@@ -1,0 +1,85 @@
+#container.row
+		.well.controls
+				span(style='font-size: 1.5em;') Résumé pour le [[ vm.data[0].date.toLocaleString().split(' ')[0] ]]
+				input(type='text', ng-model='filtre_tableau', placeholder='Filtrer le tableau')
+				button.push-right.btn.btn-info(ng-click='vm.update()')
+					span.glyphicon.glyphicon-refresh
+					| Actualiser
+			.col-md-12
+				.row.message.alert.alert-warning(ng-show="vm.data.length == 0") Rien à afficher pour cette date
+				.row
+					.tableau.panel.panel-default.col-md-8(ng-show='vm.data.length')
+						| 0"
+						.header.panel-heading(ng-init='inverse = true')
+							.row
+								.col-md-2
+									| Appli.
+									span.glyphicon.glyphicon-sort(ng-click="choix = 'codeapp'; inverse= !inverse")
+								.col-md-2
+									| Appels
+									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_transaction_http.value'; inverse= !inverse")
+								.col-md-2
+									| Web
+									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_erreur_afj_web.value'; inverse= !inverse")
+								.col-md-2
+									| Metier
+									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_erreur_afj_metier.value'; inverse= !inverse")
+								.col-md-2
+									| NSI Java
+									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_erreur_nsi_java.value'; inverse= !inverse")
+								.col-md-2
+									| Santé
+									| [[resSante]]
+									span.glyphicon.glyphicon-sort(ng-click="choix = 'resSante' ; inverse= !inverse")
+						.body.panel-body
+							.row(ng-repeat='record in vm.data | orderBy:choix:inverse | filter:filtre_tableau ')
+								.col-md-2
+									a(ng-href='[[vm.getHref(record)]]', ng-class="vm.getHref(record) ==  '' ? 'disabled_link' : '' ", ng-click='vm.toolbarActive()')
+										| [[record.codeapp]]
+								.col-md-2
+									| [[record.types.nb_transaction_http.value ]]
+									span.icon(ng-class='vm.getClassWithHealth(record.types.nb_transaction_http.resSante)')
+								.col-md-2
+									| [[record.types.nb_erreur_afj_web.value ]]
+									span.icon(ng-class='vm.getClassWithHealth(record.types.nb_transaction_http.resSante)')
+								.col-md-2
+									| [[record.types.nb_erreur_afj_metier.value ]]
+									span.icon(ng-class='vm.getClassWithHealth(record.types.nb_transaction_http.resSante)')
+								.col-md-2
+									| [[record.types.nb_erreur_nsi_java.value ]]
+									span.icon(ng-class='vm.getClassWithHealth(record.types.nb_transaction_http.resSante)')
+								.col-md-2.sante
+									span.icon(ng-class='vm.getClassWithHealth(record.resSante)')
+						.footer.panel-footer
+							.row
+								.col-md-2 Σ = [[vm.stats.nb_app ]] 
+								.col-md-2 Σ = [[vm.stats.somme_appels || '-']] 
+								.col-md-2 Σ = [[vm.stats.somme_web || '-']] 
+								.col-md-2 Σ = [[vm.stats.somme_metier || '-']] 
+								.col-md-2 Σ = [[vm.stats.somme_nsi || '-']] 
+								.col-md-2
+									| x̄ =
+									span(ng-class='vm.getClassWithHealth(vm.stats.sante)')
+					.events-container.col-md-4
+						h4(align='center') Evenements récents
+						hr
+						.event(ng-repeat='event in vm.eventsController.events | limitTo:20', ng-mouseenter='vm.eventsController.selectEvent(event)', ng-mouseleave='vm.eventsController.unSelectEvent(event)', ng-class='event.selected ? \'selected\' : event.seen ? \'seen\' : \'\' ')
+							.event-wrapper(ng-style='vm.eventsController.getStyleOf(event)')
+								div(style='float: right;') [[event.couloir]]
+								div [[event.codeapp]][[vm.eventsController.getDescriptionOf(event)]]
+								div(am-time-ago='event.start_time')
+								.details(ng-show='event.selected')
+									div
+										| Le 
+										b [[event.start_time.toLocaleString()]] 
+									div
+										| Valeur:
+										b [[event.oldValue]]→[[event.value]]
+									hr
+									span
+										| Vu:
+										input(type='checkbox', ng-model='event.seen', ng-change='vm.eventsController.setEventSeen(event)')
+										| [[event.seen ? 'Oui': 'Non']]
+									a.btn.btn-default.push-right(target='_blank', ng-href='#/casParCas/[[event.codeapp]]/[[event.couloir]]')
+										span.glyphicon.glyphicon-arrow-right
+										| Aller au diagramme

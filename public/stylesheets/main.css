@@ -1,0 +1,647 @@
+/* Surcharge bootstrap */
+
+.well {
+	min-height: 20px;
+	padding: 0;
+	margin: -0.5em 2em 0 2em;
+	background-color: rgba(255,255,255,0.8);
+	border-radius: 2px;
+	box-shadow: 0 0 1em lightgray;
+}
+
+.modal.in .modal-dialog {
+    -moz-transform: translate(0, 3em);
+    -ms-transform: translate(0, 3em);
+    -o-transform: translate(0, 3em);
+    -webkit-transform: translate(0, 3em);
+    transform: translate(0, 3em);
+}
+
+
+/*main*/
+
+body{
+	padding: 0 1%;
+	margin: 1%
+}
+
+body.snapjs-left #snap-drawer-right, body.snapjs-expand-left #snap-drawer-right{
+    display: none;
+    z-index: -9999;
+}
+body.snapjs-right #snap-drawer-left, body.snapjs-expand-right #snap-drawer-left{
+    display: none;
+    z-index: -9999;
+}
+
+a{
+	cursor: pointer;
+}
+
+
+.loader {
+	width: 35px;
+	position: relative;
+	margin: -11px 1em 0 1em;
+	opacity: 0;
+}
+
+.disabled {
+	pointer-events: none;
+	cursor: default;
+	color: lightgray;
+}
+.navbar{
+	border-radius: 0;
+}
+.navbar-default{
+	/*  background: rgba(255,255,255,0.75) url(/web/bundles/ccol/images/drag.png) 67% center no-repeat;  */
+	position: absolute;
+	width: 100%;
+	left: 0px;
+	top: 0px;
+	border: none;
+	z-index: 9999;
+    
+	
+}
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+	text-decoration:  underline
+}
+
+#conf-container {
+	text-align: center;
+	padding-bottom: 100px;
+	/*overflow-y: scroll;*/
+}
+
+#conf-container #conf-content {
+	text-align: left;
+}
+
+#conf-container .remove-item {
+	color: gray;
+	font-weight: bold;
+	cursor: pointer;
+	opacity: 0;
+}
+#conf-container .remove-item:hover {
+	text-shadow: 0 0 1px gray;
+}
+
+#conf-container .settings-item:hover  button{
+	color:white;
+	background-color: orange;
+}
+#conf-container .settings-item:hover  div{
+	font-weight: bold;
+	font-size: 1.2em;
+	opacity: 1;
+}
+
+
+#view{
+	padding-top: 2.65em;
+	padding: 1em 0;
+    background-color: rgba(255,255,255,0.85);
+}
+
+.align-right{
+	text-align: right;
+}
+
+.display-none{
+	display: none;
+}
+
+
+/* Snap Drawer */
+#snap-content, svg{
+	background-color: rgba(255,255,255,0.85);
+}
+#snap-content{
+	padding: 0 1.5em;
+	z-index: 99999;
+}
+#snap-content #view > .row *{
+	cursor: initial;
+}
+
+#snap-drawer-right {
+	width: 100%;
+}
+#snap-drawer-right ul {
+	width: 100%;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+
+
+/* Overview */
+
+.header{
+	font-size: 1.5em;
+	text-align: center;
+	border-bottom: 1px lightgray solid;
+	border-top 1px lightgray solid;
+	padding-bottom: 0.5em;
+}
+.header .glyphicon{
+	font-size: 0.6em;
+	color: gray;
+	vertical-align: middle;
+	cursor: pointer;
+
+}
+.row#container{
+	padding-bottom: 1em;
+	margin-bottom: 1em;
+    background-color: rgba(255, 255, 255, 0.70);
+}
+
+.controls{
+	padding: 0.5em 0;
+    margin-top:3em;
+}
+
+.panel-default{
+	border: none;
+	/* box-shadow: 0 0 5px lightgray; */
+}
+.panel-default>.panel-heading {
+	color: #333;
+	background-color: rgba(255,255,255,0.8);
+	border-color: none;
+}
+.panel{
+	margin: 0;
+	background-color: #fff;
+	border-radius: 2px;
+	
+}
+
+.tableau, .events{
+	padding: 0;
+}
+.tableau .row{	
+	
+	/* border-bottom: 1px whitesmoke solid;
+	border-top: 1px whitesmoke solid; */
+}
+.body{
+	padding: 0 15px;
+}
+
+.body .row:hover{
+	border-bottom: 1px lightgray solid;
+	border-top: 1px lightgray solid;
+}
+.body div{
+	border-right: 1px whitesmoke solid;
+}
+
+
+.sante .glyphicon{
+	text-shadow: 0 0 5px gray;
+}
+.sante .glyphicon-certificate{
+	color:yellow;
+}
+
+
+.disabled_link, .disabled_link:hover , .disabled_link:visited{
+	color: black;
+	text-decoration: none;
+	cursor: default;
+}
+
+.icon{
+	float:right;
+}
+
+
+.wi-day-sunny{
+	color: goldenrod;
+    text-shadow: 0 0 5px gold
+}
+.wi-day-cloudy{
+	color: green;
+}
+
+.wi-rain{
+	color: gray;
+}
+
+.wi-lightning{
+	color: black;
+}
+
+
+.events-container{
+    position: relative;
+}
+.events-container .event.selected{
+    width: 100%;
+}
+    .events-container .event.selected .event-wrapper {
+        margin-left: -4em;
+        box-shadow: 0 0 20px gray;
+        -moz-transition: 400ms ease all;
+        -o-transition: 400ms ease all;
+        -webkit-transition: 400ms ease all;
+        transition: 400ms ease all;
+    }
+/* Events*/
+
+.event {
+    -moz-transition: 400ms ease all;
+    -o-transition: 400ms ease all;
+    -webkit-transition: 400ms ease all;
+    transition: 400ms ease all;
+    position: relative;
+    padding: 0;
+    height: 3.8em;
+    border: 0;
+    border-radius: 3px;
+    
+    
+}
+.event.selected{
+    
+    /*position: absolute;*/
+    z-index: 100;
+    width: 33%;
+}
+.event-wrapper {
+    padding: 0.5em 1em;
+}
+.event-wrapper:hover{
+    box-shadow: 0 0 10px gray;   
+}
+.event.selected .event-wrapper{
+    box-shadow: 0 0 100px gray; 
+    position: absolute;
+    width: 100%;
+}
+
+.event.details {
+    -moz-transition: 1s ease all;
+    -o-transition: 1s ease all;
+    -webkit-transition: 1s ease all;
+    transition: 1s ease all;
+}
+.event.details.ng-show{
+    opacity: 1;
+}
+
+.event.seen {
+    opacity: 0.5;
+}
+
+
+
+
+
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .event
+  class
+*/
+.event.ng-enter, .event.ng-move {
+  -webkit-animation:0.5s eventEnterAnimation;
+  -moz-animation:0.5s eventEnterAnimation;
+  -o-animation:0.5s eventEnterAnimation;
+  animation:0.5s eventEnterAnimation
+  
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.event.ng-enter.ng-enter-active,
+.event.ng-move.ng-move-active {
+  /*opacity:1;*/
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .event class
+*/
+.event.ng-leave {
+  /*-webkit-animation:0.5s eventEnterAnimation;
+  -moz-animation:0.5s eventEnterAnimation;
+  -o-animation:0.5s eventEnterAnimation;
+  animation:0.5s eventEnterAnimation;*/
+}
+
+@keyframes eventEnterAnimation {
+  from { 
+      opacity:0;
+  }
+  to { 
+      opacity:1; 
+  }
+}
+
+/*
+  Unfortunately each browser vendor requires
+  its own definition of keyframe animation code...
+*/
+@-webkit-keyframes eventEnterAnimation {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@-moz-keyframes eventEnterAnimation {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@-o-keyframes eventEnterAnimation {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+	
+
+
+
+
+
+
+/*   call Tree */
+
+
+
+#callTree canvas#webglTarget{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	opacity: 0	
+}
+#callTree svg, #brushContainer{
+	background-color: transparent;overv
+}
+
+
+#callTree .legende{
+	pointer-events: all;
+	margin-top : 2.65em;
+	padding:  0 1em;
+	width: 100%;
+	position: absolute;
+	left: 0;
+}
+
+#callTree .listeNoeuds, #callTree .stackTrace {
+	overflow: scroll;
+}
+#callTree .listeNoeuds ul, #callTree .stackTrace ul {
+	list-style-type: none;
+	padding-left: 1em;
+	line-height: 2;
+}
+
+#callTree .panelInterface{
+	background-color: rgba(255, 255, 255, 0.75);
+	box-shadow: 0 0 10px lightgray;
+	opacity: 0.75;
+	transition: opacity 0.4s ease-in-out;
+}
+
+.panelInterface .nodeSelector:hover{
+	cursor: pointer;
+	box-shadow: 0 0 5px gray;
+}
+
+#callTree .panelInterface:hover{
+	opacity: 1;
+}
+
+
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+  cursor: pointer;
+}
+.selectedLink{
+	stroke: red;
+}
+.link:hover{
+	stroke:black;
+	stroke-opacity: 1;
+}
+
+.label{
+  	pointer-events: none;
+	font-size: 14px;
+	font-weight: normal;
+	
+}
+
+
+marker.arrow {
+    stroke: #999;
+    fill: #999;
+}
+
+.push-right{
+	float: right;
+}
+.btn-callTree{
+
+	background-color: transparent;
+}
+
+
+#progress{
+	width: 100%;
+}
+
+/* Cas par cas */
+
+
+/* form */
+.form-inline .form-group {
+	margin-bottom: 15px;
+}
+
+
+form .btn {
+	margin-bottom: 15px;
+}
+
+.cas-par-cas form{
+	padding-bottom: 1em;
+	border-bottom: 1px lightgray solid,	
+}
+
+.cas-par-cas form .row{
+	text-align: center;
+}
+
+
+/* Histogramme */
+
+#histogram {
+	text-align: left; /*centre le svg*/
+	width: 100%;
+	
+}
+#histogram .btn-export-csv-histogramme, #histogram .btn-width-histogramme {
+	float:right;
+	right: 2.7em;
+	top: 0em;
+	border-radius: 0;
+	z-index: 2;
+}
+#histogram .btn-width-histogramme{
+	border-bottom-left-radius: 5px;	
+	right: 7.65em;
+}
+
+#histogram > .svg{
+	width: 80%;
+	float:left;
+	
+	padding-top: 1em;
+	padding-right: 2em;
+	/*
+	-webkit-filter: drop-shadow( 6px -6px 4px #EEE );
+	filter: drop-shadow( 6px -6px 4px #EEE  ); 
+	*/
+}
+
+#histogram .svg > svg .legende-item{
+	fill:white;
+}
+
+.cas-par-cas #tooltip {
+	position: absolute;
+	background-color: rgba(255,255,255,0.9);
+	box-shadow: 0 0 5px gray;/
+	border-radius: 10px;
+	text-align: center;
+	padding: 1em;
+	opacity:0;
+	pointer-events: none; 
+}
+.cas-par-cas #tooltip .row{
+	width: 100%
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+path{
+  pointer-events: none;
+}
+path.arc{
+	pointer-events: all;
+}
+
+circle {
+	/*fill-opacity: 0.6;*/
+}
+.trend{
+	stroke-width: 1px;
+	stroke-linecap: round;
+	stroke-dasharray: 2,10;
+	fill-opacity: 0.1;
+}
+
+.trendReduced{
+	stroke:none;
+	fill-opacity: 0.1;
+}
+
+.moyenne{
+	fill:none;
+}
+
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+/*Tableau*/
+
+#tableau .glyphicon-eye-open, #tableau .glyphicon-eye-close{
+	float:left;
+	margin-left:-20px;
+}
+
+.btn-export-csv-tableau{
+	margin-top: 1.1em;
+}
+
+.cas-par-cas #tableau .list-group-item{
+	height: 3em;
+}
+.cas-par-cas #tableau .list-group-item[active='true']{
+	background-color: #CCFFCC;
+	border-bottom: 1px whitesmoke solid;
+}
+.cas-par-cas #tableau .list-group-item:hover{
+	cursor:pointer;
+}
+.cas-par-cas #tableau .list-group-item[active='false']:hover{
+	background-color: lightgreen;
+	cursor: zoom-in;
+}
+.cas-par-cas #tableau .list-group-item[active='true']:hover{
+	background-color: lightpink;
+	cursor: zoom-out;
+}
+
+
+/*Pie chart*/
+#pie{
+	text-align: center;
+	float:right;
+	position: absolute;
+	z-index: 1;
+	width: 20%;
+	
+}
+
+#pie > svg{
+}
+
+
+
+#pie .pct{
+	font-size: xx-large;
+	font-weight: bold;
+}
+
+#pie .arc path:hover{
+	stroke: white;
+	opacity: 0.75;
+	stroke-opacity: 1;
+}
