@@ -20,7 +20,7 @@ module CallTree {
 		constructor() { }
 
 		public id: number;
-		public nom: string;  // Nom de l'item
+		public name: string;  // Nom de l'item
 		public type: string; // son type {'Application','Service','Methode'}
 		public value: number; // valeur 
 		public weight: number; // poids
@@ -74,7 +74,7 @@ module CallTree {
 		private caller: Noeud;
 		private called: Noeud;
 		private service: string;
-		private methode: string;
+		private method: string;
 		private value: number;
 
 		private invalide: boolean;
@@ -87,12 +87,12 @@ module CallTree {
 			//super();
 			this.invalide = false;
 			if (called.type === 'Methode') {
-				this.methode = called.nom;
+				this.method = called.name;
 				var parentName: string;
 				// on récupère le premier grand parent
 				for (parentName in called.parents) {
 					called = called.parents[parentName];
-					this.service = called.nom; // on le parent (le service)
+					this.service = called.name; // on le parent (le service)
 					for (parentName in called.parents) {
 						called = called.parents[parentName];	// on a le grand parent(l'appli)
 						break;
@@ -105,12 +105,12 @@ module CallTree {
 			this.called = called;
 			this.value = value;
 
-			this.invalide = !!(this.caller && this.called && this.service && this.methode && this.value);
+			this.invalide = !!(this.caller && this.called && this.service && this.method && this.value);
 		}
 
 			public toCSV = (): string => {
 			if (this.invalide)
-				return this.caller.nom + ';' + this.called.nom + ';' + this.service + ';' + this.methode + ';' + this.value + '\n';
+				return this.caller.name + ';' + this.called.name + ';' + this.service + ';' + this.method + ';' + this.value + '\n';
 			else
 				return '';
 		}
@@ -144,7 +144,7 @@ module CallTree {
 		// L'objet $(window) sauvegardé pour éviter de le reconstruire à chaque fois
 		private $jQwindow: JQuery;
 
-		// Associe le nom du noeud à son type afin de créer la légende
+		// Associe le name du noeud à son type afin de créer la légende
 		private nodeTypes: { [index: string]: string; } = {};
 
 		// défini globalement si les labels sont visibles
@@ -196,7 +196,7 @@ module CallTree {
 		private nodeGeometry: any;
 
 		private colorBuilder: any; // d3.scale.category10
-		private particlesCountRange: any; // d3.scale.linear pour (nombre de particules/lien)
+		private particlesCountRange: any; // d3.scale.linear pour (namebre de particules/lien)
 		private nodeSizer: any; // D3.scale.log (taille des noeuds)
 		private texts: Array<any>;
 
@@ -269,11 +269,8 @@ module CallTree {
 
 
 				this.init3d();
-
 				this.drawNetwork();
-
 				this.updateDiagram();
-
 				this.animate();
 				this.switch2D();
 
@@ -330,16 +327,19 @@ module CallTree {
 
 				// les données viennent du serveur, la date est en timestamp
 				data.links.forEach((link) => {
-					link.date = new Date(parseInt(link.date));
+					link.date = new Date(link.date);
+					if(typeof link.value !== 'number')
+						throw "Bad data type ("+typeof link.value+") for value (link.value). Should be 'number' . Aborting! this may crash the browser and freeze your computer. Check your JSON generator.";
 				});
 
 				// -----
 
+				console.log(data);
 				_this.nodes = data.nodes;
 				_this.nodesValues = d3.values(data.nodes);
 				_this.rawLinks = data.links;
 				_this.initDiagram();
-				//_this.updateCallTreeForceDiagram()
+				
 
 				if (callback) callback();
 
@@ -349,22 +349,25 @@ module CallTree {
 
 
 
-			if (sessionStorage.getItem('callTree')) {
+			if (false/*sessionStorage.getItem('callTree')*/) {
 				next(JSON.parse(sessionStorage.getItem('callTree')));
 			}
 			else {
-				this.$http.get('api/get/appels')
+				window.Database.getCalls((data:any)=>{
+					next(data);
+				});
+				/*this.$http.get('api/calls')
 					.success(function (data: any) {
 
 
-						sessionStorage.setItem('callTree', JSON.stringify(data));
+						//sessionStorage.setItem('callTree', JSON.stringify(data));
 						next(data);
 					})
 					.error(function (err) {
 						console.error("$scope.load(): impossible de déterminer la taille des données à charger");
 						console.error(err);
 						window.stopLoader();
-					});
+					});*/
 			}
 
 		}
@@ -480,14 +483,14 @@ module CallTree {
 			this.lights = [];
 
 
-
-			// calcul du lien le plus important pour étalloner la couleur des liens
+			// find the most important link (higest value) to calibrate the particles linear scale
 			var max = -Infinity;
 			this.links.forEach((link) => {
 				if (link.value && link.value > max) {
 					max = link.value;
 				}
 			});
+
 			this.particlesCountRange = d3.scale.linear()
 				.domain([0, max])
 				.range([1, 10]);
@@ -1116,7 +1119,7 @@ module CallTree {
 			this.animateAura(true);
 
 			if (!allReadySeleted) {
-				this.selectNode(node3D.userData.nom, false);
+				this.selectNode(node3D.userData.name, false);
 			}
 
 			this.links3DList.forEach((link3D) => {
@@ -1606,14 +1609,14 @@ module CallTree {
 
 
 			if (this.node3DCategories[type]) {
-				// SI c'est un service et que les services sont visibles et que les methodes sont visibles
+				// SI c'est un service et que les services sont visibles et que les methods sont visibles
 				//if(type == 'Service' && this.node3DVisible['Service'] && this.node3DVisible['Methode'] ){
 				//	this.toggleNodes('Methode', ()=>{
 				//		this.toggleNodes('Service');
 				//	});
 				//}
 				//else if(type == 'Methode' && !this.node3DVisible['Service'] && !this.node3DVisible['Methode'] ){
-				//	// SI c'est les methodes et que les services ne sont pas visibles et que les methodes ne sont pas visibles.
+				//	// SI c'est les methods et que les services ne sont pas visibles et que les methods ne sont pas visibles.
 				//	this.toggleNodes('Service', ()=>{
 				//		this.toggleNodes('Methode');
 				//	});
@@ -1739,12 +1742,12 @@ module CallTree {
 			}
 			var regex = new RegExp(filter, 'i');
 			var retour: { [index: string]: string; } = {};
-			var nom: string;
+			var name: string;
 			var node: Noeud;
-			for (nom in this.nodes) {
-				node = this.nodes[nom];
-				if (regex.test(nom) || regex.test(node.type)) {
-					retour[nom] = this.colorBuilder(node.type);
+			for (name in this.nodes) {
+				node = this.nodes[name];
+				if (regex.test(name) || regex.test(node.type)) {
+					retour[name] = this.colorBuilder(node.type);
 				}
 			}
 			return retour;
@@ -1754,12 +1757,12 @@ module CallTree {
 			Sélectionne un noeud à partir du paneau 'liste des noeuds'
 		*/
 		private timeoutSelectNode = null;
-		private selectNode(nomSelect: string, mouseover: boolean): void {
-			var nom: string;
+		private selectNode(nameSelect: string, mouseover: boolean): void {
+			var name: string;
 			var node: Noeud;
-			for (nom in this.nodes) {
-				node = this.nodes[nom];
-				if (node.nom === nomSelect) {
+			for (name in this.nodes) {
+				node = this.nodes[name];
+				if (node.name === nameSelect) {
 					node.selected = true;
 					this.selectNode3D(node.node3D, true);
 				}
@@ -1770,7 +1773,7 @@ module CallTree {
 
 
 			this.resetAllLinks();
-			this.selectParents(nomSelect, null);
+			this.selectParents(nameSelect, null);
 			this.formatStackTrace();
 
 			if (this.timeoutSelectNode) {
@@ -1792,26 +1795,26 @@ module CallTree {
 
 
 
-		private selectParents(nomSelect: string, depth): void {
+		private selectParents(nameSelect: string, depth): void {
 
 			if (depth === undefined || depth === null) {
 				depth = 0;
-				this.stackTrace = [{ depth: 0, label: nomSelect, value: 0 }];
+				this.stackTrace = [{ depth: 0, label: nameSelect, value: 0 }];
 				depth = 1;
 			}
 
 
-			var node: Noeud = this.nodes[nomSelect];
+			var node: Noeud = this.nodes[nameSelect];
 
-			var nom: string;
+			var name: string;
 			var parent: any;
-			for (nom in node.parents) {
-				parent = node.parents[nom];
+			for (name in node.parents) {
+				parent = node.parents[name];
 
 
 				this.stackTrace.push({
 					depth: depth,
-					label: parent.node.nom,
+					label: parent.node.name,
 					value: parent.value
 				});
 
@@ -1820,30 +1823,30 @@ module CallTree {
 					//stringToAppend+= '&nbsp;';
 				}
 				if (depth === 0) {
-					//stack += nomSelect+'<br>';
+					//stack += nameSelect+'<br>';
 					parent.node.linksSelected = true;
-					this.selectParents(parent.node.node.nom, depth + 1);
+					this.selectParents(parent.node.node.name, depth + 1); // TODO parent.node.node???
 				}
 				else if (!parent.node.linksSelected) {
-					//stack += '╚ '+parent.node.nom + '<br>';
+					//stack += '╚ '+parent.node.name + '<br>';
 					parent.node.linksSelected = true;
-					this.selectParents(parent.node.nom, depth + 1);
+					this.selectParents(parent.node.name, depth + 1);
 				}
 				else {
-					//stack += "↻ "+parent.node.nom+'<br>' ;
+					//stack += "↻ "+parent.node.name+'<br>' ;
 				}
 
 				this.links.forEach(function (link: Lien) {
-					if (link.source.nom === parent.node.nom && link.target.nom === node.nom) {
+					if (link.source.name === parent.node.name && link.target.name === node.name) {
 						link.selected = true;
 
 						link.source.node3D.link3D.forEach((link3D) => {
-							if (link3D.source.userData.nom == parent.node.nom && link3D.target.userData.nom == node.nom) {
+							if (link3D.source.userData.name == parent.node.name && link3D.target.userData.name == node.name) {
 								link3D.selected = true;
 							}
 						});
 						link.target.node3D.link3D.forEach((link3D) => {
-							if (link3D.source.userData.nom == parent.node.nom && link3D.target.userData.nom == node.nom) {
+							if (link3D.source.userData.name == parent.node.name && link3D.target.userData.name == node.name) {
 								link3D.selected = true;
 							}
 						});
@@ -1876,10 +1879,10 @@ module CallTree {
 		}
 
 		private resetAllLinks(): void {
-			var nom: string;
+			var name: string;
 			var node: Noeud;
-			for (nom in this.nodes) {
-				node = this.nodes[nom];
+			for (name in this.nodes) {
+				node = this.nodes[name];
 				node.linksSelected = false;
 			}
 			this.links.forEach(function (link: Lien, index: number) {
@@ -1988,8 +1991,8 @@ module CallTree {
 				};
 
 
-				source.children[target.nom] = { node: target, value: link.value };
-				target.parents[source.nom] = { node: source, value: link.value };
+				source.children[target.name] = { node: target, value: link.value };
+				target.parents[source.name] = { node: source, value: link.value };
 
 
 
@@ -2011,8 +2014,8 @@ module CallTree {
 			// calcul de la taille des noeuds
 
 			var node: Noeud;
-			for (var nom in this.nodes) {
-				node = this.nodes[nom];
+			for (var name in this.nodes) {
+				node = this.nodes[name];
 				node.weight = this.objectSize(node.children);
 			}
 
@@ -2026,7 +2029,7 @@ module CallTree {
 			var rawLink: LienBrut;
 			while (lengthLinks--) {
 				rawLink = this.rawLinks[lengthLinks];
-				if (rawLink.source == node.nom || rawLink.target == node.nom) {  // TODO ajouter critère Date
+				if (rawLink.source == node.name || rawLink.target == node.name) {  // TODO ajouter critère Date
 					count += rawLink.value;
 				}
 			}
@@ -2038,8 +2041,8 @@ module CallTree {
 			var max = -Infinity;
 			var min = Infinity;
 			var node: Noeud;
-			for (var nom in this.nodes) {
-				node = this.nodes[nom];
+			for (var name in this.nodes) {
+				node = this.nodes[name];
 
 				if (node.weight > max) max = node.weight;
 				if (node.weight < min) min = node.weight;
@@ -2229,19 +2232,19 @@ module CallTree {
 			// 			}
 			// 		})
 			// 		.on('mouseover', function (node){        
-			// 			d3.select('text.'+node.nom)
+			// 			d3.select('text.'+node.name)
 			// 				.text( function (node) {
-			// 					return node.nom;
+			// 					return node.name;
 			// 				});
 			// 		})
 			// 		.on('mouseout', function (node) {
 			// 			if( !thisAlias.textVisible && !node.selected){
-			// 				d3.select('text.'+node.nom)
+			// 				d3.select('text.'+node.name)
 			// 					.text('');
 			// 			}
 			// 		})
 			// 		.on('dblclick', (node) => {
-			// 			this.selectNode(node.nom, false);
+			// 			this.selectNode(node.name, false);
 			// 		});
 
 
@@ -2262,7 +2265,7 @@ module CallTree {
 
 			// 			var text : string = '';
 			// 			if( this.textVisible || node.selected ){
-			// 				text = node.nom;
+			// 				text = node.name;
 			// 			}
 
 			// 			return text;
@@ -2278,7 +2281,7 @@ module CallTree {
 			// 		.enter()
 			// 		.append('text')
 			// 		.attr('class', function(node){
-			// 			return 'label '+node.nom;
+			// 			return 'label '+node.name;
 			// 		})
 			// 		.text(textLabel);
 
@@ -2336,7 +2339,7 @@ module CallTree {
 			for (key in node.children) {
 				child = node.children[key];
 				// si le noeud pointe vers lui même
-				if (child.nom !== node.nom && this.objectSize(child.parents) === 1) {
+				if (child.name !== node.name && this.objectSize(child.parents) === 1) {
 					if (!child.grouped) {
 						this.toggleChildren(child, function () { });
 					}
@@ -2361,10 +2364,10 @@ module CallTree {
 			Replie tout l'arbre.
 		*/
 		private foldAll(): void {
-			var nom: string;
+			var name: string;
 			var node: Noeud;
-			for (nom in this.nodes) {
-				node = this.nodes[nom];
+			for (name in this.nodes) {
+				node = this.nodes[name];
 				node.grouped = true;
 				if (this.objectSize(node.parents) !== 0) {
 					node.hidden = true;
@@ -2384,10 +2387,10 @@ module CallTree {
 			Déplie tout l'arbre.
 		*/
 		private unFoldAll(): void {
-			var nom: string;
+			var name: string;
 			var node: Noeud;
-			for (nom in this.nodes) {
-				node = this.nodes[nom];
+			for (name in this.nodes) {
+				node = this.nodes[name];
 				node.grouped = false;
 				node.hidden = false;
 			}
@@ -2417,7 +2420,7 @@ module CallTree {
 		private getLienFromPair(parent: Noeud, child: Noeud): Array<Lien> {
 			var listeLiens: Array<Lien> = new Array();
 			this.links.forEach(function (link: Lien, index: number) {
-				if (parent.nom === link.source.nom && child.nom === link.target.nom) {
+				if (parent.name === link.source.name && child.name === link.target.name) {
 					listeLiens.push(link);
 				}
 			});

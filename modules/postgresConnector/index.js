@@ -1,7 +1,6 @@
-var PGConnector = require('./PostgresConnector');
 
 var config = require('./config');
 
-var connector = new PGConnector(config);
+var PGConnector = require('./PostgresConnector')(config);
 
-module.exports = connector;
+module.exports = PGConnector;

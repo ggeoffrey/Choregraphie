@@ -82,37 +82,47 @@
                         sourceMap: false,
                         declaration: false
                     }
-                },
-                server: {
-                    src: ['./modules/**/*.ts'],
-                    //dest: './modules/',
-                    options: {
-                        module: 'commonjs',
-                        target: 'es5',
-                        sourceMap: false,
-                        declaration: false
-                    }
                 }
             },
             watch: {
                 all: {
-                    files: [privatePath + '/src/*.ts', publicPath + '/**'],
-                    tasks: ['typescript:base']
-                },
-                quick: {
-                    files: [privatePath + '/src/**/*.ts'],
-                    tasks: ['quickDev']
+                    files: ['./app.js', './modules/**/*.js', privatePath + '/src/*.ts', publicPath + '/**'],
+                    tasks: ['jshint', 'typescript:client', 'express:dev']
                 },
                 client: {
                     files: [privatePath + '/src/**/*.ts'],
                     tasks: ['typescript:client']
                 },
                 server: {
-                    files: ['./modules/**/*.ts'],
-                    tasks: ['typescript:server']
+                    files: ['./app.js', './modules/**/*.js'],
+                    tasks: ['jshint', 'express:dev'],
+                    options: {
+                      spawn: false // for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions. Without this option specified express won't be reloaded
+                    }
                 }
             },
-            
+            jshint: {
+                ignore_warning: {
+                  options: {
+                    '-W015': true,
+                  },
+                  src: [ './app.js' , './modules/**/*.js','./routes/**/*.js' ],
+                },
+            },
+            express: {
+                options: {   
+                  port: 3000,
+                  output: ".+",
+                  debug: false
+                },
+                dev:{
+                    options:{
+                        script : "./bin/www",
+                        background: true,
+                        node_env: 'development',
+                    }
+                }
+            }            
         });
         grunt.loadNpmTasks('grunt-contrib-concat');
         grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -120,6 +130,8 @@
         grunt.loadNpmTasks('grunt-contrib-copy');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-typescript');
+        grunt.loadNpmTasks('grunt-contrib-jshint');
+        grunt.loadNpmTasks('grunt-express-server');
 
 
         grunt.registerTask('assets', ['shell:copy_assets']);

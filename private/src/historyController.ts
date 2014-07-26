@@ -5,7 +5,7 @@
 
 
 
-module CasParCas {
+module HistoryModule {
 
 	var Months : Array<string> = ["Jan", "Fev", "Mar", "Avr", "Mai", "Ju", "Jui", "Aou", "Sept", "Oct", "Nov", "Dec"];
 	var nullSymbol: string = '\u2015';
@@ -128,7 +128,7 @@ module CasParCas {
 	}
 
 	export interface Record{
-		startTime: any;
+		starttime: any;
 
 		codeapp?: string;
 		couloir?: string;
@@ -171,7 +171,7 @@ module CasParCas {
 
 	*/
 
-	export class CasParCasController {
+	export class HistoryController {
 
 		private scope: ng.IScope;
 		private http: ng.IHttpService;
@@ -303,27 +303,21 @@ module CasParCas {
 
 				window.stopLoader();
 
-				this.bloqueApplications = false;
-
+				this.bloqueApplications = false
+				this.updateScope();
 			}
 
 			// Récupération des données
 			var listeApp : string;
 			listeApp = window.sessionStorage.getItem('listeApp');
 
-			if(listeApp){
+			if(false /*listeApp*/){
 				nextApp(JSON.parse(listeApp));
 			}
 			else{
-				this.http.get('api/get/applications')
-					.success(function(data:any){
-						nextApp(data);
-						window.sessionStorage.setItem('listeApp', JSON.stringify(data));
-					})
-					.error(function(err: any){
-						window.stopLoader();
-						console.error("erreur à la récupération des applications");
-					});
+				window.Database.getApplications((data:any)=>{
+					nextApp(data);
+				});
 			}
 
 
@@ -338,6 +332,7 @@ module CasParCas {
 
 				window.stopLoader();
 				this.bloqueCouloirs = false;
+				this.updateScope();
 			};
 
 			// récupération des couloirs
@@ -345,27 +340,19 @@ module CasParCas {
 			window.startLoader();
 
 			var listeCouloirs: string;
-			listeCouloirs = window.sessionStorage.getItem('listeCouloirs');
-			if(listeCouloirs){
+			//listeCouloirs = window.sessionStorage.getItem('listeCouloirs');
+			if(false /*listeCouloirs*/){
 				nextCouloirs(JSON.parse(listeCouloirs));
 			}
 			else{
-				this.http.get('api/get/couloirs')
-					.success(function(data:Array<string>){
-						nextCouloirs(data);
-						window.sessionStorage.setItem('listeCouloirs',JSON.stringify(data));
-					})
-					.error(function(err:any){
-						console.log("erreur à la récupération des couloirs");
-						console.log(err);
-						window.stopLoader();
-					});
+				window.Database.getCorridors((data:any)=>{
+					nextCouloirs(data);
+				});
 			}
 
             //On charge les évenements en premier comme ça, on les à pour toute la suite
             this.eventsController.getByCouple(this.application, this.couloir, (events) => {
                 this.events = events;
-
 			    this.load();
             });
 
@@ -380,6 +367,8 @@ module CasParCas {
 
 				var next = (): void =>{
 					if(dataLoaded && trendLoaded){
+
+						this.updateScope();
 
 						// calcul du max et mappage en objet des données non filtrées
 						var maxValue: number = -Infinity;
@@ -408,11 +397,9 @@ module CasParCas {
 					}
 				}
 
-
 				window.startLoader();
 
-				this.http.get("api/get/totalErreurs?application="+this.application+"&couloir="+this.couloir)
-					.success((data:Array<Record>)=>{
+				window.Database.getHistory(this.application, this.couloir, (data: Record[])=>{
 						if(data.length > 0){
 							data = this.parseInData(data);
 						}
@@ -436,40 +423,46 @@ module CasParCas {
 							this.noMatches = true;
 							this.chosen = false;
 						}
+				});
+				/*this.http.get("api/history/"+this.application+"/"+this.couloir)
+					.success((data:Array<Record>)=>{
+						
+						
 					})
 					.error(function(err:any){
 						window.stopLoader();
 						console.error("erreur à la récupération des données pour l'histogramme");
 						console.error(err);
-					});
+					});*/
 
 				window.startLoader();
-				this.http.get("api/get/trend?app="+this.application+"&couloir="+this.couloir)
-					.success((data:{[index:string]: Array<Record>})=>{
-						var type: string;
-						for(type in data){
-							data[type] = this.parseInData(data[type]);
-						}
 
-						setTimeout(()=>{
-							this.trendBackup = JSON.stringify(data);
-						}, 1);
+				window.Database.getTrend(this.application, this.couloir, (data:{[index:string]: Array<Record>})=>{
+					var type: string;
+					for(type in data){
+						data[type] = this.parseInData(data[type]);
+					}
 
-						this.trend = <{[index:string]: Array<Record>}> data;
-						trendLoaded = true;
+					setTimeout(()=>{
+						this.trendBackup = JSON.stringify(data);
+					}, 1);
 
-						window.stopLoader();
-						next();
+					this.trend = <{[index:string]: Array<Record>}> data;
+					trendLoaded = true;
 
-					})
+					window.stopLoader();
+					next();
+
+				})
+				/*
+				this.http.get("api/trend/"+this.application+"/"+this.couloir)
+					.success()
 					.error(function(err:any){
 						window.stopLoader();
 						console.error("erreur à la récupération du trend pour l'histogramme");
 						console.error(err);
 					});
-
-
-
+				*/
 			}
 		}
 
@@ -487,17 +480,7 @@ module CasParCas {
 		private parseInData = (data: Array<Record>) : Array<Record> =>{
 			var tempStr: string;
 			data.forEach(function(item: Record, inex: number){
-				tempStr = '';
-				if(_.isString(item.startTime)){
-					tempStr = item.startTime.split(' ').join('T')+'.000Z';
-				}
-				else{
-					tempStr = item.startTime.date.split(' ').join('T')+'.000Z';
-				}
-
-				tempStr = tempStr.replace('00:00:00', '00:00:01');
-
-				item.startTime = new Date(tempStr);
+				item.starttime = new Date(item.starttime);
 
 				if(_.isString(item.value)){
 					item.value = parseInt( String(item.value), 10);
@@ -537,7 +520,7 @@ module CasParCas {
 
 
 		/*
-			Cherche une date dans le champs array[n].startTime par dichotomie récursive
+			Cherche une date dans le champs array[n].starttime par dichotomie récursive
 			renvoi la valeur la plus proche si non trouvée
 			renvoi -1 si erreur
 			@param array [Array] Les données triées à parcourir
@@ -561,7 +544,7 @@ module CasParCas {
 			var value: Record = array[centre];
 
 			if(arret){
-				if(value.startTime == date_recherche)
+				if(value.starttime == date_recherche)
 					return centre;
 				else
 				{
@@ -575,8 +558,8 @@ module CasParCas {
 					if(sup == value)
 						centre_sup = centre;
 
-					var diff_inf = inf.startTime - value.startTime;
-					var diff_sup = value.startTime - sup.startTime;
+					var diff_inf = inf.starttime - value.starttime;
+					var diff_sup = value.starttime - sup.starttime;
 
 					if(diff_inf < diff_sup)
 						return centre_inf
@@ -586,9 +569,9 @@ module CasParCas {
 				}
 			}
 			else{
-				if(date_recherche < value.startTime)
+				if(date_recherche < value.starttime)
 					return this.findStartTimeSorted(array, date_recherche, start, centre);
-				else if (date_recherche > value.startTime)
+				else if (date_recherche > value.starttime)
 					return this.findStartTimeSorted(array, date_recherche, centre, stop);
 				else
 					return this.findStartTimeSorted(array, date_recherche, centre, centre);
@@ -683,7 +666,7 @@ module CasParCas {
 								.interpolate(this.interpolation)
 								.tension(this.tension)
 								.x((record)=>{
-									return this.scalerBrushX(record.startTime);
+									return this.scalerBrushX(record.starttime);
 								})
 								.y((record)=>{
 									return scalerBrushY(record.value);
@@ -697,10 +680,7 @@ module CasParCas {
                         .datum(this.unfilteredReports[codeType])
                         .attr('class', 'line')
                         .attr('d', brushDrawer)
-                        .style('stroke', (report) => { return this.colorBuilder(codeType) });
-
-                    
-                    
+                        .style('stroke', (report) => { return this.colorBuilder(codeType) });                    
 				}
             }
 
@@ -717,7 +697,9 @@ module CasParCas {
             var eventsEnter = eventsContainer
                 .enter()
                 .append('rect')
-                .attr('x', (event: Events.Event) => {return this.scalerBrushX(event.startTime) })
+                .attr('x', (event: Events.Event) => {
+                	return this.scalerBrushX(event.start_time) 
+                })
                 .attr('y', height + 50)
                 .attr('width', '1')
                 .attr('height', heightBrush)
@@ -890,7 +872,7 @@ module CasParCas {
 			}
 
 			if(!skipRendering && data.length >0 ) {
-				var thisClass : CasParCasController = this;
+				var thisClass : HistoryController = this;
 				var $svg : JQuery = this.histogram.find('.svg > svg');
 				//$svg.empty();
 				var width: number = target.find('.svg').width() * 0.95;
@@ -907,8 +889,8 @@ module CasParCas {
 					var scalerX: D3.Scale.TimeScale;
 					scalerX = d3.time.scale()
 						.domain([
-							first_value.startTime,
-							last_value.startTime
+							first_value.starttime,
+							last_value.starttime
 						])
 						.range([
 							margin.left,
@@ -978,25 +960,25 @@ module CasParCas {
 								.interpolate(this.interpolation)
 								.tension(this.tension)
 								.x((record)=>{
-									return scalerX(record.startTime);
+									return scalerX(record.starttime);
 								})
 								.y((record)=>{
 									return scalerY(record.value);
 								});
 
 					var trend = d3.svg.area()
-								.x((d)=>{ return scalerX(d.startTime) })
+								.x((d)=>{ return scalerX(d.starttime) })
 								.y((d)=>{ return scalerY(d.average + d.stddev) })
 								.y1((d)=>{ return scalerY(d.average - d.stddev) });
 
 					var moyenne = d3.svg.line()
 									.interpolate('bundle')
 									.tension(0.7)
-									.x((d)=>{ return scalerX(d.startTime) })
+									.x((d)=>{ return scalerX(d.starttime) })
 									.y((d)=>{ return scalerY(d.average) });
 
 					var trendReduis = d3.svg.area()
-										.x((d)=>{ return scalerX(d.startTime) })
+										.x((d)=>{ return scalerX(d.starttime) })
 										.y0((d)=>{ return scalerY(d.average + (d.stddev/2)) })
 										.y1((d)=>{ return scalerY(d.average - (d.stddev/2)) });
 
@@ -1122,7 +1104,7 @@ module CasParCas {
 						var $circles = diagram.selectAll('circle')
 						.data(reportsList, (record)=>{
 							if(record.value > seuil)
-								return record.startTime
+								return record.starttime
 						});
 
 						$circles.each(function(record){
@@ -1135,20 +1117,20 @@ module CasParCas {
 
 
 						$circles//.transition()
-							.attr('cx', (record)=> { return scalerX(record.startTime); })
+							.attr('cx', (record)=> { return scalerX(record.starttime); })
 							.attr('cy', (record)=> { return scalerY(record.value); })
 							.style('fill', (record)=>{ return color(record.codetype); });
 						$circles
 							.enter()
 							.append('circle')
-							.attr('cx', (record)=> { return scalerX(record.startTime); })
+							.attr('cx', (record)=> { return scalerX(record.starttime); })
 							.attr('cy', (record)=> { return scalerY(record.value); })
 							.style('fill', (record)=>{ return color(record.codetype); })
 							.attr('r', '4')
 							.on('mouseover', function(record){
 								thisClass.histogramNomRapport = record.codetype;
 								thisClass.histogramValeurRapport = record.value;
-								thisClass.histogramDateRapport = record.startTime.toLocaleString().replace('UTC', '');
+								thisClass.histogramDateRapport = record.starttime.toLocaleString().replace('UTC', '');
 
 								thisClass.updateScope();
 
@@ -1197,8 +1179,8 @@ module CasParCas {
                 var eventsEnter = eventsContainer   
                     .enter()
                     .append('line')
-                    .attr('x1', (event: Events.Event) => {return scalerX(event.startTime) })
-                    .attr('x2', (event: Events.Event) => {return scalerX(event.startTime) })
+                    .attr('x1', (event: Events.Event) => {return scalerX(event.start_time) })
+                    .attr('x2', (event: Events.Event) => {return scalerX(event.start_time) })
                     .attr('y1', '0')
                     .attr('y2', height)
                     .style('stroke-width', '2')
@@ -1624,7 +1606,7 @@ module CasParCas {
 						+SEP
 						+item.value
 						+SEP
-						+item.startTime.toJSON()
+						+item.starttime.toJSON()
 						+'\n';
 			});
 
@@ -1655,10 +1637,10 @@ module CasParCas {
 
 
 (function(){
-    window.ccolControllers.controller('casParCasController', ['$scope', '$http', '$routeParams', '$window', function ($scope, $http, $routeParams, $window) {
+    window.ccolControllers.controller('historyController', ['$scope', '$http', '$routeParams', '$window', function ($scope, $http, $routeParams, $window) {
 
         var eventsController: Events.EventsController = new Events.EventsController($scope, $http, $routeParams, $window);
-		$scope.vm = new CasParCas.CasParCasController($scope, $http, $routeParams, eventsController); // notre module dépend de scope, de http, des routes et des evenements
+		$scope.vm = new HistoryModule.HistoryController($scope, $http, $routeParams, eventsController); // notre module dépend de scope, de http, des routes et des evenements
 		//console.log($scope.vm);
 	}]); 
 })();

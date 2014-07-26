@@ -18,7 +18,7 @@ module Events {
         codeapp: string;
         couloir: string;
         codetype: string;
-        startTime: Date; // string puis Date
+        start_time: Date; // string puis Date
         seen: boolean;
         deleted: boolean;
         oldValue: number;
@@ -69,9 +69,11 @@ module Events {
 
             this.displayedEvents = [];
 
-            
-
 			this.init();
+
+            window.Database.socket.on('eventChanged', (event)=>{
+                this.updateEvent(event);
+            });
 		}
 
 		private init = (): void=>{
@@ -93,6 +95,8 @@ module Events {
                 this.parseData();
 
                 window.stopLoader();
+
+                if(!this.scope.$$phase) this.scope.$apply();
                 
             });	
         }
@@ -198,8 +202,9 @@ module Events {
         }
 
         public setEventSeen(event: Event) {
-            window.startLoader();
-            this.http.get('api/set/events?action=seen&target='+event.id+'&value='+event.seen)
+            //window.startLoader();
+            window.Database.setEvent(event);
+            /*this.http.get('api/set/events?action=seen&target='+event.id+'&value='+event.seen)
                 .success((data: any) => {
                     console.log(data);
 
@@ -210,7 +215,26 @@ module Events {
                     console.error("Event.seen -> impossible de metter à jour");
                     console.error(err);
                     window.stopLoader();
-                });		
+                });		*/
+        }
+
+        private updateEvent(newEvent: Event){
+            newEvent.start_time = new Date(<any>newEvent.start_time);
+            var length = this.events.length;
+            var stop = false;
+            var event: Event;
+            while(length-- && !stop){
+                event = this.events[length];
+                newEvent.selected = false;
+                if(this.selectedEvent == event) this.selectedEvent.selected = false;
+                if(event.id === newEvent.id){
+                    this.events[length] = newEvent;
+                    stop = true;
+                }
+            }
+
+            if(!this.scope.$$phase) this.scope.$apply();
+            
         }
 
         public getByCouple(codeapp: string, couloir: string, callback: any) {

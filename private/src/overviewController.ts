@@ -112,7 +112,7 @@ module Overview {
 				window.Database.getOverviewData(( data: Record[] )=>{
 
 					if(_.isArray(data)){
-						sessionStorage.setItem('overview', JSON.stringify(data));
+						//sessionStorage.setItem('overview', JSON.stringify(data));
 						this.data = data;//this.groupDataByApplication(data);
 						this.makeStats();						
 					}
@@ -137,7 +137,7 @@ module Overview {
 				href='';
 			}
 			else{
-				href="#/casParCas/"+record.codeapp+"/"+record.couloir;
+				href="#/history/"+record.codeapp+"/"+record.couloir;
 			}		
 			return  href;
 		}

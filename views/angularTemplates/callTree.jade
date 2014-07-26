@@ -1,0 +1,55 @@
+.row
+	.col-xs-12
+		div#callTree
+			canvas#webglTarget
+			span.legende.panelInterface
+				.row
+					svg#brushContainer(style='width: 99%; height: 20px;')
+				.row
+					.col-xs-12
+						.btn-group
+							button.btn.btn-default.dropdown-toggle.btn-callTree(type='button', ng-click='toggleListeNoeuds()')
+								span.glyphicon.glyphicon-search
+								| Rechercher
+						.dropdown-menu.listeNoeuds.panelInterface(role='menu')
+							input.form-control(type='search', placeholder='Filtrer les éléments', ng-model='filtreNoeuds')
+							ul
+								// The flter directive only work on array, we have to filter by hand here
+								li.nodeSelector(ng-repeat='(nom, color) in vm.getNodes(filtreNoeuds)', ng-click='vm.selectNode(nom, false)')
+									span(style='background-color: [[color]]; border-radius: 20px;')
+										| &nbsp;&nbsp;&nbsp;&nbsp;
+									span(style='padding-left: 1em;')
+										| [[nom]]
+						.btn-group
+							a.btn.btn-default.btn-callTree(href='', ng-repeat='(type, color) in vm.getNodeTypes()', ng-click='vm.toggleNodes(type)')
+
+								span(style='background-color:[[color]];border-radius:20px')
+									| &nbsp;&nbsp;&nbsp;&nbsp;
+
+								span(style='color: [[color]]; font-weight: bold;')  [[type]]
+						.btn-group
+							a.btn.btn-default.btn-callTree(href='', ng-click='vm.switch2D()', title='Vue 2D')
+								span.glyphicon.glyphicon-unchecked
+								| 2D
+							a.btn.btn-default.btn-callTree(href='', ng-click='vm.switch3D()', title='Vue 3D')
+								span.glyphicon.glyphicon-record
+								| 3D
+							a.btn.btn-default.btn-callTree(href='', ng-click='vm.switchAnaglyphe()', title='Vue Anaglyphe')
+								span.glyphicon.glyphicon-unchecked(style='color: red;')
+								span.glyphicon.glyphicon-unchecked(style='color: blue;')
+
+						a.btn.btn-default.btn-callTree(href='', ng-click='vm.toggleText()', title='Étendre tout')
+							span.glyphicon(ng-class='vm.textVisible ? \'glyphicon-eye-open\' : \'glyphicon-eye-close\'')
+							| Labels
+						span.push-right
+								a.btn.btn-default.btn-callTree.btn-export-csv(href='', ng-click='vm.exportCSV()')
+									span.glyphicon.glyphicon-save
+									| CSV
+								.btn-group
+									button.btn.btn-default.btn-callTree.dropdown-toggle(ng-click='vm.toggleStackTrace()')
+										span.glyphicon.glyphicon-indent-left
+										| Pile des appels
+								.dropdown-menu.stackTrace.panelInterface(role='menu')
+									ul
+										li(ng-repeat='record in vm.getStackTrace() track by $index', style='padding-left: [[record.depth]]em;')
+										| [[record.label]] : [[record.value]]

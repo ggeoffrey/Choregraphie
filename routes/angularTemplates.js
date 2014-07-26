@@ -12,7 +12,7 @@ router.get('/:templateName', function(req, res) {
 
 	var file = './views/angularTemplates/'+req.params.templateName + '.jade';
 	fs.exists(file, function(exists){
-		console.log(exists);
+		
 		if (exists) {
 			res.render('angularTemplates/'+req.params.templateName,{});
 		}

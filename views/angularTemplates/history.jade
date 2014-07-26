@@ -1,0 +1,93 @@
+.cas-par-cas
+    .row
+        form.form-inline(role='form')
+          .well.row.controls
+            .col-xs-12
+              .form-group
+                label Couloir →
+                select.form-control(ng-disabled='bloqueCouloirs', ng-model='vm.couloir')
+                  option(ng-repeat='c in vm.couloirs', ng-value='c') [[c]]
+              span(style='font-size: 3em;')
+                span(ng-show='!vm.chosen && !vm.noMatches') &#8644;
+                span(ng-show='vm.chosen', style='color: #86B22D;') &#8621;
+                span(ng-show='vm.noMatches', style='color: red;') &#8622;
+              .form-group
+                select.form-control(ng-disabled='vm.bloqueApplications', ng-model='vm.application')
+                  option(ng-repeat='app in vm.applications', ng-value='app') [[app]]
+                label ← Application
+              //- a : ng-click='vm.load()'
+              a.btn.btn-info(ng-disabled="vm.application == '' || vm.couloir == '' ", ng-href='#/history/[[vm.application]]/[[vm.couloir]]')
+                span.glyphicon.glyphicon-ok
+                | Charger
+              .form-group
+                label Interpolée en: 
+                select#interpolation.form-control(ng-model='vm.interpolation', ng-init="vm.interpolation='step-after'", ng-change='vm.externalUpdateHistogram(true)')
+                  option(value='step-after') Pas après
+                  option(value='bundle') Groupement
+                  option(value='basis') Base
+                  option(value='step-before') Pas avant
+                  option(value='monotone') Monotone
+                  option(value='linear') Linéaire
+                  option(value='basis-open') Base ouverte
+                  option(value='basis-closed') Base fermée
+                  option(value='cardinal') Cardinal
+                  option(value='cardinal-open') Cardinal ouvert
+                  option(value='cardinal-closed') Cardinal fermé
+
+              br
+            span(style='color: red;')
+              span(ng-show='vm.noMatches') [[vm.messages.application_not_in_couloir]]
+            .form-group(ng-init='vm.tension = 0.70', ng-show="vm.interpolation.search('cardinal') != -1 || vm.interpolation.search('bundle') != -1")
+              label Tension:
+              input.form-control(ng-model='vm.tension', ng-change='vm.externalUpdateHistogram(true)', type='range', min='0', max='1', step='0.05')
+              label
+                | [[(vm.tension+'').length == 4 ? vm.tension : ((vm.tension+'').length == 3 ? vm.tension+'0' : vm.tension +'.00')]]
+
+      .row
+        .col-xs-12
+          span#histogram
+            span.svg
+              a.btn.btn-default.btn-export-csv-histogramme(href='', ng-click='vm.exportCSVHistogramme()')
+                span.glyphicon.glyphicon-save
+                | CSV
+              a.btn.btn-default.btn-width-histogramme(href='', ng-disabled='vm.resizeDisabled', ng-click='vm.resizeHistogram()')
+                span.glyphicon.glyphicon.glyphicon-resize-full
+              svg
+            span#anchor-pie-normal(style='width: 1px; height: 1px;') .
+            span#pie
+              svg
+                g.root
+      p(align='center') [[vm.messageHistogramme]]
+      .row
+        .col-md-2
+          h3 Totaux:
+        .col-md-1
+          a.btn.btn-default.btn-export-csv-tableau(href='', ng-click='vm.exportCSVTableau()')
+            span.glyphicon.glyphicon-save
+            | CSV
+      .row
+        .col-md-7
+          ul#tableau.list-group
+            li.list-group-item(style='font-weight: bold;')
+              .col-md-1 Rang
+              .col-md-2 % Erreur
+              .col-md-3 Erreur
+              .col-md-2 Appels
+              .col-md-1 Échecs
+              .col-md-3(align='center') %/Total précis
+            li.list-group-item(ng-repeat='item in vm.tableau ', active='[[ vm.lignesSelectionees[item.raw_err] ]]', ng-click='vm.select_ligne(item.raw_err)')
+              .col-md-1.align-right
+                span.glyphicon(ng-class='vm.lignes_selectionees[item.raw_err] ? \'glyphicon-eye-open\': \'glyphicon-eye-close\'', style='float: left;')
+                | [[$index+1]]
+              .col-md-1.align-right [[item.pct_err]]
+              .col-md-2.col-md-offset-1 [[item.err]]
+              .col-md-1.col-md-offset-1.align-right [[item.http]]
+              .col-md-1.col-md-offset-1.align-right [[item.value]]
+              .col-md-2.align-right [[item.pct]]
+        span#anchor-pie-full(style='width: 1px; height: 1px;') .
+      #tooltip
+        .row.col-md-12 [[vm.histogramNomRapport]]
+        .row.col-md-12
+          b
+            | [[vm.histogramValeurRapport]]
+        .row.col-md-12 [[vm.histogramDateRapport]]

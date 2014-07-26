@@ -1,34 +1,33 @@
 #container.row
 		.well.controls
-				span(style='font-size: 1.5em;') Résumé pour le [[ vm.data[0].date.toLocaleString().split(' ')[0] ]]
+				span(style='font-size: 1.5em;') Resume for [[ vm.data[0].date.toLocaleString().split(' ')[0] ]]
 				input(type='text', ng-model='filtre_tableau', placeholder='Filtrer le tableau')
 				button.push-right.btn.btn-info(ng-click='vm.update()')
 					span.glyphicon.glyphicon-refresh
-					| Actualiser
+					| Refresh
 			.col-md-12
-				.row.message.alert.alert-warning(ng-show="vm.data.length == 0") Rien à afficher pour cette date
+				.row.message.alert.alert-warning(ng-show="vm.data.length == 0") Nothing to show for this day
 				.row
 					.tableau.panel.panel-default.col-md-8(ng-show='vm.data.length')
-						| 0"
 						.header.panel-heading(ng-init='inverse = true')
 							.row
 								.col-md-2
-									| Appli.
+									| App.
 									span.glyphicon.glyphicon-sort(ng-click="choix = 'codeapp'; inverse= !inverse")
 								.col-md-2
-									| Appels
+									| Calls
 									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_transaction_http.value'; inverse= !inverse")
 								.col-md-2
-									| Web
+									| Web errors
 									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_erreur_afj_web.value'; inverse= !inverse")
 								.col-md-2
-									| Metier
+									| Business errors
 									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_erreur_afj_metier.value'; inverse= !inverse")
 								.col-md-2
 									| NSI Java
 									span.glyphicon.glyphicon-sort(ng-click="choix = 'types.nb_erreur_nsi_java.value'; inverse= !inverse")
 								.col-md-2
-									| Santé
+									| Health
 									| [[resSante]]
 									span.glyphicon.glyphicon-sort(ng-click="choix = 'resSante' ; inverse= !inverse")
 						.body.panel-body
@@ -70,16 +69,15 @@
 								div(am-time-ago='event.start_time')
 								.details(ng-show='event.selected')
 									div
-										| Le 
 										b [[event.start_time.toLocaleString()]] 
 									div
-										| Valeur:
+										| Value:
 										b [[event.oldValue]]→[[event.value]]
 									hr
 									span
-										| Vu:
+										| Seen:
 										input(type='checkbox', ng-model='event.seen', ng-change='vm.eventsController.setEventSeen(event)')
 										| [[event.seen ? 'Oui': 'Non']]
-									a.btn.btn-default.push-right(target='_blank', ng-href='#/casParCas/[[event.codeapp]]/[[event.couloir]]')
+									a.btn.btn-default.push-right(target='_blank', ng-href='#/history/[[event.codeapp]]/[[event.couloir]]')
 										span.glyphicon.glyphicon-arrow-right
-										| Aller au diagramme
+										| Watch history

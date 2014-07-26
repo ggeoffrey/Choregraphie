@@ -5,11 +5,31 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var compression = require('compression');
+
 var routes = require('./routes/index');
 var angularTemplates = require('./routes/angularTemplates');
 
 
 var app = express();
+
+
+    // Ajouté par Geoffrey
+        var http = require('http').Server(app);
+        http.listen(80);
+    
+        var io = require('socket.io')(http);
+        
+        var restApi = require('./modules/restApi');  
+        var socketManager = require('./modules/socketManager')(io);
+        socketManager.listenToSockets();
+    // -----------------------------
+    
+
+
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -17,6 +37,8 @@ app.set('view engine', 'jade');
 
 app.use(favicon());
 app.use(logger('dev'));
+app.use(compression());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
@@ -30,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/template', angularTemplates);
+app.use('/api', restApi);
 
 
 /// catch 404 and forward to error handler
@@ -67,27 +90,6 @@ app.use(function(err, req, res, next) {
 
 
 
-// Ajouté par Geoffrey
 
-
-var http = require('http').Server(app);
-
-http.listen(80);
-
-var io = require('socket.io')(http);
-
-
-
-
-// -------------------------------------------
-
-// Déclaration de l'api
-
-var socketManager = require('./modules/socketManager');
-var connector = require('./modules/postgresConnector');
-var api = require('./modules/api')(connector);
-
-
-socketManager = new socketManager(io, api);
 
 module.exports = app;

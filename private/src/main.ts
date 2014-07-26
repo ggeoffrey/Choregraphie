@@ -82,14 +82,14 @@ window.objectSize = (object: any) : number  =>{
 					controller: 'callTreeController'
 				}
 			)			
-			.when('/casParCas', {
+			.when('/history', {
 					templateUrl: '/template/history',
-					controller: 'casParCasController'
+					controller: 'historyController'
 				}
 			)
-			.when('/casParCas/:codeapp/:couloir', {
+			.when('/history/:codeapp/:couloir', {
 					templateUrl: '/template/history',
-					controller: 'casParCasController'
+					controller: 'historyController'
 				}
             )
             .when('/events', {
@@ -319,7 +319,7 @@ module Main {
 					}
 				},{
 					label: "History",
-					href: '#/casParCas',
+					href: '#/history',
 					classes: 'glyphicon glyphicon-signal'
 				},
 				{
@@ -491,15 +491,14 @@ module Main {
 			window.startLoader();
 
 			window.Database.getApplications((data:string[])=>{	
-				this.applications =  formatData(data);				
-				console.log(this.applications);
+				this.applications =  formatData(data);
 				window.stopLoader();
 			});
 
 
 			window.startLoader();
 
-			window.Database.getCoridors((data:string[])=>{
+			window.Database.getCorridors((data:string[])=>{
 				this.couloirs =  formatData(data);
 				window.stopLoader();
 			});
