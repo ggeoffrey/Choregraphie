@@ -221,7 +221,7 @@ var Main;
                     classes: 'glyphicon glyphicon-signal'
                 },
                 {
-                    label: "Diagramme des appels",
+                    label: "Calls",
                     href: '#/callTree',
                     classes: 'glyphicon glyphicon-resize-full'
                 }
