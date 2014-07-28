@@ -18,6 +18,7 @@ module HistoryModule {
 		private _pct: number; // pourcentage par rapport à un total
 		private _http: number; //nombre de transactions HTTP
 		private _pct_err: number; // pourcentage d'erreur
+		private _pct_err_total: number; // pourcentage d'erreur par rapport au total
 
 		private isHttp: boolean; // SI c'est un stats sur les appels
 		private _isFake: boolean;
@@ -80,6 +81,9 @@ module HistoryModule {
 			else
 				return nullSymbol;
 		}
+		get pct_err_total(): number {
+			return this._pct_err_total;
+		}
 
 		public calculePourcentage = (totalReference : number): void => {
 			var value: number;
@@ -95,6 +99,20 @@ module HistoryModule {
 			percent /= 100;
 
 			this._pct = percent;
+		};
+
+		public computeErrPct = (totalReference : number): void => {
+			var value: number;
+			var percent: number;
+
+			if(this.isHttp)
+				this._pct_err_total = 0;
+			else
+				percent = (this._pct_err / totalReference ) * 100;
+				percent = Math.round(percent*100);
+				percent /= 100;
+
+				this._pct_err_total = percent;
 		};
 
 		public addValue = (value:number): void => {
@@ -219,6 +237,15 @@ module HistoryModule {
 		private histogramValeurRapport: number;
 		private histogramDateRapport: string;
 		// --------
+
+
+		// Pie chart
+
+		public pieChartType: string; // IN {'Calls', 'Err (%)'}
+		private pieChartContainsHttpValues: boolean;
+
+
+		// ------
 
 
 		private fdata: Array<Record>;
@@ -1314,11 +1341,39 @@ module HistoryModule {
 			var liste : Statistique[] = [];
 			var total : number = 0;
 
+			this.pieChartContainsHttpValues = false;
+
 			var codetype : string, item: Statistique;
 			for(codetype in stats){
 				item = stats[codetype];
 				if(this.lignesSelectionees[codetype]){
-					var num: any = parseInt(item.value, 10) || parseInt(item.http,10);
+					
+					var errValue = parseInt(item.value, 10);
+					var httpValue = parseInt(item.http,10);
+
+					
+					if(_.isNaN(errValue) && httpValue > 0 ){
+						this.pieChartContainsHttpValues = true;
+						break;
+					}
+				}
+			}
+
+			console.log(this.pieChartContainsHttpValues);
+			this.pieChartType = (this.pieChartContainsHttpValues ? 'Calls': 'Err (%)');
+			
+
+
+			for(codetype in stats){
+				item = stats[codetype];
+				if(this.lignesSelectionees[codetype]){
+					var num: any;
+					if(this.pieChartContainsHttpValues){
+						num = parseInt(item.http,10) || 0;
+					}
+					else{
+						num = parseInt(item.pct_err, 10) || 0;
+					}					
 					if(num !== NaN)
 						total+= num;
 
@@ -1331,7 +1386,7 @@ module HistoryModule {
 			}
 
 			liste.forEach((item: Statistique)=>{
-				item.calculePourcentage(total);
+				item.computeErrPct(total);
 			});
 
 			var $target = $('#pie');
@@ -1353,8 +1408,8 @@ module HistoryModule {
 			var pie = d3.layout.pie()
 						.startAngle(0)
 						.value((record)=>{
-							console.log(parseInt(record.value, 10) || parseInt(record.http,10));
-							return parseInt(record.value, 10) || parseInt(record.http,10);
+							
+							return  (this.pieChartContainsHttpValues ? parseInt(record.http,10) : record.pct_err_total );
 						});
 						//.sort(null);
 
@@ -1373,7 +1428,9 @@ module HistoryModule {
 
 			var text :string = '0';
 			if(liste.length > 0){
-				text = ''+ Math.round( parseInt(liste[0].pct) || 0 );
+				if(this.pieChartContainsHttpValues) text = ''+ Math.round( parseInt(liste[0].pct) || 0 );
+				else text = ''+ Math.round( parseInt(<any>liste[0].pct_err_total) || 0 );
+				
 			}
 
 			function interpolateText(d) {
@@ -1429,7 +1486,8 @@ module HistoryModule {
 
 
 
-
+			
+			var thisAlias = this;
 			var $path = $arc
 				.enter()
 				.append('path')
@@ -1441,7 +1499,9 @@ module HistoryModule {
 				.on('mouseenter', function(record){
 					var $target = $(this).siblings('.pct');
 					$target.fadeOut(150, function(){
-						  $target.text(Math.round(record.data.pct));
+
+						  var text = (thisAlias.pieChartContainsHttpValues ? record.data.pct : record.data.pct_err_total);
+						  $target.text(Math.round(text));
 						  $target.fadeIn(150);
 					});
 				});
@@ -1476,6 +1536,7 @@ module HistoryModule {
 			$text.exit()
 				 .remove();
 
+			this.updateScope();
 
 		}
 

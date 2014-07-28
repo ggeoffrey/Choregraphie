@@ -2291,6 +2291,19 @@ var HistoryModule;
 
                 _this._pct = percent;
             };
+            this.computeErrPct = function (totalReference) {
+                var value;
+                var percent;
+
+                if (_this.isHttp)
+                    _this._pct_err_total = 0;
+                else
+                    percent = (_this._pct_err / totalReference) * 100;
+                percent = Math.round(percent * 100);
+                percent /= 100;
+
+                _this._pct_err_total = percent;
+            };
             this.addValue = function (value) {
                 if (value > 0) {
                     if (_this.isHttp)
@@ -2363,6 +2376,13 @@ var HistoryModule;
                     return String(this._pct_err);
                 else
                     return nullSymbol;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Statistique.prototype, "pct_err_total", {
+            get: function () {
+                return this._pct_err_total;
             },
             enumerable: true,
             configurable: true
@@ -3174,11 +3194,34 @@ var HistoryModule;
                 var liste = [];
                 var total = 0;
 
+                _this.pieChartContainsHttpValues = false;
+
                 var codetype, item;
                 for (codetype in stats) {
                     item = stats[codetype];
                     if (_this.lignesSelectionees[codetype]) {
-                        var num = parseInt(item.value, 10) || parseInt(item.http, 10);
+                        var errValue = parseInt(item.value, 10);
+                        var httpValue = parseInt(item.http, 10);
+
+                        if (_.isNaN(errValue) && httpValue > 0) {
+                            _this.pieChartContainsHttpValues = true;
+                            break;
+                        }
+                    }
+                }
+
+                console.log(_this.pieChartContainsHttpValues);
+                _this.pieChartType = (_this.pieChartContainsHttpValues ? 'Calls' : 'Err (%)');
+
+                for (codetype in stats) {
+                    item = stats[codetype];
+                    if (_this.lignesSelectionees[codetype]) {
+                        var num;
+                        if (_this.pieChartContainsHttpValues) {
+                            num = parseInt(item.http, 10) || 0;
+                        } else {
+                            num = parseInt(item.pct_err, 10) || 0;
+                        }
                         if (num !== NaN)
                             total += num;
 
@@ -3189,7 +3232,7 @@ var HistoryModule;
                 }
 
                 liste.forEach(function (item) {
-                    item.calculePourcentage(total);
+                    item.computeErrPct(total);
                 });
 
                 var $target = $('#pie');
@@ -3204,8 +3247,7 @@ var HistoryModule;
                 var arc = d3.svg.arc().outerRadius(radius).innerRadius(radius / 3);
 
                 var pie = d3.layout.pie().startAngle(0).value(function (record) {
-                    console.log(parseInt(record.value, 10) || parseInt(record.http, 10));
-                    return parseInt(record.value, 10) || parseInt(record.http, 10);
+                    return (_this.pieChartContainsHttpValues ? parseInt(record.http, 10) : record.pct_err_total);
                 });
 
                 var svg = d3.select($svg.selector).attr('width', width).attr('height', height);
@@ -3214,7 +3256,10 @@ var HistoryModule;
 
                 var text = '0';
                 if (liste.length > 0) {
-                    text = '' + Math.round(parseInt(liste[0].pct) || 0);
+                    if (_this.pieChartContainsHttpValues)
+                        text = '' + Math.round(parseInt(liste[0].pct) || 0);
+                    else
+                        text = '' + Math.round(parseInt(liste[0].pct_err_total) || 0);
                 }
 
                 function interpolateText(d) {
@@ -3249,6 +3294,7 @@ var HistoryModule;
                     };
                 });
 
+                var thisAlias = _this;
                 var $path = $arc.enter().append('path').attr('class', 'arc').attr('d', arc).each(function (d) {
                     this._current = d;
                 }).attr('centroid', function (record) {
@@ -3258,7 +3304,8 @@ var HistoryModule;
                 }).on('mouseenter', function (record) {
                     var $target = $(this).siblings('.pct');
                     $target.fadeOut(150, function () {
-                        $target.text(Math.round(record.data.pct));
+                        var text = (thisAlias.pieChartContainsHttpValues ? record.data.pct : record.data.pct_err_total);
+                        $target.text(Math.round(text));
                         $target.fadeIn(150);
                     });
                 });
@@ -3282,6 +3329,8 @@ var HistoryModule;
                 });
 
                 $text.exit().remove();
+
+                _this.updateScope();
             };
             this.full = false;
             this.premierAppel = true;
