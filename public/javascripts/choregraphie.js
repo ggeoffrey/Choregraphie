@@ -2323,6 +2323,12 @@ var HistoryModule;
                 this._value = value || 0;
 
             this._http = http || 0;
+
+            if (this._value) {
+                this._pct_err = Math.round(((this._http / this._value) * 100) * 100) / 100;
+                if (this._pct_err > 1000)
+                    this._pct_err = Math.floor(this._pct_err);
+            }
         }
         Object.defineProperty(Statistique.prototype, "isFake", {
             set: function (bool) {
@@ -2366,7 +2372,7 @@ var HistoryModule;
             get: function () {
                 var retour;
                 if (this.isHttp)
-                    retour = String(this._http);
+                    retour = nullSymbol;
                 else
                     retour = String(this._value);
 
@@ -3172,7 +3178,7 @@ var HistoryModule;
                 for (codetype in stats) {
                     item = stats[codetype];
                     if (_this.lignesSelectionees[codetype]) {
-                        var num = parseInt(item.value);
+                        var num = parseInt(item.value, 10) || parseInt(item.http, 10);
                         if (num !== NaN)
                             total += num;
 
@@ -3198,7 +3204,8 @@ var HistoryModule;
                 var arc = d3.svg.arc().outerRadius(radius).innerRadius(radius / 3);
 
                 var pie = d3.layout.pie().startAngle(0).value(function (record) {
-                    return record.value;
+                    console.log(parseInt(record.value, 10) || parseInt(record.http, 10));
+                    return parseInt(record.value, 10) || parseInt(record.http, 10);
                 });
 
                 var svg = d3.select($svg.selector).attr('width', width).attr('height', height);

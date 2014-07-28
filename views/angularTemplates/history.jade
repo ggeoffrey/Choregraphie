@@ -69,12 +69,13 @@
         .col-md-7
           ul#tableau.list-group
             li.list-group-item(style='font-weight: bold;')
-              .col-md-1 Rang
-              .col-md-2 % Erreur
-              .col-md-3 Erreur
-              .col-md-2 Appels
-              .col-md-1 Échecs
-              .col-md-3(align='center') %/Total précis
+              .col-md-1 Rank
+              .col-md-2 % Err
+              .col-md-3 Error
+              .col-md-2 Calls
+              .col-md-1 Fails
+              .col-md-3(align='center') % / total
+
             li.list-group-item(ng-repeat='item in vm.tableau ', active='[[ vm.lignesSelectionees[item.raw_err] ]]', ng-click='vm.select_ligne(item.raw_err)')
               .col-md-1.align-right
                 span.glyphicon(ng-class='vm.lignes_selectionees[item.raw_err] ? \'glyphicon-eye-open\': \'glyphicon-eye-close\'', style='float: left;')
