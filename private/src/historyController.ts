@@ -618,7 +618,7 @@ module HistoryModule {
 
 			var svg = d3.select('#histogram > .svg > svg ');
 
-			var width: number = $('#histogram > .svg').width() * 0.95;
+			var width: number = $('#histogram .svg').width() * 0.95;
 			var height: number = 300;
 			var margin : any ={
 				top: 25,
@@ -904,7 +904,7 @@ module HistoryModule {
 				var thisClass : HistoryController = this;
 				var $svg : JQuery = this.histogram.find('.svg > svg');
 				//$svg.empty();
-				var width: number = target.find('.svg').width() * 0.95;
+				var width: number = $('#histogram').find('.svg').width() * 0.95;
 				var height: number = 300;
 				var margin : any ={
 					top: 25,
@@ -1429,8 +1429,7 @@ module HistoryModule {
 			var text :string = '0';
 			if(liste.length > 0){
 				if(this.pieChartContainsHttpValues) text = ''+ Math.round( parseInt(liste[0].pct) || 0 );
-				else text = ''+ Math.round( parseInt(<any>liste[0].pct_err_total) || 0 );
-				
+				else text = ''+ Math.round( parseInt(<any>liste[0].pct_err_total) || 0 );				
 			}
 
 			function interpolateText(d) {
@@ -1548,10 +1547,10 @@ module HistoryModule {
 
 			var decalageHistogram;
 			var offsetTarget: any;
-
+			var distanceToTop = $('#anchor-pie-normal').offset().top;
 			if(this.premierAppel){
 				var offset = $('#anchor-pie-normal').offset();
-				$('#pie').css(offset);
+				$('#pie').offset(offset);
 				this.premierAppel = false;
 				this.resizeHistogram();
 			}
@@ -1563,7 +1562,7 @@ module HistoryModule {
 					decalageHistogram = '100%';
 
 					$('#pie ').animate({
-						top: offsetTarget.top,
+						top: offsetTarget.top - distanceToTop,
 						left: offsetTarget.left
 					}, 500, ()=> {
 						$('#histogram > .svg')
@@ -1587,7 +1586,7 @@ module HistoryModule {
 
 							offsetTarget = $('#anchor-pie-normal').offset();
 							$('#pie ').animate({
-								top: offsetTarget.top,
+								top: 0,//offsetTarget.top,
 								left: offsetTarget.left
 							});
 						});

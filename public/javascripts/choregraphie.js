@@ -2666,7 +2666,7 @@ var HistoryModule;
             this.buildBrush = function (mustRefresh) {
                 var svg = d3.select('#histogram > .svg > svg ');
 
-                var width = $('#histogram > .svg').width() * 0.95;
+                var width = $('#histogram .svg').width() * 0.95;
                 var height = 300;
                 var margin = {
                     top: 25,
@@ -2868,7 +2868,7 @@ var HistoryModule;
                     var thisClass = _this;
                     var $svg = _this.histogram.find('.svg > svg');
 
-                    var width = target.find('.svg').width() * 0.95;
+                    var width = $('#histogram').find('.svg').width() * 0.95;
                     var height = 300;
                     var margin = {
                         top: 25,
@@ -3337,10 +3337,10 @@ var HistoryModule;
             this.resizeHistogram = function () {
                 var decalageHistogram;
                 var offsetTarget;
-
+                var distanceToTop = $('#anchor-pie-normal').offset().top;
                 if (_this.premierAppel) {
                     var offset = $('#anchor-pie-normal').offset();
-                    $('#pie').css(offset);
+                    $('#pie').offset(offset);
                     _this.premierAppel = false;
                     _this.resizeHistogram();
                 } else {
@@ -3350,7 +3350,7 @@ var HistoryModule;
                         decalageHistogram = '100%';
 
                         $('#pie ').animate({
-                            top: offsetTarget.top,
+                            top: offsetTarget.top - distanceToTop,
                             left: offsetTarget.left
                         }, 500, function () {
                             $('#histogram > .svg').animate({
@@ -3371,7 +3371,7 @@ var HistoryModule;
 
                             offsetTarget = $('#anchor-pie-normal').offset();
                             $('#pie ').animate({
-                                top: offsetTarget.top,
+                                top: 0,
                                 left: offsetTarget.left
                             });
                         });
