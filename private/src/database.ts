@@ -1,7 +1,5 @@
 // <reference path="../../modules/socketManager/socket.io.d.ts" />
 
-//import socketIO = require('socket.io');
-
 declare var io: any;
 
 

@@ -119,7 +119,6 @@
                     options:{
                         script : "./bin/www",
                         background: true,
-                        node_env: 'development',
                     }
                 }
             }            
