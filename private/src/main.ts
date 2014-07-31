@@ -114,7 +114,7 @@ window.objectSize = (object: any) : number  =>{
 	Choregraphie.run([ '$rootScope','$location', 'amMoment', ($rootScope, $location, amMoment) => {	// Appelé à initilaisation du module
 			
 			// amMomet -> Angular-MomentMoment
-			amMoment.changeLanguage('fr');
+			
 
 			$rootScope.$on('$locationChangeStart', (event, current, next) => { //Lorsque la page commence à charger
 				
