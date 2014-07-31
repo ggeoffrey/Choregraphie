@@ -8,7 +8,7 @@
 	main.js
 
 	Roles: 
-		- Déclarer un module Angular pour toute l'application ccol
+		- Déclarer un module Angular pour toute l'application Choregraphie
 		- Gérer les marques d'évaluation Angular {{}}
 		- Gérer le routage
 		- Déclarer le controleur de la configuration (présente sur toute les pages)
@@ -61,7 +61,7 @@ window.objectSize = (object: any) : number  =>{
 	*/
 
 	// On utlise le routage, les controlleurs décalarés, et les modules
-    var ccol = angular.module('ccol', ['ngRoute', 'ccolControllers', 'angularMoment', 'snap', 'ngAnimate'])
+    var Choregraphie = angular.module('Choregraphie', ['ngRoute', 'ChoregraphieControllers', 'angularMoment', 'snap', 'ngAnimate'])
 		
 		.config (['$interpolateProvider', ($interpolateProvider) => { // On change les marqueurs d'évalutation {{}} -> [[]], {{}} est utilisé par Twig
 			$interpolateProvider
@@ -111,7 +111,7 @@ window.objectSize = (object: any) : number  =>{
 
 		}]);
 
-	ccol.run([ '$rootScope','$location', 'amMoment', ($rootScope, $location, amMoment) => {	// Appelé à initilaisation du module
+	Choregraphie.run([ '$rootScope','$location', 'amMoment', ($rootScope, $location, amMoment) => {	// Appelé à initilaisation du module
 			
 			// amMomet -> Angular-MomentMoment
 			amMoment.changeLanguage('fr');
@@ -150,7 +150,7 @@ window.objectSize = (object: any) : number  =>{
 
 	// On déclare le controlleur racine dans le scope global
 
-	window.ccolControllers = angular.module('ccolControllers', []);
+	window.ChoregraphieControllers = angular.module('ChoregraphieControllers', []);
 
 })();
 
@@ -248,7 +248,7 @@ window.toggleConfig = (): void => {
 
 }
 
-// Ajout d'un controlleur au controlleur racine ccolControllers, au pluriel
+// Ajout d'un controlleur au controlleur racine ChoregraphieControllers, au pluriel
 
 
 
@@ -640,11 +640,11 @@ module Main {
 
 
 (function(){
-	window.ccolControllers.controller('mainController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams){
+	window.ChoregraphieControllers.controller('mainController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams){
 		$scope.vm = new Main.MainController($scope, $http, $routeParams); // notre module dépend de $scope et de $http
 	}]);
 
-	window.ccolControllers.controller('configController', ['$scope', '$http', '$window', function($scope, $http, $window){
+	window.ChoregraphieControllers.controller('configController', ['$scope', '$http', '$window', function($scope, $http, $window){
 		$scope.vm = new Main.ConfigController($scope, $http, $window); // notre module dépend de $scope et de $http
 	}]);
 })();

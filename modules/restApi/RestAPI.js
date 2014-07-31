@@ -26,7 +26,7 @@ router.get('/overviewData', function (req, res) {
 });
 
 router.get('/events', function (req, res) {
-    api.getOverviewData(function(events){
+    api.getEvents(function(events){
     	res.send(events);
     	res.end();
     });

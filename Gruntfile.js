@@ -11,8 +11,11 @@
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
                 },
                 dist: {
+                    options:{
+                        mangle : true
+                    },
                     files: {
-                        './public/<%= pkg.name %>.js': ['<%= concat.prod.dest %>']
+                        './public/javascripts/<%= pkg.name %>.js': ['<%= concat.prod.dest %>']
                     }
                 }
             },
@@ -58,8 +61,12 @@
                 prod: {
                     src:
                         [
-                            publicPath + '/javascripts/'
+                            publicPath + '/javascripts/*'
                         ]
+                },
+                final: {
+                    src:
+                        [ publicPath + '/javascripts/vendors.js' ]
                 }
             },
             copy: {
@@ -132,13 +139,11 @@
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-express-server');
 
-
-        grunt.registerTask('assets', ['shell:copy_assets']);
-        grunt.registerTask('prod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'uglify', 'copy:jscss']);
+        grunt.registerTask('prod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'uglify', 'copy:jscss', 'clean:final']);
         grunt.registerTask('preprod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'copy:jscss']);
         grunt.registerTask('dev', ['clean:dev', 'typescript:client', 'concat:dev', 'copy:jscss']);
-        grunt.registerTask('quickDev', ['typescript:client', 'concat:dev', 'copy:jscss']);
-        grunt.registerTask('default', ['dev']);
+        
+        grunt.registerTask('default', ['prod']);
     };
 
 }).call(this);

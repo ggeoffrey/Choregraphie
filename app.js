@@ -4,11 +4,11 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var compression = require('compression');
-
 var routes = require('./routes/index');
 var angularTemplates = require('./routes/angularTemplates');
+
+var config = require('./config');
 
 
 var app = express();
@@ -16,7 +16,7 @@ var app = express();
 
     // Ajouté par Geoffrey
         var http = require('http').Server(app);
-        http.listen(3001);
+        http.listen(config.port);
     
         var io = require('socket.io')(http);
         

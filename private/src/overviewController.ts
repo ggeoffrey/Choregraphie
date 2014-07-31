@@ -226,7 +226,7 @@ module Overview {
 
 
 (function(){
-	window.ccolControllers.controller('overviewController', ['$scope', '$http', '$routeParams',  '$window', function($scope, $http, $routeParams, $window){
+	window.ChoregraphieControllers.controller('overviewController', ['$scope', '$http', '$routeParams',  '$window', function($scope, $http, $routeParams, $window){
         var eventsController: Events.EventsController = new Events.EventsController($scope, $http, $routeParams, $window);
         $scope.vm = new Overview.OverviewController($scope, $http, eventsController);
 	}]);

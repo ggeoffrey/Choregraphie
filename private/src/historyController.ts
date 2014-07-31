@@ -1633,7 +1633,7 @@ module HistoryModule {
 			var $link: JQuery = $('.btn-export-csv-tableau');
 			$link.attr('href', uri);
 
-			var filename = 'ccol_stats_tableau';
+			var filename = 'Choregraphie_stats_tableau';
 
 			var date: string = new Date()
 								.toLocaleString()
@@ -1679,7 +1679,7 @@ module HistoryModule {
 			var $link: JQuery = $('.btn-export-csv-histogramme');
 			$link.attr('href', uri);
 
-			var filename: string = 'ccol_dump'+this.couloir+'~'+this.application;
+			var filename: string = 'Choregraphie_dump'+this.couloir+'~'+this.application;
 
 			var date : string =  new Date()
 									.toLocaleString()
@@ -1700,7 +1700,7 @@ module HistoryModule {
 
 
 (function(){
-    window.ccolControllers.controller('historyController', ['$scope', '$http', '$routeParams', '$window', function ($scope, $http, $routeParams, $window) {
+    window.ChoregraphieControllers.controller('historyController', ['$scope', '$http', '$routeParams', '$window', function ($scope, $http, $routeParams, $window) {
 
         var eventsController: Events.EventsController = new Events.EventsController($scope, $http, $routeParams, $window);
 		$scope.vm = new HistoryModule.HistoryController($scope, $http, $routeParams, eventsController); // notre module dépend de scope, de http, des routes et des evenements

@@ -2,7 +2,7 @@ interface Window {
     Database : any;
     startLoader(): void;
     stopLoader(): void;
-    ccolControllers: any;
+    ChoregraphieControllers: any;
     objectSize(object: any): number;
 
     lastRouteName: string;

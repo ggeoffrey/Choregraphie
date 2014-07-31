@@ -2458,7 +2458,7 @@ module CallTree {
 			var $link: JQuery = $('.btn-export-csv');
 			$link.attr('href', uri);
 
-			var fileName: string = 'ccol_statistiques_appels';
+			var fileName: string = 'Choregraphie_statistiques_appels';
 
 			var date: string = new Date()
 				.toLocaleString()
@@ -2606,7 +2606,7 @@ module CallTree {
 }
 // Encapsulé
 (function () {
-	window.ccolControllers.controller('callTreeController', ['$scope', '$http', function ($scope, $http) {
+	window.ChoregraphieControllers.controller('callTreeController', ['$scope', '$http', function ($scope, $http) {
 		$scope.vm = new CallTree.CallTreeController($scope, $http);
 	}]);
 })();
