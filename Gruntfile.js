@@ -42,7 +42,8 @@
                         privatePath + '/vendors/OrbitControls.js',
                         privatePath + '/vendors/helvetiker_regular.typeface.js',
                         privatePath + '/vendors/Tween.js',
-                        privatePath + '/vendors/Ease.js'
+                        privatePath + '/vendors/Ease.js',
+                        privatePath + '/vendors/lz-string-1.3.3-min.js'
                     ],
                     dest: publicPath + '/javascripts/vendors.js'
                 },

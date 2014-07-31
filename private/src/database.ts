@@ -1,6 +1,6 @@
 // <reference path="../../modules/socketManager/socket.io.d.ts" />
 
-declare var io: any;
+declare var io: any, LZString: any;
 
 
 module Server {
@@ -13,16 +13,32 @@ module Server {
 			this.socket = io.connect();
 		}
 
+		private decompress(lzEncodedBase64String: string ): any {
+			var decompressedJSON : string =  LZString.decompressFromBase64(lzEncodedBase64String);
+
+			console.log('Compression: '+ (Math.round(100-(lzEncodedBase64String.length/decompressedJSON.length)*100)) + '%');
+
+			return JSON.parse(decompressedJSON);
+		}
+
+
+
 		public getApplications( callback: Function ):void {
-			this.socket.emit('getApplications', null, callback);
+			this.socket.emit('getApplications', null, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 		}
 
 		public getCorridors( callback: Function ):void {
-			this.socket.emit('getCorridors', null, callback);
+			this.socket.emit('getCorridors', null, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 		}
 
 		public getOverviewData( callback: Function ):void {
-			this.socket.emit('getOverviewData', null, callback);
+			this.socket.emit('getOverviewData', null, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 			
 		}
 
@@ -30,17 +46,23 @@ module Server {
 			this.socket.emit('getHistory', {
 				app: app,
 				corridor: corridor
-			}, callback);
+			}, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 		}
 		public getTrend( app:string, corridor:string, callback:Function): void {
 			this.socket.emit('getTrend', {
 				app: app,
 				corridor: corridor
-			}, callback);
+			}, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 		}
 
 		public getEvents( callback: Function ):void {
-			this.socket.emit('getEvents', null, callback);
+			this.socket.emit('getEvents', null, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 		}
 
 		public setEvent( event: Events.Event ):void {
@@ -49,7 +71,9 @@ module Server {
 
 
 		public getCalls(callback:Function): void{
-			this.socket.emit('getCalls', null,  callback);
+			this.socket.emit('getCalls', null, (encodedData: string)=>{
+				callback(this.decompress(encodedData));
+			});
 		}
 	}
 }
