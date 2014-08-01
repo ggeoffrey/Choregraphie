@@ -96652,8 +96652,6 @@ window.objectSize = function (object) {
 
     Choregraphie.run([
         '$rootScope', '$location', 'amMoment', function ($rootScope, $location, amMoment) {
-            amMoment.changeLanguage('fr');
-
             $rootScope.$on('$locationChangeStart', function (event, current, next) {
                 document.body.style.cursor = 'wait';
 
