@@ -257,10 +257,10 @@ module CallTree {
 			var $stackTrace = $('.stackTrace');
 			$listeNoeuds.width(this.$jQwindow.width() / 4);
 			$listeNoeuds.height(this.$jQwindow.height() * 0.8);
-			$stackTrace.width(this.$jQwindow.width() / 4);
-			$stackTrace.css('margin-left', -(this.$jQwindow.width() / 6.7));
+			$stackTrace.width($(window).width() / 4);
+			$stackTrace.css('margin-left', ($(window).width() - $stackTrace.width()) + 'px');
 
-			$stackTrace.height(this.$jQwindow.height() * 0.8);
+			$stackTrace.height($(window).height() * 0.8);
 
 			this.colorBuilder = d3.scale.category10();
 
@@ -302,9 +302,11 @@ module CallTree {
 					.duration(window.getTransitionDuration())
 					.style('opacity', '1');
 
+				if (!this.$scope.$$phase) {
+					this.$scope.$apply();
+				}
 
 			});
-
 
 			this.destructor();
 
@@ -1789,7 +1791,7 @@ module CallTree {
 				this.hardUpdate();
 			}
 
-			//console.log(this.stackTrace);
+			if(!this.$scope.$$phase) this.$scope.$apply();
 
 		}
 

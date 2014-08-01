@@ -52,4 +52,4 @@
 								.dropdown-menu.stackTrace.panelInterface(role='menu')
 									ul
 										li(ng-repeat='record in vm.getStackTrace() track by $index', style='padding-left: [[record.depth]]em;')
-										| [[record.label]] : [[record.value]]
+											| [[record.label]] : [[record.value]]
