@@ -6,7 +6,7 @@ module.exports = (grunt)->
 		pkg: grunt.file.readJSON('package.json')
 		uglify:
 			options:
-				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+				banner: '/*! Chorégraphie <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 			dist:
 				options:
 					mangle : true
