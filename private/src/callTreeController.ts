@@ -617,7 +617,7 @@ module CallTree {
 
 			// EVENEMENTS. On utilise $.on afin de disposer de $.off, la méthode native est plus (trop) contraignante.
 
-			this.$jQwindow.on('resize', () => { this.onWindowResize(); });
+			$(window).on('resize', () => { this.onWindowResize(); });
 			var $canvas: JQuery = $(this.canvas);
 			$canvas.on('mousedown', (event) => { this.onDocumentMouseDown(event); });
 			$canvas.on('mouseup', (event) => { this.onDocumentMouseUp(event); });
@@ -909,8 +909,10 @@ module CallTree {
 		private renderParallel(callback: any) {
 
 			var texts: boolean = false;
+			var resize: boolean = false;
+
 			function next() {
-				if (callback && texts) {
+				if (callback && texts && resize) {
 					callback();
 				}
 			}
@@ -923,6 +925,13 @@ module CallTree {
 					text3D.lookAt(this.camera.position);
 				});
 				texts = true;
+				next();
+			});
+
+			setTimeout(() => {
+				// Update aspect ratio
+				this.onWindowResize();
+				resize = true;
 				next();
 			});
 

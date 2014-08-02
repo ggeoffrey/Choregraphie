@@ -97389,7 +97389,7 @@ var CallTree;
             this.controls.staticMoving = true;
             this.controls.dynamicDampingFactor = 0.3;
 
-            this.$jQwindow.on('resize', function () {
+            $(window).on('resize', function () {
                 _this.onWindowResize();
             });
             var $canvas = $(this.canvas);
@@ -97583,8 +97583,10 @@ var CallTree;
         CallTreeController.prototype.renderParallel = function (callback) {
             var _this = this;
             var texts = false;
+            var resize = false;
+
             function next() {
-                if (callback && texts) {
+                if (callback && texts && resize) {
                     callback();
                 }
             }
@@ -97594,6 +97596,12 @@ var CallTree;
                     text3D.lookAt(_this.camera.position);
                 });
                 texts = true;
+                next();
+            });
+
+            setTimeout(function () {
+                _this.onWindowResize();
+                resize = true;
                 next();
             });
         };
