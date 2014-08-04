@@ -11,11 +11,9 @@ class exports
     
     @getEvents :  (callback) ->
         connector.getEvents(callback)
-    
 
     @setEvent : (callback, event)->
         connector.setEvent(callback, event)
-    
 
     @getOverviewData :  (callback) ->
         connector.getOverviewData(callback)
@@ -27,7 +25,6 @@ class exports
 
     @getTrend :  (callback, options) ->
         connector.getTrend(callback, false, options)
-    
 
     @getCalls :  (callback) ->
         connector.getCalls(callback, false)

@@ -4,6 +4,7 @@ async = require 'async'
 Call = require './Call'
 Node = require './Node'
 Link = require './Link'
+Event = require './Event'
 
 
 
@@ -96,7 +97,7 @@ class Connector
 					query = client.query queryText
 					result = []
 
-					query.on 'row', (row)-> result.push row
+					query.on 'row', (row)-> result.push new Event(row)
 
 					query.on 'end', ->
 						callback(result)
@@ -108,7 +109,7 @@ class Connector
 			else
 				callback(Connector.cache.events)
 		
-		@setEvent : (callback, events) ->
+		@setEvent : (callback, event) ->
 
 			queryText = "
 				UPDATE ccol.metric_events
@@ -221,20 +222,29 @@ class Connector
 					
 
 		@getHistory : (callback, forceUpdate, options)->
+
+			if options.app is 'all' and options.corridor is 'all'
+				options.app = '%'
+				options.corridor = '%'
+
+			if not options.limit?
+				options.limit = null
+
 			queryTextRecords =  " 
 					SELECT codeapp, couloir, start_time as startTime, code, codetype, value
 					FROM ccol.metric_value
 					WHERE code <> 'INCONNUE' 
 					AND codetype NOT LIKE 'nb_appelFI' 
-					AND codeapp = $1 
-					AND couloir = $2 
+					AND codeapp LIKE $1 
+					AND couloir LIKE $2 
 					ORDER BY startTime ASC
+					LIMIT $3
 					;
 				"
 
 			getRecords = (next)->
 				Connector.getClient (client)->
-					query = client.query(queryTextRecords, [options.app, options.corridor])
+					query = client.query(queryTextRecords, [options.app, options.corridor, options.limit])
 					result = []
 
 					query.on 'row', (row)-> result.push(row)
@@ -248,15 +258,16 @@ class Connector
 				FROM ccol.metric_value
 				WHERE code <> 'INCONNUE'
 				AND codetype LIKE 'nb_transaction_http'
-				AND codeapp = $1
-				AND couloir = $2
+				AND codeapp LIKE $1
+				AND couloir LIKE $2
 				ORDER BY startTime ASC
+				LIMIT $3
 				;
 			"
 
 			getCalls = (next)->
 				Connector.getClient (client)->
-					query = client.query(queryTextCalls, [options.app, options.corridor])
+					query = client.query(queryTextCalls, [options.app, options.corridor, options.limit])
 					result = []
 
 					query.on 'row', (row) -> result.push(row)

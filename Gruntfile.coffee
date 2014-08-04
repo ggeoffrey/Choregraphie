@@ -115,6 +115,21 @@ module.exports = (grunt)->
 				options:
 					script : "./bin/www"
 					background: true
+
+		mochaTest:
+			test:
+				options:
+					reporter: 'spec'
+					require:[
+						'coffee-script/register'
+						-> should =require('should')
+						#'./globals.js',
+					]
+				src: [
+					'tests/**/*.coffee'
+					'modules/**/tests/**/*.coffee'
+				]
+
 				
 
 	grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -125,10 +140,13 @@ module.exports = (grunt)->
 	grunt.loadNpmTasks 'grunt-typescript'
 	grunt.loadNpmTasks 'grunt-contrib-jshint'
 	grunt.loadNpmTasks 'grunt-express-server'
+	grunt.loadNpmTasks 'grunt-mocha-test'
 
 	grunt.registerTask('prod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'uglify', 'copy:jscss', 'clean:final'])
 	grunt.registerTask('preprod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'copy:jscss'])
 	grunt.registerTask('dev', ['clean:dev', 'typescript:client', 'concat:dev', 'copy:jscss'])
 	
+	grunt.registerTask 'test', ['mochaTest']
+
 	grunt.registerTask('default', ['prod'])
 
