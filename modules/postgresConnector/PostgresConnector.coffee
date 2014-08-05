@@ -32,7 +32,7 @@ class Connector
 			if err?
 				console.warn(err)
 			else
-				callback(client)
+				callback(client, done)
 
 
 	class @PgConnector
@@ -45,7 +45,7 @@ class Connector
 			"
 
 			if not Connector.cache.applications? or forceUpdate is on
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query queryText
 					result = []
 
@@ -53,7 +53,7 @@ class Connector
 
 					query.on 'end', ->
 						callback(result)
-						client.end()
+						done()
 						Connector.cache.applications = result
 
 					query.on 'error', (err) -> console.log(err)
@@ -69,7 +69,7 @@ class Connector
 			"
 
 			if not Connector.cache.corridors? or forceUpdate is on
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query queryText
 					result = []
 
@@ -77,7 +77,7 @@ class Connector
 
 					query.on 'end', ->
 						callback(result)
-						client.end()
+						done()
 						Connector.cache.corridors = result
 
 					query.on 'error', (err) -> console.log(err)
@@ -93,7 +93,7 @@ class Connector
 				;
 			"
 			if not Connector.cache.events? or forceUpdate is on
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query queryText
 					result = []
 
@@ -101,7 +101,7 @@ class Connector
 
 					query.on 'end', ->
 						callback(result)
-						client.end()
+						done()
 						Connector.cache.events = result
 
 					query.on 'error', (err) -> console.log(err)
@@ -118,17 +118,22 @@ class Connector
 				;
 			"
 
-			Connector.getClient (client)->
-				query = client.query queryText, [event.seen, event.deleted, event.id], (err, result)->
-					if err?
-						callback(false)
-						console.log(err)
-					else
-						callback(true)
-
-				query.on 'end', ->
+			
+			Connector.getClient (client, done)->
+				query = client.query queryText, [event.seen, event.deleted, event.id]		
+		
+				query.on 'end', (result)->
+					
+					callback(result.rowCount > 0)				
 					delete Connector.cache.events
-					client.end()
+					done()
+		
+				query.on 'error', (err)->
+					throw err
+			
+				
+
+
 
 		
 		@getOverviewData : (callback, forceUpdate)->
@@ -149,7 +154,7 @@ class Connector
 			if Connector.cache.overviewData? and not forceUpdate?
 				callback(Connector.cache.overviewData)
 			else
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query(queryText)
 					result = []
 
@@ -157,7 +162,7 @@ class Connector
 					query.on 'error', (err)-> console.warn(err)
 					query.on 'end', ->
 						groupByApplication(result)
-						client.end()
+						done()
 
 				computeAbsMax = (array)->
 					max = -Infinity
@@ -243,7 +248,7 @@ class Connector
 				"
 
 			getRecords = (next)->
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query(queryTextRecords, [options.app, options.corridor, options.limit])
 					result = []
 
@@ -251,7 +256,7 @@ class Connector
 					query.on 'error', (error)-> console.warn(error)
 					query.on 'end', ->
 						next(null, result)
-						client.end()
+						done()
 
 			queryTextCalls = "
 				SELECT codeapp, couloir, start_time as startTime, code, codetype, value
@@ -266,7 +271,7 @@ class Connector
 			"
 
 			getCalls = (next)->
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query(queryTextCalls, [options.app, options.corridor, options.limit])
 					result = []
 
@@ -274,7 +279,7 @@ class Connector
 					query.on 'error', (error)-> console.warn(error)
 					query.on 'end', ->
 						next(null, result)
-						client.end()
+						done()
 
 
 			async.parallel
@@ -303,6 +308,7 @@ class Connector
 
 
 		@getTrend : (callback, forceUpdate, options)->
+
 			queryText = " 
 				SELECT codetype, start_time as starttime, somme, average, stddev, sante
 				FROM ccol.metric_stats 
@@ -311,7 +317,7 @@ class Connector
 				;
 			"
 
-			Connector.getClient (client)->
+			Connector.getClient (client, done)->
 				query = client.query(queryText, [options.app, options.corridor])
 				result = []
 
@@ -319,7 +325,7 @@ class Connector
 				query.on 'error', (error)-> console.warn(error)
 				query.on 'end', ->
 					next(result)
-					client.end()
+					done()
 
 			next = (result)->
 				mapper = {}
@@ -354,7 +360,7 @@ class Connector
 			if Connector.cache.calls? and not forceUpdate?
 				callback(Connector.cache.calls)
 			else
-				Connector.getClient (client)->
+				Connector.getClient (client, done)->
 					query = client.query(queryText)
 					result = []
 
@@ -362,7 +368,7 @@ class Connector
 					query.on 'error', (error)-> console.warn(error)
 					query.on 'end', ->
 						next(result)
-						client.end()
+						done()
 
 			next = (data)->
 				calls = []

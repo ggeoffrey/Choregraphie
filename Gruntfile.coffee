@@ -117,9 +117,9 @@ module.exports = (grunt)->
 					background: true
 
 		mochaTest:
-			test:
+			server:
 				options:
-					reporter: 'spec'
+					reporter: 'nyan'
 					require:[
 						'coffee-script/register'
 						-> should =require('should')
@@ -127,6 +127,7 @@ module.exports = (grunt)->
 					]
 				src: [
 					'tests/**/*.coffee'
+					'modules/*Connector/tests/**/*.coffee'
 					'modules/**/tests/**/*.coffee'
 				]
 
@@ -146,7 +147,7 @@ module.exports = (grunt)->
 	grunt.registerTask('preprod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'copy:jscss'])
 	grunt.registerTask('dev', ['clean:dev', 'typescript:client', 'concat:dev', 'copy:jscss'])
 	
-	grunt.registerTask 'test', ['mochaTest']
+	grunt.registerTask 'test', ['mochaTest:server']
 
 	grunt.registerTask('default', ['prod'])
 

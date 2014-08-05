@@ -1,117 +1,241 @@
-assert = require 'assert'
 api = require '../api'
 
 describe 'Api', ->
 	it 'should be ready in less than 5000ms', (done)->
 		@timeout 5000
-		api.getApplications (stringArray) =>
+		api.getApplications (stringArray) ->
 			done()
 
-	describe 'methods', ->
-		it 'should contains the function getApplications', ->
-			api.should.have.property 'getApplications'
-			api.getApplications.should.be.a.Function
-
-		it 'should contains the function getCorridors', ->
-			api.should.have.property 'getCorridors'
-			api.getCorridors.should.be.a.Function
-
-		it 'should contains the function getEvents', ->
-			api.should.have.property 'getEvents'
-			api.getEvents.should.be.a.Function
-
-		it 'should contains the function setEvent', ->
-			api.should.have.property 'setEvent'
-			api.setEvent.should.be.a.Function
-
-		it 'should contains the function getOverviewData', ->
-			api.should.have.property 'getOverviewData'
-			api.getOverviewData.should.be.a.Function
-
-		it 'should contains the function getHistory', ->
-			api.should.have.property 'getHistory'
-			api.getHistory.should.be.a.Function
-
-		it 'should contains the function getTrend', ->
-			api.should.have.property 'getTrend'
-			api.getTrend.should.be.a.Function
-
-		it 'should contains the function getCalls', ->
-			api.should.have.property 'getCalls'
-			api.getCalls.should.be.a.Function
+	describe 'method',->
 
 		# returned data
 
-		it 'getApplications should return an array of strings ', (done)->
-			
-			api.getApplications (stringArray) ->
-				stringArray.should.be.an.Array.and.should.not.be.empty
-				for supposedString in stringArray
-					supposedString.should.be.a.String
+		describe 'getApplications', ->
+			it 'should be a Function', ->
+				api.getApplications.should.be.a.Function
+			it 'should return an array of strings ', (done)->
+				
+				api.getApplications (stringArray) ->
+					stringArray.should.be.an.Array.and.should.not.be.empty
+					for supposedString in stringArray
+						supposedString.should.be.a.String
 
-				done()
-
-		it 'getCorridors should return an array of strings ', (done)->
-			
-			api.getCorridors (stringArray) ->
-				stringArray.should.be.an.Array.and.should.not.be.empty
-				for supposedString in stringArray
-					supposedString.should.be.a.String
-				done()
-
-		it 'getEvents should return an array of Events ', (done)->
-			
-			api.getEvents (eventArray) ->
-				eventArray.should.be.an.Array.and.should.not.be.empty
-
-				for supposedEvent, index in eventArray
-
-					if index % 2 is 0					
-						supposedEvent.should.have.keys [
-							'id'
-							'codeapp' # TODO should be changed to application
-							'couloir' # TODO should be changed to corridor
-							'codetype'
-							'start_time' # TODO should be changed to starttime
-							'seen'
-							'deleted'
-							'old_value'
-							'value'
-							'diff_stddev'
-							'type'
-						]
-				done()
-
-		it 'setEvent should return true', (done)->
-			api.getEvents (eventArray)->
-				random = (Math.random() * eventArray.length + 1) // 1 # // -> Math.floor(x/y)
-				event = eventArray[random]
-
-				next = (result)->
-					result.should.be.ok
 					done()
-				# we doesn't change the event to avoid corruption
-				api.setEvent next, event
 
-		it 'getHistory should return an array of Values', (done)->
+			it 'should throw an exception on bad params ', ->
+				api.getApplications.bind(null, null).should.throw()
+
+		describe 'getCorridors', ->
+			it 'should be a Function', ->
+				api.getCorridors.should.be.a.Function
+
+			it 'should return an array of strings ', (done)->
+				
+				api.getCorridors (stringArray) ->
+					stringArray.should.be.an.Array.and.should.not.be.empty
+					for supposedString in stringArray
+						supposedString.should.be.a.String
+					done()
+
+			it 'should throw an exception on bad params ', ->
+				api.getCorridors.bind(null, null).should.throw()
+
+		describe 'getEvents', ->
+			it 'should be a Function', ->
+				api.getEvents.should.be.a.Function
+
+			it 'should return an array of Events ', (done)->
+				
+				api.getEvents (eventArray) ->
+					eventArray.should.be.an.Array.and.should.not.be.empty
+
+					for supposedEvent, index in eventArray
+
+						if index % 2 is 0				
+							#console.log supposedEvent if supposedEvent.codeapp is 'ACIN'	
+							supposedEvent.should.have.keys [
+								'id'
+								'codeapp' # TODO should be changed to application
+								'couloir' # TODO should be changed to corridor
+								'codetype'
+								'start_time' # TODO should be changed to starttime
+								'seen'
+								'deleted'
+								'old_value'
+								'value'
+								'diff_stddev'
+								'type'
+							]
+					done()
+			it 'should throw an exception on bad params ', ->
+				next = (result)->
+					console.log result
+				api.getEvents.bind(null, null).should.throw()
 			
-			options =
-				app : 'all'
-				corridor : 'all'
-				limit: 1000
 
-			next = (valuesArray)->
-				valuesArray.should.be.an.Array
-				done()
+		describe 'setEvent', ->
+			it 'should be a Function', ->
+				api.setEvent.should.be.a.Function
 
-			api.getHistory next, options
+			it 'should return true', (done)->
+				api.getEvents (eventArray)->
+					random = (Math.random() * eventArray.length + 1) // 1 # // -> Math.floor(x/y)
+					event = eventArray[random]
+
+					next = (result)->
+						result.should.be.ok
+						done()
+					# we doesn't change the event to avoid corruption
+					api.setEvent next, event
+
+			it 'should return false on update fail', (done)->
+				api.getEvents (eventArray)->
+					random = (Math.random() * eventArray.length + 1) // 1 # // -> Math.floor(x/y)
+					event = eventArray[random]
+
+					event.id = -1
+
+					next = (result)->
+						console.log
+						result.should.not.be.ok
+						done()
+					api.setEvent next, event
+
+			it 'should throw an exception on bad params', ->
+				api.getEvents (eventArray)->
+					random = (Math.random() * eventArray.length + 1) // 1 # // -> Math.floor(x/y)
+					event = eventArray[random]
+
+					event.id = -1
+					event.seen = 'banana'
+					
+					next = (value)-> value
+					api.setEvent.bind(next, event).should.throw()
+					
+
+		describe 'getHistory', ->
+			it 'should be a Function', ->
+				api.getHistory.should.be.a.Function
+
+			it 'should return an array of Values', (done)->
+				
+				options =
+					app : 'all'
+					corridor : 'all'
+					limit: 1000
+
+				next = (valuesArray)->
+					valuesArray.should.be.an.Array
+					done()
+
+				api.getHistory next, options
+
+			it 'should return an empty array on inexistant params', (done)->
+				
+				options =
+					app : 'yolo'
+					corridor : 'swag'
+					limit: 1000
+
+				next = (valuesArray)->
+					valuesArray.should.be.an.Array.and.be.empty
+					done()
+
+				api.getHistory next, options
+
+			it 'should throw an exception on bad params',->
+				
+				next = (valuesArray)->
+					console.log valuesArray
+					done()
+				
+				api.getHistory.bind(null, next).should.throw()
+				
+
+			it 'should throw an exception on bad callback', ->
+				api.getHistory.bind(null).should.throw()
+
+		describe 'getTrend', ->
+			it 'should be a Function', ->
+				api.getTrend.should.be.a.Function
+
+			it 'getTrend should return an empty object on bad params', (done)->
+				
+				options =
+					app : 'all'
+					corridor : 'all'
 
 
+				next = (values)->
+					values.should.be.an.Object#.and.should.be.empty
+					done()
 
+				api.getTrend next, options
+
+			it 'getTrend should return an Object containing Values', (done)->
+
+				options =
+					app : 'VMIR'
+					corridor : 'X_00'
+
+				next = (values)->
+					values.should.be.an.Object.and.should.not.be.empty
+					for key, value of values
+						key.should.be.a.String
+						value.should.be.an.Array
+						for item in value
+							item.should.be.an.Object
+							item.should.have.keys [
+								'somme'
+								'average'
+								'stddev'
+								'starttime'
+							]
+							item.somme.should.be.a.Number.and.greaterThan -1
+							item.average.should.be.a.Number.and.greaterThan -1
+							item.stddev.should.be.a.Number.and.greaterThan -1
+							item.starttime.should.be.Date
+							
+					done()
+				api.getTrend next, options
+
+			it 'should throw an exception on bad params', ->
+				api.getTrend.bind(null, null).should.throw()
+
+			it 'should throw an exception on bad params values', ->
+				options = 
+					yolo: 'swag'
+				api.getTrend.bind(null, null, options).should.throw()
+
+		describe 'getOverviewData', ->
+
+			it 'should be a Function', ->
+				api.getOverviewData.should.be.a.Function
+
+			it 'should return an array', ->
+				api.getOverviewData (data)->
+					data.should.be.an.Array
+					for item in data
+						item.should.have.keys [
+							'codeapp'
+							'couloir'
+							'codetype'
+							'start_time'
+							'value'
+							'sante'
+							'types'
+						]
+						item.codeapp.should.be.a.String
+						item.couloir.should.be.a.String
+						item.codetype.should.be.a.String
+						item.start_time.should.be.a.String
+						item.value.should.be.a.String
+						item.sante.should.be.a.String
+						item.types.should.be.an.Object
+
+			it 'should throw an exception on bad callback', ->
+				api.getOverviewData.bind(null, null).should.throw()
 ###	
-		it 'getOverviewData should return  an object', ->
-			api.should.have.property 'getOverviewData'
-			api.getOverviewData.should.be.a.Function
 
 		it 'getHistory should return  an array of objects', ->
 			api.should.have.property 'getHistory'

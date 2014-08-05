@@ -1,18 +1,16 @@
 assert = require 'assert'
 config = require '../config'
 
-describe 'Config', ->
-	describe 'type', ->
+describe 'Global', ->
+	describe 'config', ->
 		it 'should be an object', ->
 			config.should.be.an.Object
 
-	describe 'content', ->
+	
 		it 'should contain at least one port to listen', ->
 			config.should.have.property 'port'
 
 		describe 'port', ->
-			it 'should be a number', ->
-				config.port.should.be.a.Number
 
 			it 'should be an Integer', ->
 				rest = config.port %% 1  
