@@ -2,21 +2,8 @@ module.exports = (grunt)->
 	publicPath = './public'
 	privatePath = './private'
 
-	grunt.initConfig
-		pkg: grunt.file.readJSON('package.json')
-		uglify:
-			options:
-				banner: '/*! Chorégraphie <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-			dist:
-				options:
-					mangle : true
-				files:
-					'./public/javascripts/<%= pkg.name %>.js': ['<%= concat.prod.dest %>']
-		concat:
-			options:
-				separator: '\n'
-			dev: 
-				src: [
+
+	vendorsList = [
 					"#{privatePath}/vendors/jquery-1.11.1.js"
 					"#{privatePath}/vendors/bootstrap/bootstrap.js"
 					"#{privatePath}/vendors/d3.js"
@@ -37,11 +24,48 @@ module.exports = (grunt)->
 					"#{privatePath}/vendors/Ease.js"
 					"#{privatePath}/vendors/lz-string-1.3.3-min.js"
 				]
-				dest: "#{publicPath}/javascripts/vendors.js"
+	vendorsDest = "#{publicPath}/javascripts/vendors.js"
+
+	clientList = [
+		"#{privatePath}/src/database.ts"
+		"#{privatePath}/src/main.ts"
+		"#{privatePath}/src/*.ts"
+	]
+
+	clientDest = "#{publicPath}/javascripts/choregraphie.js"
+
+	clientOptions = 
+		module: 'commonjs'
+		target: 'es5'
+		sourceMap: false
+		declaration: false
+
+	grunt.initConfig
+		pkg: grunt.file.readJSON('package.json')
+		uglify:
+			options:
+				banner: '/*! Chorégraphie <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+			dist:
+				options:
+					mangle : true
+				files:
+					'./public/javascripts/<%= pkg.name %>.js': ['<%= concat.prod.dest %>']
+		concat:
+			options:
+				separator: '\n'
+			dev: 
+				src: vendorsList
+				dest: vendorsDest
+			test:
+				src: vendorsList.concat [
+					"#{privatePath}/vendors/should.js"
+					"#{privatePath}/vendors/mocha.js"
+				]
+				dest: vendorsDest
 
 			prod: 
 				src: [
-					"#{publicPath}/javascripts/vendors.js",
+					"#{publicPath}/javascripts/vendors.js"
 					"#{publicPath}/javascripts/choregraphie.js"
 				]
 				dest: "#{publicPath}/javascripts/choregraphie.js"
@@ -74,37 +98,31 @@ module.exports = (grunt)->
 		
 		typescript: 
 			client: 
-				src: ["#{privatePath}/src/database.ts", "#{privatePath}/src/main.ts", "#{privatePath}/src/*.ts"]
-				dest: "#{publicPath}/javascripts/choregraphie.js"
-				options: 
-					module: 'commonjs'
-					target: 'es5'
-					sourceMap: false
-					declaration: false
-				
-			
+				src: clientList
+				dest: clientDest
+				options: clientOptions
+					
+			preprod: 
+				src: clientList.concat [
+					"#{privatePath}/tests/*.ts"
+				]
+				dest: clientDest
+				options: clientOptions			
 		
 		watch: 
 			all: 
 				files: ['./app.js', './modules/**/*.js', "#{privatePath}/src/*.ts", "#{publicPath}/**"],
-				tasks: ['jshint', 'typescript:client', 'express:dev']
+				tasks: ['typescript:client', 'express:dev']
 			
 			client:
 				files: ["#{privatePath}/src/**/*.ts"]
 				tasks: ['typescript:client']
 
 			server: 
-				files: ['./app.js', './modules/**/*.js'],
-				tasks: ['jshint', 'express:dev'],
+				files: ['./app.js', './modules/**/*.coffee']
+				tasks: ['express:dev']
 				options: 
 					spawn: false # for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions. Without this option specified express won't be reloaded
-				
-		jshint: 
-			ignore_warning: 
-				options: 
-					'-W015': true
-				
-				src: [ './app.js' , './modules/**/*.js','./routes/**/*.js' ]
 		
 		express:
 			options:   
@@ -122,7 +140,7 @@ module.exports = (grunt)->
 					reporter: 'nyan'
 					require:[
 						'coffee-script/register'
-						-> should =require('should')
+						-> should = require('should')
 						#'./globals.js',
 					]
 				src: [
@@ -139,12 +157,11 @@ module.exports = (grunt)->
 	grunt.loadNpmTasks 'grunt-contrib-copy'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.loadNpmTasks 'grunt-typescript'
-	grunt.loadNpmTasks 'grunt-contrib-jshint'
 	grunt.loadNpmTasks 'grunt-express-server'
 	grunt.loadNpmTasks 'grunt-mocha-test'
 
 	grunt.registerTask('prod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'uglify', 'copy:jscss', 'clean:final'])
-	grunt.registerTask('preprod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'copy:jscss'])
+	grunt.registerTask('preprod', ['clean:prod', 'typescript:preprod', 'concat:test', 'concat:prod', 'copy:jscss'])
 	grunt.registerTask('dev', ['clean:dev', 'typescript:client', 'concat:dev', 'copy:jscss'])
 	
 	grunt.registerTask 'test', ['mochaTest:server']
