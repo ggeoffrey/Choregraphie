@@ -115,7 +115,9 @@ module.exports = (grunt)->
 				tasks: ['typescript:client', 'express:dev']
 			
 			client:
-				files: ["#{privatePath}/src/**/*.ts"]
+				files: [
+					"#{privatePath}/src/**/*.ts"
+				]
 				tasks: ['typescript:client']
 
 			server: 
@@ -123,6 +125,13 @@ module.exports = (grunt)->
 				tasks: ['express:dev']
 				options: 
 					spawn: false # for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions. Without this option specified express won't be reloaded
+
+			tests:
+				files: [
+					"#{privatePath}/src/**/*.ts"
+					"#{privatePath}/tests/**/*.ts"
+				]
+				tasks: ['preprod']
 		
 		express:
 			options:   

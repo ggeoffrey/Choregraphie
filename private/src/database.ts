@@ -10,7 +10,12 @@ module Server {
 		private socket : any;
 
 		constructor(){
-			this.socket = io.connect();
+			try{
+				this.socket = io.connect();
+			}
+			catch(err){
+				console.error(err);
+			}
 		}
 
 		private decompress(lzEncodedBase64String: string ): any {

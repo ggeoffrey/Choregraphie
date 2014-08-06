@@ -105198,7 +105198,11 @@ var Server;
 (function (Server) {
     var Database = (function () {
         function Database() {
-            this.socket = io.connect();
+            try  {
+                this.socket = io.connect();
+            } catch (err) {
+                console.error(err);
+            }
         }
         Database.prototype.decompress = function (lzEncodedBase64String) {
             var decompressedJSON = LZString.decompressFromBase64(lzEncodedBase64String);
@@ -105351,11 +105355,6 @@ window.objectSize = function (object) {
     window.ChoregraphieControllers = angular.module('ChoregraphieControllers', []);
 })();
 
-$(document).ready(start);
-
-function start() {
-}
-
 var $loader = $(".loader");
 
 var loadCount = 0;
@@ -105384,14 +105383,6 @@ function startLoader() {
 
     return loadCount;
 }
-
-window.snapperExpanded = false;
-window.toggleEvents = function () {
-    return;
-};
-window.toggleConfig = function () {
-    return;
-};
 
 var Main;
 (function (Main) {
@@ -105433,10 +105424,7 @@ var Main;
                 {
                     label: "Events",
                     href: '#/events',
-                    classes: 'glyphicon glyphicon-certificate',
-                    click: function () {
-                        window.toggleEvents();
-                    }
+                    classes: 'glyphicon glyphicon-certificate'
                 }, {
                     label: "History",
                     href: '#/history',
@@ -105449,10 +105437,10 @@ var Main;
                 }
             ];
 
-            this.getMeteo();
+            this.getWeather();
 
             setInterval(function () {
-                _this.getMeteo(true);
+                _this.getWeather(true);
             }, 7200000);
 
             this.rangeTransition = d3.scale.linear().domain([0, 100]).range([this.maxDuration, this.minDuration]);
@@ -105470,35 +105458,35 @@ var Main;
             configurable: true
         });
 
-        MainController.prototype.getMeteo = function (update) {
+        MainController.prototype.getWeather = function (update) {
             var _this = this;
             var next = function () {
-                if (_this.meteo) {
-                    _this.luminosity = 100 - _this.meteo.clouds.all;
-                    _this.sunRise = new Date(_this.meteo.sys.sunrise);
-                    _this.sunSet = new Date(_this.meteo.sys.sunset);
-                    _this.sunEndRise = new Date(_this.meteo.sys.sunrise);
+                if (_this.weather) {
+                    _this.luminosity = 100 - _this.weather.clouds.all;
+                    _this.sunRise = new Date(_this.weather.sys.sunrise);
+                    _this.sunSet = new Date(_this.weather.sys.sunset);
+                    _this.sunEndRise = new Date(_this.weather.sys.sunrise);
                     _this.sunEndRise.setHours(_this.sunEndRise.getHours() + 2);
-                    _this.sunBeginSet = new Date(_this.meteo.sys.sunset);
+                    _this.sunBeginSet = new Date(_this.weather.sys.sunset);
                     _this.sunBeginSet.setHours(_this.sunBeginSet.getHours() - 2);
 
-                    _this.iconUrl = 'http://openweathermap.org/img/w/' + _this.meteo.weather[0].icon + '.png';
+                    _this.iconUrl = 'http://openweathermap.org/img/w/' + _this.weather.weather[0].icon + '.png';
                 }
 
                 if (!_this.scope.$$phase)
                     _this.scope.$apply();
             };
 
-            var meteo = sessionStorage.getItem('meteo');
-            if (meteo && !update) {
-                this.meteo = JSON.parse(meteo);
+            var weather = sessionStorage.getItem('weather');
+            if (weather && !update) {
+                this.weather = JSON.parse(weather);
                 next();
             } else {
                 $.get('http://api.openweathermap.org/data/2.5/weather?q=Metz,FR').done(function (data) {
-                    sessionStorage.setItem('meteo', JSON.stringify(data));
+                    sessionStorage.setItem('weather', JSON.stringify(data));
                     data.sys.sunrise *= 1000;
                     data.sys.sunset *= 1000;
-                    _this.meteo = data;
+                    _this.weather = data;
 
                     next();
                 });
@@ -105508,7 +105496,7 @@ var Main;
         MainController.prototype.getTransitionDuration = function () {
             var finalDuration = 0;
 
-            if (this.meteo) {
+            if (this.weather) {
                 finalDuration = this.minDuration;
                 var now = new Date();
 
@@ -105544,7 +105532,7 @@ var Main;
             this.$http = $http;
             this.window = $window;
 
-            this.couloirs = [];
+            this.corridors = [];
             this.applications = [];
 
             this.window = $window;
@@ -105553,8 +105541,8 @@ var Main;
         }
         ConfigController.prototype.init = function () {
             var _this = this;
-            this.nouveauCouloir = '';
-            this.nouvelleApplication = '';
+            this.newCorridor = '';
+            this.newApplication = '';
 
             function formatData(data) {
                 var dataArray = [];
@@ -105582,12 +105570,12 @@ var Main;
             window.startLoader();
 
             window.Database.getCorridors(function (data) {
-                _this.couloirs = formatData(data);
+                _this.corridors = formatData(data);
                 window.stopLoader();
             });
         };
 
-        ConfigController.prototype.ajouteApplication = function (application) {
+        ConfigController.prototype.addApplication = function (application) {
             var _this = this;
             if (application) {
                 var item = application.toUpperCase();
@@ -105604,12 +105592,12 @@ var Main;
             }
         };
 
-        ConfigController.prototype.supprimeApplication = function (application) {
+        ConfigController.prototype.deleteApplication = function (application) {
             var _this = this;
             if (application) {
                 var item = application.toUpperCase();
                 if (this.applications.indexOf(item) > -1) {
-                    if (window.confirm("Voulez vous vraiment supprimer " + item + "?")) {
+                    if (window.confirm("Did you confirm the deletion of " + item + "?")) {
                         window.startLoader();
                         this.$http.get("api/set/config?action=delete&target=application&value=" + item).success(function (data) {
                             _this.init();
@@ -105623,13 +105611,13 @@ var Main;
             }
         };
 
-        ConfigController.prototype.ajouteCouloir = function (couloir) {
+        ConfigController.prototype.addCorridor = function (corridor) {
             var _this = this;
-            if (couloir) {
-                var item = couloir.toUpperCase();
-                if (this.couloirs.indexOf(item) === -1 && (item.length === 4 || item.length === 5)) {
+            if (corridor) {
+                var item = corridor.toUpperCase();
+                if (this.corridors.indexOf(item) === -1 && (item.length === 4 || item.length === 5)) {
                     window.startLoader();
-                    this.$http.get("api/set/config?action=add&target=couloir&value=" + item).success(function (data) {
+                    this.$http.get("api/set/config?action=add&target=corridor&value=" + item).success(function (data) {
                         _this.init();
                         window.stopLoader();
                         _this.askRefresh();
@@ -105640,14 +105628,14 @@ var Main;
             }
         };
 
-        ConfigController.prototype.supprimeCouloir = function (couloir) {
+        ConfigController.prototype.deleteCorridor = function (corridor) {
             var _this = this;
-            if (couloir) {
-                var item = couloir.toUpperCase();
-                if (this.couloirs.indexOf(item) > -1) {
-                    if (window.confirm("Voulez vous vraiment supprimer " + item + "?")) {
+            if (corridor) {
+                var item = corridor.toUpperCase();
+                if (this.corridors.indexOf(item) > -1) {
+                    if (window.confirm("Did you confirm the deletion of " + item + "?")) {
                         window.startLoader();
-                        this.$http.get("api/set/config?action=delete&target=couloir&value=" + item).success(function (data) {
+                        this.$http.get("api/set/config?action=delete&target=corridor&value=" + item).success(function (data) {
                             _this.init();
                             window.stopLoader();
                             _this.askRefresh();
@@ -105660,11 +105648,11 @@ var Main;
         };
 
         ConfigController.prototype.askRefresh = function () {
-            if (confirm("Vous devez recharger la page pour que les modifications soit prisent en compte dans les données. Recharger maintenant?"))
+            if (confirm("You must reload the page to complete the changes you made. Reload *now*? "))
                 location.reload();
         };
 
-        ConfigController.prototype.verifierExistant = function (item, type) {
+        ConfigController.prototype.checkExists = function (item, type) {
             var found = !item;
             if (item) {
                 if (type === 'application' && item.length !== 4) {
@@ -105674,8 +105662,8 @@ var Main;
                 } else {
                     item = item.toUpperCase();
 
-                    for (var i = 0; i < this.couloirs.length; i++) {
-                        if (this.couloirs[i] === item) {
+                    for (var i = 0; i < this.corridors.length; i++) {
+                        if (this.corridors[i] === item) {
                             found = true;
                             break;
                         }
@@ -108848,3 +108836,136 @@ var Overview;
             $scope.vm = new Overview.OverviewController($scope, $http, eventsController);
         }]);
 })();
+mocha.setup('bdd');
+
+describe('Database', function () {
+    it('should be ready in less than 5s', function (done) {
+        this.timeout(5000);
+        window.Database.getApplications(function (data) {
+            done();
+        });
+    });
+    describe('decompress', function () {
+        it('should be a Function', function () {
+            Should(window.Database.decompress).be.a.Function;
+        });
+        it('should return an object decompressed from LZ algorithm', function () {
+            var compressed = LZString.compressToBase64(JSON.stringify({ yolo: 'swag' }));
+            var decompressed = window.Database.decompress(compressed);
+
+            Should(decompressed.yolo).be.exactly('swag');
+        });
+
+        it('should throw an exception on bad params', function () {
+            var func = window.Database.decompress.bind(null, null);
+            Should(func).throw();
+        });
+    });
+    describe('getApplication', function () {
+        it('should be a Function', function () {
+            Should(window.Database.getApplications).be.a.Function;
+        });
+        it('should return an array of strings', function (done) {
+            window.Database.getApplications(function (data) {
+                Should(data).be.an.Array.and.not.empty;
+                data.forEach(function (value) {
+                    Should(value).be.a.String;
+                });
+                done();
+            });
+        });
+
+        it('should throw an exception on bad params', function () {
+            var func = window.Database.getApplications.bind(null, null);
+            Should(func).throw();
+        });
+    });
+    describe('getCorridors', function () {
+        it('should be a Function', function () {
+            Should(window.Database.getCorridors).be.a.Function;
+        });
+        it('should return an array of strings', function (done) {
+            window.Database.getCorridors(function (data) {
+                Should(data).be.an.Array.and.not.empty;
+                data.forEach(function (value) {
+                    Should(value).be.a.String;
+                });
+                done();
+            });
+        });
+        it('should throw an exception on bad params', function () {
+            var func = window.Database.getCorridors.bind(null, null);
+            Should(func).throw();
+        });
+    });
+});
+var Obj = (function () {
+    function Obj() {
+        this.one = 1;
+        this.two = 2;
+        this.yolo = 'swag';
+    }
+    Obj.prototype.getYolo = function () {
+        return this.yolo;
+    };
+    return Obj;
+})();
+
+describe('Main', function () {
+    describe('startLoader', function () {
+        it('should be a Function', function () {
+            Should(window.startLoader).be.a.Function;
+        });
+        it('should increment the calls counter when called ', function () {
+            var loaderPreviousState = loadCount;
+            window.startLoader();
+            Should(loadCount).be.above(loaderPreviousState);
+        });
+    });
+
+    describe('stopLoader', function () {
+        it('should be a Function', function () {
+            Should(window.stopLoader).be.a.Function;
+        });
+        it('should decrement the calls counter when called ', function () {
+            var loaderPreviousState = loadCount;
+            window.stopLoader();
+            Should(loadCount).be.below(loaderPreviousState);
+        });
+    });
+
+    describe('Array.prototype.forEach', function () {
+        it('should be a Function', function () {
+            Should(Array.prototype.forEach).be.a.Function;
+        });
+
+        it('should iterate over an array', function () {
+            var array = [1, 2, 3, 4, 5];
+            array.forEach(function (value, index) {
+                var indexOfValue = array.indexOf(value);
+                Should(indexOfValue).be.exactly(index);
+            });
+        });
+    });
+
+    describe('window.objectSize', function () {
+        it('should be a Function', function () {
+            Should(window.objectSize).be.a.Function;
+        });
+
+        it('should give the size of raw object', function () {
+            var obj = {
+                one: 1,
+                two: 2,
+                yolo: 'swag'
+            };
+
+            var size = window.objectSize(obj);
+            Should(size).be.exactly(3);
+        });
+        it('should give the size of an instantiated object', function () {
+            var size = window.objectSize(new Obj());
+            Should(size).be.exactly(3);
+        });
+    });
+});

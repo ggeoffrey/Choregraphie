@@ -2,11 +2,16 @@ doctype html
 html(ng-app='Choregraphie')
 	head
 		meta(http-equiv='X-UA-Compatible', content='IE=Edge')
-		title= 'Chorégraphie - '+title
+		meta(charset='utf-8')
+		title= 'Chorégraphie - ' + title
 		link(rel='stylesheet', type='text/css', href='/stylesheets/bootstrap/bootstrap.min.css')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/weather-icons.min.css')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/js/snap.css')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/js/angular-snap.css')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/main.css')
+		if tests
+			link(rel="stylesheet", href="/stylesheets/js/mocha.css")
+
 	body
+		
 		block content

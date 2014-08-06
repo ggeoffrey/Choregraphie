@@ -7,30 +7,28 @@
 /*	
 	main.js
 
-	Roles: 
-		- Déclarer un module Angular pour toute l'application Choregraphie
-		- Gérer les marques d'évaluation Angular {{}}
-		- Gérer le routage
-		- Déclarer le controleur de la configuration (présente sur toute les pages)
-		- Gérer des effets non dépendant d'angular et présent sur toutes les pages
-			 (ajout de boutons en barre de navigation par exemple)
+	Goals: 
+		- Create a Angular module for all the application
+		- Change Angular symbols {{}}
+		- Manage routing
+		- Create a controller for the configuration view
+		- Mange animations and effects not provided by Angular
+			 (buttons in the navbar is an exemple)
 */
 
 /*
-	Point d'entrée de l'application
-	On encapsule notre code pour le protéger des accès depuis la console
+	Entry point of the application
 
-	Modification des méthodes peut performantes:
+	Customizing some methods
 */
 
-Array.prototype.forEach = function(fn) {
+Array.prototype.forEach = function(fn) : void {
 	for (var i = 0, len = this.length; i < len; i++) {
 		fn.call(null,this[i],i,this);
 	}
 };
 
-
-window.objectSize = (object: any) : number  =>{
+window.objectSize = function(object: any) : number  {
 	var size : number = 0;
 	for(var i in object){
 		if(object.hasOwnProperty(i)){
@@ -38,7 +36,7 @@ window.objectSize = (object: any) : number  =>{
 		}
 	}
 	return size;
-}
+};
 
 
 
@@ -51,29 +49,25 @@ window.objectSize = (object: any) : number  =>{
 
 
 	/*		
-		Scope local (this)
-	*/
-	
-	/*
-		Définition du module principal, lié à /home
-		On injecte les dépendances Angular en utilisant la notation par tableau!
-		Très important car le minifieur vas remplacer les noms de variables,  mais pas le contenu des chaînes
+		Local scope (this)
+
+		Here comes the main module, bound to /home
+		Dependencies are injected with the array notation. By this way, the uglify task will not broke the code.
 	*/
 
-	// On utlise le routage, les controlleurs décalarés, et les modules
     var Choregraphie = angular.module('Choregraphie', ['ngRoute', 'ChoregraphieControllers', 'angularMoment', 'snap', 'ngAnimate'])
 		
-		.config (['$interpolateProvider', ($interpolateProvider) => { // On change les marqueurs d'évalutation {{}} -> [[]], {{}} est utilisé par Twig
+		.config (['$interpolateProvider', ($interpolateProvider) => { // We change the markers {{}} -> [[]], {{}} is used by some preprocessors
 			$interpolateProvider
 				.startSymbol('[[')
 				.endSymbol(']]')
 			}
 		])
 
-		.config ([ '$routeProvider', ($routeProvider) => { // On déclare nos routes, leurs templates récupéré par AJAX, et leurs controlleurs associés
+		.config ([ '$routeProvider', ($routeProvider) => { // This is the router. Templates are loaded via AJAX
 			$routeProvider
 			.when ('/overview',{ 
-					templateUrl: '/template/overview', // L'URL appelée est donc http://domain.tld/path_vers_.php/<templateurl>
+					templateUrl: '/template/overview',
 					controller: 'overviewController'
 				}
 			)
@@ -111,12 +105,12 @@ window.objectSize = (object: any) : number  =>{
 
 		}]);
 
-	Choregraphie.run([ '$rootScope','$location', 'amMoment', ($rootScope, $location, amMoment) => {	// Appelé à initilaisation du module
+	Choregraphie.run([ '$rootScope','$location', 'amMoment', ($rootScope, $location, amMoment) => {	// Called when the module is instantiated 
 			
 			// amMoment -> Angular-MomentMoment
 			
 
-			$rootScope.$on('$locationChangeStart', (event, current, next) => { //Lorsque la page commence à charger
+			$rootScope.$on('$locationChangeStart', (event, current, next) => { // When the page begin to load
 				
 				document.body.style.cursor = 'wait';
 
@@ -138,7 +132,7 @@ window.objectSize = (object: any) : number  =>{
 
 			});
 
-			$rootScope.$on('$routeChangeSuccess', (event, current, preview) => { //Si la page a changée avec succès (pas d'erreurs AJAX)
+			$rootScope.$on('$routeChangeSuccess', (event, current, preview) => { // if the page hase changed successfully
 				$(' #view, #snap-drawer-left, #snap-drawer-right').fadeIn(window.getTransitionDuration());
 
 				document.body.style.cursor = 'auto';
@@ -148,46 +142,27 @@ window.objectSize = (object: any) : number  =>{
 	]);
 
 
-	// On déclare le controlleur racine dans le scope global
+	// The root controller is declared in the global scope.
 
 	window.ChoregraphieControllers = angular.module('ChoregraphieControllers', []);
 
 })();
 
 /*
-	Scope Global (window)
+	Global scope (window)
 */
 
 /*
-	Actions ne nécessitant pas Angular
+	Functions the doesn't depend of Angular
 */
-
-$(document).ready( start ) // quand le DOM est pret
-
-
-function start() :void {
-
-}
-
-
-
-
-
-
 
 
 /*
-	Gestion du spinner
-	Défini dans le scope global
+	Spinner management
 */
 
 var $loader: JQuery = $(".loader");
 
-/*
-	Permet une utilisation souple: les appels demandant l'affichage incrémentent le compteur
-	Les appels demandant la disparition le décrémentent.
-	Si le compteur est à 0, le spinner disparaît
-*/
 var loadCount : number = 0;
 
 function stopLoader() : number{
@@ -218,37 +193,6 @@ function startLoader() : number {
 	return loadCount;
 }
 
-/*
-	mainController et configController situé dans la barre de navigation ou en fond
-*/
-
-window.snapperExpanded = false;
-window.toggleEvents = () : void =>{
-    return;
-	//if(!window.snapperExpanded){
-	//	window.snapper.expand('right');
-	//	window.snapperExpanded = true;				
-	//}
-	//else{
-	//	window.snapper.close();
-	//	window.snapperExpanded = false;
-	//}
-
-}
-window.toggleConfig = (): void => {
-    return;
-	//if(!window.snapperExpanded){
-	//	window.snapper.expand('left');
-	//	window.snapperExpanded = true;				
-	//}
-	//else{
-	//	window.snapper.close();
-	//	window.snapperExpanded = false;
-	//}
-
-}
-
-// Ajout d'un controlleur au controlleur racine ChoregraphieControllers, au pluriel
 
 
 
@@ -270,16 +214,16 @@ module Main {
 	 	
 
 
-	 	// Météo et fades
+	 	// weather and fades
 	 	private minDuration = 600;
 	 	private maxDuration = 4000;
 
-	 	private meteo: any;
+	 	private weather: any;
 	 	private rangeTransition: any; // D3.scale.linear
 	 	private sunRise: Date;
 		private sunSet : Date;  
-		private sunEndRise: Date; // 2h après
-		private sunBeginSet: Date; // 2h avant
+		private sunEndRise: Date; // 2h after
+		private sunBeginSet: Date; // 2h before
 		public luminosity: number;
 
 		public iconUrl: string;
@@ -313,10 +257,7 @@ module Main {
 				{
 					label: "Events",
 					href: '#/events',
-					classes: 'glyphicon glyphicon-certificate',
-					click: ()=>{
-						window.toggleEvents();
-					}
+					classes: 'glyphicon glyphicon-certificate'
 				},{
 					label: "History",
 					href: '#/history',
@@ -333,11 +274,11 @@ module Main {
 
             
 
-			this.getMeteo();
+			this.getWeather();
 
 			setInterval(()=>{
-				this.getMeteo(true);
-			}, 7200000); // 2heures
+				this.getWeather(true);
+			}, 7200000); // 2h
 
 			this.rangeTransition = d3.scale.linear()
 									 .domain([0, 100])
@@ -355,37 +296,37 @@ module Main {
 		}
 		
 
-		private getMeteo(update?: boolean):void {
+		private getWeather(update?: boolean):void {
 
             var next = () => {
-                if (this.meteo) {
+                if (this.weather) {
 
-                    this.luminosity = 100 - this.meteo.clouds.all;
-                    this.sunRise = new Date(this.meteo.sys.sunrise);
-                    this.sunSet = new Date(this.meteo.sys.sunset);
-                    this.sunEndRise = new Date(this.meteo.sys.sunrise);
+                    this.luminosity = 100 - this.weather.clouds.all;
+                    this.sunRise = new Date(this.weather.sys.sunrise);
+                    this.sunSet = new Date(this.weather.sys.sunset);
+                    this.sunEndRise = new Date(this.weather.sys.sunrise);
                     this.sunEndRise.setHours(this.sunEndRise.getHours() + 2);
-                    this.sunBeginSet = new Date(this.meteo.sys.sunset);
+                    this.sunBeginSet = new Date(this.weather.sys.sunset);
                     this.sunBeginSet.setHours(this.sunBeginSet.getHours() - 2);
 
-                    this.iconUrl = 'http://openweathermap.org/img/w/' + this.meteo.weather[0].icon + '.png';
+                    this.iconUrl = 'http://openweathermap.org/img/w/' + this.weather.weather[0].icon + '.png';
                 }
                 
 				if(!this.scope.$$phase) this.scope.$apply();
 			}
 
-			var meteo = sessionStorage.getItem('meteo');
-			if(meteo && !update){
-				this.meteo = JSON.parse(meteo);
+			var weather = sessionStorage.getItem('weather');
+			if(weather && !update){
+				this.weather = JSON.parse(weather);
 				next();
 			}
 			else{
 				$.get('http://api.openweathermap.org/data/2.5/weather?q=Metz,FR')
 					.done((data)=>{
-						sessionStorage.setItem('meteo', JSON.stringify(data));
+						sessionStorage.setItem('weather', JSON.stringify(data));
 						data.sys.sunrise *= 1000;
 						data.sys.sunset *= 1000;
-						this.meteo = data;
+						this.weather = data;
 						
 						next();
 					});
@@ -396,7 +337,7 @@ module Main {
 		private getTransitionDuration(): number {
             var finalDuration: number = 0;
 
-            if (this.meteo) {
+            if (this.weather) {
                 finalDuration = this.minDuration;
                 var now: Date = new Date();
 
@@ -445,13 +386,13 @@ module Main {
 
 		private window: any;
 
-		// Membres
+		// Members
 
-		public couloirs: Array<string>;
+		public corridors: Array<string>;
 		public applications: Array<string>;
 
-		public nouveauCouloir : string;
-		public nouvelleApplication: string;
+		public newCorridor : string;
+		public newApplication: string;
 
 		constructor($scope, $http, $window) {
 
@@ -459,7 +400,7 @@ module Main {
 			this.$http = $http;
 			this.window = $window;
 
-			this.couloirs = [];
+			this.corridors = [];
 			this.applications = [];
 
 			this.window = $window;
@@ -468,12 +409,12 @@ module Main {
 		}
 
 		private init(): void {
-			this.nouveauCouloir = '';
-			this.nouvelleApplication = '';
+			this.newCorridor = '';
+			this.newApplication = '';
 
 
 			function formatData( data: any ) : Array<string>{
-				var dataArray: Array<string> = []; // Transformation des données: chaines en UpperCase et Object vers Array
+				var dataArray: Array<string> = []; // Data transformation: strings to UpperCase and Objects to Arrays
 				if(_.isObject(data)){
 					var str : string;
 					for (str in data){
@@ -499,13 +440,13 @@ module Main {
 			window.startLoader();
 
 			window.Database.getCorridors((data:string[])=>{
-				this.couloirs =  formatData(data);
+				this.corridors =  formatData(data);
 				window.stopLoader();
 			});
 		}
 
 
-		public ajouteApplication(application: string): void {
+		public addApplication(application: string): void {
 			if(application){
 				var item = application.toUpperCase();
 				if(this.applications.indexOf(item) === -1 && item.length === 4){
@@ -524,12 +465,12 @@ module Main {
 			}
 		}
 
-		public supprimeApplication(application: string): void {
+		public deleteApplication(application: string): void {
 			if(application){
 				var item = application.toUpperCase();
 				if(this.applications.indexOf(item) > -1){
 
-					if( window.confirm("Voulez vous vraiment supprimer "+ item +"?")){
+					if( window.confirm("Did you confirm the deletion of "+ item +"?")){
 
 						window.startLoader();
 						this.$http.get("api/set/config?action=delete&target=application&value="+item)
@@ -547,12 +488,12 @@ module Main {
 			}
 		}
 
-		public ajouteCouloir(couloir: string): void {
-			if(couloir){
-				var item = couloir.toUpperCase();
-				if(this.couloirs.indexOf(item) === -1 && ( item.length === 4 || item.length === 5)){
+		public addCorridor(corridor: string): void {
+			if(corridor){
+				var item = corridor.toUpperCase();
+				if(this.corridors.indexOf(item) === -1 && ( item.length === 4 || item.length === 5)){
 					window.startLoader();
-					this.$http.get("api/set/config?action=add&target=couloir&value="+item)
+					this.$http.get("api/set/config?action=add&target=corridor&value="+item)
 						.success( (data :any)=>{
 							this.init(); // on recharge
 							window.stopLoader();
@@ -566,15 +507,15 @@ module Main {
 			}
 		}
 
-		public supprimeCouloir(couloir: string): void {
-			if(couloir){
-				var item = couloir.toUpperCase();
-				if(this.couloirs.indexOf(item) > -1){
+		public deleteCorridor(corridor: string): void {
+			if(corridor){
+				var item = corridor.toUpperCase();
+				if(this.corridors.indexOf(item) > -1){
 
-					if( window.confirm("Voulez vous vraiment supprimer "+ item +"?")){
+					if( window.confirm("Did you confirm the deletion of "+ item +"?")){
 
 						window.startLoader();
-						this.$http.get("api/set/config?action=delete&target=couloir&value="+item)
+						this.$http.get("api/set/config?action=delete&target=corridor&value="+item)
 							.success( (data :any) => {
 								this.init(); // on recharge
 								window.stopLoader();
@@ -590,7 +531,7 @@ module Main {
 		}
 
 		private askRefresh() : void {
-			if(confirm("Vous devez recharger la page pour que les modifications soit prisent en compte dans les données. Recharger maintenant?"))
+			if(confirm("You must reload the page to complete the changes you made. Reload *now*? "))
 				location.reload()
 		}
 
@@ -599,7 +540,7 @@ module Main {
 			Le cas échéant, désactive le bouton d'ajout
 		*/
 
-		public verifierExistant( item : string, type: string) : boolean {
+		public checkExists( item : string, type: string) : boolean {
 			var found: boolean = !item; // true si l'item n'existe pas. quand angular démarre, cette fonction est appelée sans parametres.
 			if(item){
 				if(type === 'application' && item.length !== 4){
@@ -611,8 +552,8 @@ module Main {
 				else{
 					item = item.toUpperCase();
 
-					for (var i = 0; i < this.couloirs.length; i++){
-						if(this.couloirs[i] === item){
+					for (var i = 0; i < this.corridors.length; i++){
+						if(this.corridors[i] === item){
 							found = true;
 							break;
 						}
@@ -641,10 +582,10 @@ module Main {
 
 (function(){
 	window.ChoregraphieControllers.controller('mainController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams){
-		$scope.vm = new Main.MainController($scope, $http, $routeParams); // notre module dépend de $scope et de $http
+		$scope.vm = new Main.MainController($scope, $http, $routeParams); // Our module depends of $scope and $http
 	}]);
 
 	window.ChoregraphieControllers.controller('configController', ['$scope', '$http', '$window', function($scope, $http, $window){
-		$scope.vm = new Main.ConfigController($scope, $http, $window); // notre module dépend de $scope et de $http
+		$scope.vm = new Main.ConfigController($scope, $http, $window);
 	}]);
 })();
