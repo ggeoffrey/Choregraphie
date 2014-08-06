@@ -19,11 +19,12 @@ module Server {
 		}
 
 		private decompress(lzEncodedBase64String: string ): any {
-			var decompressedJSON : string =  LZString.decompressFromBase64(lzEncodedBase64String);
+			return lzEncodedBase64String;
+			//var decompressedJSON : string =  LZString.decompressFromBase64(lzEncodedBase64String);
 
-			console.log('Compression: '+ (Math.round(100-(lzEncodedBase64String.length/decompressedJSON.length)*100)) + '%');
+			//console.log('Compression: '+ (Math.round(100-(lzEncodedBase64String.length/decompressedJSON.length)*100)) + '%');
 
-			return JSON.parse(decompressedJSON);
+			//return JSON.parse(decompressedJSON);
 		}
 
 
@@ -70,8 +71,8 @@ module Server {
 			});
 		}
 
-		public setEvent( event: Events.Event ):void {
-			this.socket.emit('setEvents', event);
+		public setEvent( callback: Function, event: Events.Event ):void {
+			this.socket.emit('setEvents', event, callback);
 		}
 
 

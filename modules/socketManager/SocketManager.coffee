@@ -6,8 +6,9 @@ api = require '../api'
 
 
 compress = ( object ) ->
-	json = JSON.stringify object
-	lzString.compressToBase64 json
+	return object
+	#json = JSON.stringify object
+	#lzString.compressToBase64 json
 
 
 class SocketManager
@@ -49,11 +50,14 @@ class SocketManager
 				
 
 
-			socket.on 'setEvents', (event) ->
+			socket.on 'setEvents', (event, callback) ->
 				next = (result) ->
 					if result?
 						socket.broadcast.emit('eventChanged', event)
 						socket.emit('eventChanged', event)
+						callback(true)
+					else 
+						callback(false)
 
 				api.setEvent(next, event)
 
