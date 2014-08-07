@@ -105205,54 +105205,97 @@ var Server;
             }
         }
         Database.prototype.decompress = function (lzEncodedBase64String) {
-            return lzEncodedBase64String;
+            var decompressedJSON = LZString.decompressFromBase64(lzEncodedBase64String);
+
+            console.log('Compression: ' + (Math.round(100 - (lzEncodedBase64String.length / decompressedJSON.length) * 100)) + '%');
+
+            return JSON.parse(decompressedJSON);
+        };
+
+        Database.prototype.getFromCache = function (flag) {
+            var fromCache = sessionStorage.getItem(flag);
+            if (fromCache) {
+                return this.decompress(fromCache);
+            } else {
+                return false;
+            }
+        };
+
+        Database.prototype.storeInCache = function (flag, object) {
+            sessionStorage.setItem(flag, object);
         };
 
         Database.prototype.getApplications = function (callback) {
             var _this = this;
-            this.socket.emit('getApplications', null, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            var fromCache = this.getFromCache('applications');
+            if (fromCache) {
+                callback(fromCache);
+            } else {
+                this.socket.emit('getApplications', null, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                    _this.storeInCache('applications', encodedData);
+                });
+            }
         };
 
         Database.prototype.getCorridors = function (callback) {
             var _this = this;
-            this.socket.emit('getCorridors', null, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            var fromCache = this.getFromCache('corridor');
+            if (fromCache) {
+                callback(fromCache);
+            } else {
+                this.socket.emit('getCorridors', null, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                    _this.storeInCache('corridor', encodedData);
+                });
+            }
         };
 
         Database.prototype.getOverviewData = function (callback) {
             var _this = this;
-            this.socket.emit('getOverviewData', null, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            var fromCache = this.getFromCache('overview');
+            if (fromCache) {
+                callback(fromCache);
+            } else {
+                this.socket.emit('getOverviewData', null, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                    _this.storeInCache('overview', encodedData);
+                });
+            }
         };
 
-        Database.prototype.getHistory = function (app, corridor, callback) {
+        Database.prototype.getHistory = function (options, callback) {
             var _this = this;
-            this.socket.emit('getHistory', {
-                app: app,
-                corridor: corridor
-            }, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            if (!options || typeof options.app !== 'string' || typeof options.corridor !== 'string') {
+                throw new Error('bad params for getHistory');
+            } else {
+                this.socket.emit('getHistory', options, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                });
+            }
         };
-        Database.prototype.getTrend = function (app, corridor, callback) {
+        Database.prototype.getTrend = function (options, callback) {
             var _this = this;
-            this.socket.emit('getTrend', {
-                app: app,
-                corridor: corridor
-            }, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            if (!options || typeof options.app !== 'string' || typeof options.corridor !== 'string') {
+                throw new Error('bad params for getTrend');
+            } else {
+                this.socket.emit('getTrend', options, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                });
+            }
         };
 
         Database.prototype.getEvents = function (callback) {
             var _this = this;
-            this.socket.emit('getEvents', null, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            var fromCache = this.getFromCache('events');
+            if (fromCache) {
+                callback(fromCache);
+            } else {
+                this.socket.emit('getEvents', null, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                    _this.storeInCache('events', encodedData);
+                });
+            }
         };
 
         Database.prototype.setEvent = function (callback, event) {
@@ -105261,9 +105304,15 @@ var Server;
 
         Database.prototype.getCalls = function (callback) {
             var _this = this;
-            this.socket.emit('getCalls', null, function (encodedData) {
-                callback(_this.decompress(encodedData));
-            });
+            var fromCache = this.getFromCache('calls');
+            if (fromCache) {
+                callback(fromCache);
+            } else {
+                this.socket.emit('getCalls', null, function (encodedData) {
+                    callback(_this.decompress(encodedData));
+                    _this.storeInCache('calls', encodedData);
+                });
+            }
         };
         return Database;
     })();
@@ -107754,7 +107803,11 @@ var HistoryModule;
 
                     window.startLoader();
 
-                    window.Database.getHistory(_this.application, _this.couloir, function (data) {
+                    var options = {
+                        app: _this.application,
+                        corridor: _this.couloir
+                    };
+                    window.Database.getHistory(options, function (data) {
                         if (data.length > 0) {
                             data = _this.parseInData(data);
                         }
@@ -107780,8 +107833,11 @@ var HistoryModule;
                     });
 
                     window.startLoader();
-
-                    window.Database.getTrend(_this.application, _this.couloir, function (data) {
+                    var options = {
+                        app: _this.application,
+                        corridor: _this.couloir
+                    };
+                    window.Database.getTrend(options, function (data) {
                         var type;
                         for (type in data) {
                             data[type] = _this.parseInData(data[type]);
@@ -108935,18 +108991,23 @@ describe('Database', function () {
             });
         });
         it('should return false on update fail', function (done) {
-            this.timeout(30000);
             Database.getEvents(function (eventArray) {
                 var event, next, random;
                 random = Math.floor((Math.random() * eventArray.length + 1) / 1);
                 event = eventArray[random];
                 event.id = -1;
                 next = function (result) {
-                    console.log;
-                    Should(result).not.be.ok;
-                    done();
+                    if (!result) {
+                        done();
+                    } else {
+                        done(new Error('expecting Boolean(false) callback returned (' + result + ')'));
+                    }
                 };
-                Database.setEvent(next, event);
+                try  {
+                    Database.setEvent(next, event);
+                } catch (e) {
+                    alert(e);
+                }
             });
         });
         it('should throw an exception on bad params', function () {
@@ -108961,6 +109022,132 @@ describe('Database', function () {
                 };
                 Should(Database.setEvent.bind(next, event)).should["throw"]();
             });
+        });
+    });
+    describe('getHistory', function () {
+        it('should be a Function', function () {
+            Should(Database.getHistory).be.a.Function;
+        });
+        it('should return an array of Values', function (done) {
+            var next, options;
+            options = {
+                app: 'all',
+                corridor: 'all',
+                limit: 1000
+            };
+            next = function (valuesArray) {
+                Should(valuesArray).be.an.Array;
+                done();
+            };
+            Database.getHistory(options, next);
+        });
+        it('should return an empty array on inexistant params', function (done) {
+            var next, options;
+            options = {
+                app: 'yolo',
+                corridor: 'swag',
+                limit: 1000
+            };
+            next = function (valuesArray) {
+                Should(valuesArray).be.an.Array.and.be.empty;
+                done();
+            };
+            Database.getHistory(options, next);
+        });
+        it('should throw an exception on bad params', function () {
+            var next;
+            next = function (valuesArray) {
+            };
+            Should(Database.getHistory.bind(null, next)).throw();
+        });
+        it('should throw an exception on bad callback', function () {
+            Should(Database.getHistory.bind(null)).throw();
+        });
+    });
+
+    describe('getTrend', function () {
+        it('should be a Function', function () {
+            Should(Database.getTrend).be.a.Function;
+        });
+        it('getTrend should return an empty object on bad params', function (done) {
+            var next, options;
+            options = {
+                app: 'all',
+                corridor: 'all'
+            };
+            next = function (values) {
+                Should(values).be.an.Object;
+                done();
+            };
+            Database.getTrend(options, next);
+        });
+        it('getTrend should return an Object containing Values', function (done) {
+            this.timeout(30000);
+            var next, options;
+            options = {
+                app: 'VMIR',
+                corridor: 'X_00'
+            };
+            next = function (values) {
+                var item, key, value, _i, _len;
+                try  {
+                    Should(values).be.an.Object.and.not.be.empty;
+                    for (key in values) {
+                        value = values[key];
+                        Should(key).be.a.String;
+                        Should(value).be.an.Array;
+                        value.forEach(function (item) {
+                            Should(item).be.an.Object;
+
+                            Should(item.somme).be.a.Number.and.be.greaterThan(-1);
+                            Should(item.average).be.a.Number.and.be.greaterThan(-1);
+                            Should(item.stddev).be.a.Number.and.be.greaterThan(-1);
+                            Should(item.starttime).be.a.Date;
+                        });
+                    }
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            };
+            Database.getTrend(options, next);
+        });
+        it('should throw an exception on bad params', function () {
+            Should(Database.getTrend.bind(null, null)).throw();
+        });
+        it('should throw an exception on bad params values', function () {
+            var options;
+            options = {
+                yolo: 'swag'
+            };
+            Should(Database.getTrend.bind(null, null, options)).throw();
+        });
+    });
+
+    describe('getOverviewData', function () {
+        it('should be a Function', function () {
+            Should(Database.getOverviewData).be.a.Function;
+        });
+        it('should return an array', function (done) {
+            Database.getOverviewData(function (data) {
+                var item, _i, _len;
+                Should(data).be.an.Array;
+                for (_i = 0, _len = data.length; _i < _len; _i++) {
+                    item = data[_i];
+
+                    Should(item.codeapp).be.a.String;
+                    Should(item.couloir).be.a.String;
+                    Should(item.codetype).be.a.String;
+                    Should(item.start_time).be.a.String;
+                    Should(item.value).be.a.String;
+                    Should(item.sante).be.a.Number;
+                    Should(item.types).be.an.Object;
+                }
+                done();
+            });
+        });
+        it('should throw an exception on bad callback', function () {
+            Should(Database.getOverviewData.bind(null, null))["throw"]();
         });
     });
 });
@@ -109018,7 +109205,7 @@ describe('Main', function () {
             Should(window.objectSize).be.a.Function;
         });
 
-        it('should give the size of raw object', function () {
+        it('should give the size of raw objects', function () {
             var obj = {
                 one: 1,
                 two: 2,
@@ -109028,7 +109215,7 @@ describe('Main', function () {
             var size = window.objectSize(obj);
             Should(size).be.exactly(3);
         });
-        it('should give the size of an instantiated object', function () {
+        it('should give the size of an instantiated objects', function () {
             var size = window.objectSize(new Obj());
             Should(size).be.exactly(3);
         });

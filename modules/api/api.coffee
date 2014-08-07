@@ -30,13 +30,14 @@ class exports
     
 
     @getHistory :  (callback, options) ->
-        if not callback? or typeof options.app isnt 'string' or typeof options.corridor isnt 'string'
-            throw 'bad arguments'
+
+        if not callback? or typeof options?.app isnt 'string' or typeof options?.corridor isnt 'string'
+            throw new Error('bad arguments')
         connector.getHistory(callback, false, options)
     
 
     @getTrend :  (callback, options) ->
-        if not callback? or typeof options.app isnt 'string' or typeof options.corridor isnt 'string'
+        if not callback? or typeof options?.app isnt 'string' or typeof options?.corridor isnt 'string'
             throw 'invalid params'
         connector.getTrend(callback, false, options)
 
@@ -46,6 +47,4 @@ class exports
         connector.getCalls(callback, false)
 
     
-
-
 module.exports = exports

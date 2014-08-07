@@ -77,7 +77,7 @@ describe 'Api', ->
 			it 'should be a Function', ->
 				api.setEvent.should.be.a.Function
 
-			it 'should return true', (done)->
+			it 'should return true on update success', (done)->
 				api.getEvents (eventArray)->
 					random = (Math.random() * eventArray.length + 1) // 1 # // -> Math.floor(x/y)
 					event = eventArray[random]
@@ -143,17 +143,23 @@ describe 'Api', ->
 
 				api.getHistory next, options
 
-			it 'should throw an exception on bad params',->
+			it 'should throw an exception on bad params', ->
 				
 				next = (valuesArray)->
 					console.log valuesArray
-					done()
+					done() if done?
+
+				options = 
+					app: false
+					corridor: {}
 				
-				api.getHistory.bind(null, next).should.throw()
+				api.getHistory.bind(null, next).should.throw()	
+				
+				
 				
 
 			it 'should throw an exception on bad callback', ->
-				api.getHistory.bind(null).should.throw()
+				api.getHistory.bind(null, null, null).should.throw()
 
 		describe 'getTrend', ->
 			it 'should be a Function', ->
@@ -179,7 +185,7 @@ describe 'Api', ->
 					corridor : 'X_00'
 
 				next = (values)->
-					values.should.be.an.Object.and.should.not.be.empty
+					values.should.be.an.Object.and.not.be.empty
 					for key, value of values
 						key.should.be.a.String
 						value.should.be.an.Array
@@ -191,9 +197,9 @@ describe 'Api', ->
 								'stddev'
 								'starttime'
 							]
-							item.somme.should.be.a.Number.and.greaterThan -1
-							item.average.should.be.a.Number.and.greaterThan -1
-							item.stddev.should.be.a.Number.and.greaterThan -1
+							item.somme.should.be.a.Number.and.be.greaterThan -1
+							item.average.should.be.a.Number.and.be.greaterThan -1
+							item.stddev.should.be.a.Number.and.be.greaterThan -1
 							item.starttime.should.be.Date
 							
 					done()
@@ -212,7 +218,7 @@ describe 'Api', ->
 			it 'should be a Function', ->
 				api.getOverviewData.should.be.a.Function
 
-			it 'should return an array', ->
+			it 'should return an array', (done)->
 				api.getOverviewData (data)->
 					data.should.be.an.Array
 					for item in data
@@ -224,28 +230,45 @@ describe 'Api', ->
 							'value'
 							'sante'
 							'types'
+							'resSante'
 						]
 						item.codeapp.should.be.a.String
 						item.couloir.should.be.a.String
 						item.codetype.should.be.a.String
-						item.start_time.should.be.a.String
+						item.start_time.should.be.a.Date
 						item.value.should.be.a.String
-						item.sante.should.be.a.String
+						item.sante.should.be.a.Number
 						item.types.should.be.an.Object
+					done()
 
 			it 'should throw an exception on bad callback', ->
 				api.getOverviewData.bind(null, null).should.throw()
-###	
+		
 
-		it 'getHistory should return  an array of objects', ->
-			api.should.have.property 'getHistory'
-			api.getHistory.should.be.a.Function
+		describe 'getCalls', ->
+			it 'should be a Function', ->
+				api.should.have.property 'getCalls'
+				api.getCalls.should.be.a.Function
 
-		it 'getTrend should return  an array of objects', ->
-			api.should.have.property 'getTrend'
-			api.getTrend.should.be.a.Function
+			it 'getCalls should return a CallsTree', (done)->
+				api.getCalls (callsTree)->
+					callsTree.should.be.an.Object
 
-		it 'getCalls should return  a CallTree', ->
-			api.should.have.property 'getCalls'
-			api.getCalls.should.be.a.Function
-###
+					callsTree.nodes.should.be.an.Object
+					callsTree.links.should.be.an.Array
+
+					for key, node of callsTree.nodes
+						key.should.be.a.String
+						node.should.be.an.Object
+						node.type.should.be.a.String
+						node.name.should.be.a.String
+
+					for link in callsTree.links
+						link.should.be.an.Object
+						link.source.should.be.a.String
+						link.target.should.be.a.String
+
+						link.value.should.be.a.Number
+						link.date.should.be.a.Date
+
+					done()

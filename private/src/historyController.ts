@@ -428,7 +428,11 @@ module HistoryModule {
 
 				window.startLoader();
 
-				window.Database.getHistory(this.application, this.couloir, (data: Record[])=>{
+				var options: any = {
+					app: this.application,
+					corridor: this.couloir
+				}
+				window.Database.getHistory(options, (data: Record[])=>{
 						if(data.length > 0){
 							data = this.parseInData(data);
 						}
@@ -465,8 +469,11 @@ module HistoryModule {
 					});*/
 
 				window.startLoader();
-
-				window.Database.getTrend(this.application, this.couloir, (data:{[index:string]: Array<Record>})=>{
+				var options : any = {
+					app: this.application,
+					corridor: this.couloir
+				}
+				window.Database.getTrend(options, (data:{[index:string]: Array<Record>})=>{
 					var type: string;
 					for(type in data){
 						data[type] = this.parseInData(data[type]);

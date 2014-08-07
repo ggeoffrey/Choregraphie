@@ -9,6 +9,8 @@ module Server {
 
 		private socket : any;
 
+
+
 		constructor(){
 			try{
 				this.socket = io.connect();
@@ -19,56 +21,100 @@ module Server {
 		}
 
 		private decompress(lzEncodedBase64String: string ): any {
-			return lzEncodedBase64String;
-			//var decompressedJSON : string =  LZString.decompressFromBase64(lzEncodedBase64String);
+			//return lzEncodedBase64String;
+			var decompressedJSON : string =  LZString.decompressFromBase64(lzEncodedBase64String);
 
-			//console.log('Compression: '+ (Math.round(100-(lzEncodedBase64String.length/decompressedJSON.length)*100)) + '%');
+			console.log('Compression: '+ (Math.round(100-(lzEncodedBase64String.length/decompressedJSON.length)*100)) + '%');
 
-			//return JSON.parse(decompressedJSON);
+			return JSON.parse(decompressedJSON);
 		}
 
 
+		private getFromCache(flag): any {
+			var fromCache: any = sessionStorage.getItem(flag);
+			if (fromCache){
+				return this.decompress(fromCache);
+			}
+			else{
+				return false;
+			}
+		}
+
+		private storeInCache(flag, object): void{
+			sessionStorage.setItem(flag, object);
+		}
 
 		public getApplications( callback: Function ):void {
-			this.socket.emit('getApplications', null, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
+			var fromCache = this.getFromCache('applications');
+			if(fromCache){
+				callback(fromCache);
+			}
+			else{
+				this.socket.emit('getApplications', null, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+					this.storeInCache('applications',encodedData);
+				});				
+			}
 		}
 
 		public getCorridors( callback: Function ):void {
-			this.socket.emit('getCorridors', null, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
+			var fromCache = this.getFromCache('corridor');
+			if(fromCache){
+				callback(fromCache);
+			}
+			else{
+				this.socket.emit('getCorridors', null, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+					this.storeInCache('corridor',encodedData);
+				});
+			}
 		}
 
 		public getOverviewData( callback: Function ):void {
-			this.socket.emit('getOverviewData', null, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
-			
+			var fromCache = this.getFromCache('overview');
+			if(fromCache){
+				callback(fromCache);
+			}
+			else{
+				this.socket.emit('getOverviewData', null, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+					this.storeInCache('overview',encodedData);
+				});
+			}			
 		}
 
-		public getHistory( app:string, corridor:string, callback:Function): void {
-			this.socket.emit('getHistory', {
-				app: app,
-				corridor: corridor
-			}, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
+		public getHistory( options, callback:Function): void {
+			if(!options || typeof options.app !== 'string' || typeof options.corridor !== 'string'){
+				throw new Error('bad params for getHistory');
+			}
+			else{
+				this.socket.emit('getHistory', options, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+				});				
+			}
 		}
-		public getTrend( app:string, corridor:string, callback:Function): void {
-			this.socket.emit('getTrend', {
-				app: app,
-				corridor: corridor
-			}, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
+		public getTrend( options, callback:Function): void {
+			if(!options || typeof options.app !== 'string' || typeof options.corridor !== 'string'){
+				throw new Error('bad params for getTrend');
+			}
+			else{
+				this.socket.emit('getTrend', options, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+				});				
+			}
 		}
 
 		public getEvents( callback: Function ):void {
-			this.socket.emit('getEvents', null, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
+			var fromCache = this.getFromCache('events');
+			if(fromCache){
+				callback(fromCache);
+			}
+			else{
+				this.socket.emit('getEvents', null, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+					this.storeInCache('events',encodedData);
+				});
+			}
 		}
 
 		public setEvent( callback: Function, event: Events.Event ):void {
@@ -77,9 +123,16 @@ module Server {
 
 
 		public getCalls(callback:Function): void{
-			this.socket.emit('getCalls', null, (encodedData: string)=>{
-				callback(this.decompress(encodedData));
-			});
+			var fromCache = this.getFromCache('calls');
+			if(fromCache){
+				callback(fromCache);
+			}
+			else{
+				this.socket.emit('getCalls', null, (encodedData: string)=>{
+					callback(this.decompress(encodedData));
+					this.storeInCache('calls',encodedData);
+				});
+			}
 		}
 	}
 }

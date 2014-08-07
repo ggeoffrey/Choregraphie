@@ -71,7 +71,7 @@ describe('Main', function(){
 			Should(window.objectSize).be.a.Function;
 		});
 
-		it('should give the size of raw object', function(){
+		it('should give the size of raw objects', function(){
 			var obj: any = {
 				one: 1,
 				two: 2,
@@ -81,7 +81,7 @@ describe('Main', function(){
 			var size: number = window.objectSize(obj);
 			Should(size).be.exactly(3);
 		});
-		it('should give the size of an instantiated object', function(){
+		it('should give the size of an instantiated objects', function(){
 			var size: number = window.objectSize(new Obj());
 			Should(size).be.exactly(3);
 		});

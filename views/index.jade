@@ -4,9 +4,9 @@ block content
 	snap-content
 			div(snap-dragger='right')
 				include navbar.jade
-			#view(ng-view='ng-view')
 			if tests
 				#mocha
+			#view(ng-view='ng-view')
 		div(snap-drawer='right')
 			#conf-container(ng-controller='configController')
 				.row
