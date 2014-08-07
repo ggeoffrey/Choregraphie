@@ -212,7 +212,7 @@ module Events {
             }
 
             window.Database.setEvent(confirm, event);
-            
+
             /*this.http.get('api/set/events?action=seen&target='+event.id+'&value='+event.seen)
                 .success((data: any) => {
                     console.log(data);
@@ -242,7 +242,10 @@ module Events {
                 }
             }
 
-            if(!this.scope.$$phase) this.scope.$apply();
+            if(!this.scope.$$phase){
+                this.scope.$apply();
+                window.Database.clearCache('events');
+            }
             
         }
 

@@ -44,6 +44,10 @@ module Server {
 			sessionStorage.setItem(flag, object);
 		}
 
+		private clearCache(flag: string): void{
+			sessionStorage.removeItem(flag);
+		}
+
 		public getApplications( callback: Function ):void {
 			var fromCache = this.getFromCache('applications');
 			if(fromCache){

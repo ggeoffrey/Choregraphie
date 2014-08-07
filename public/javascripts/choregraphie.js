@@ -105225,6 +105225,10 @@ var Server;
             sessionStorage.setItem(flag, object);
         };
 
+        Database.prototype.clearCache = function (flag) {
+            sessionStorage.removeItem(flag);
+        };
+
         Database.prototype.getApplications = function (callback) {
             var _this = this;
             var fromCache = this.getFromCache('applications');
@@ -107511,8 +107515,10 @@ var Events;
                 }
             }
 
-            if (!this.scope.$$phase)
+            if (!this.scope.$$phase) {
                 this.scope.$apply();
+                window.Database.clearCache('events');
+            }
         };
 
         EventsController.prototype.getByCouple = function (codeapp, couloir, callback) {
