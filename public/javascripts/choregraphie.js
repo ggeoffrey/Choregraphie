@@ -107484,7 +107484,15 @@ var Events;
         };
 
         EventsController.prototype.setEventSeen = function (event) {
-            window.Database.setEvent(event);
+            var confirm = function (success) {
+                if (!success) {
+                    event.selected = !event.selected;
+                    if (!this.scope.$$phase)
+                        this.scope.$apply();
+                }
+            };
+
+            window.Database.setEvent(confirm, event);
         };
 
         EventsController.prototype.updateEvent = function (newEvent) {

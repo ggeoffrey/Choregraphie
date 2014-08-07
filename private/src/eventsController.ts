@@ -203,7 +203,16 @@ module Events {
 
         public setEventSeen(event: Event) {
             //window.startLoader();
-            window.Database.setEvent(event);
+
+            var confirm = function(success){
+                if(!success){
+                    event.selected = !event.selected;
+                    if(!this.scope.$$phase) this.scope.$apply();
+                }
+            }
+
+            window.Database.setEvent(confirm, event);
+            
             /*this.http.get('api/set/events?action=seen&target='+event.id+'&value='+event.seen)
                 .success((data: any) => {
                     console.log(data);

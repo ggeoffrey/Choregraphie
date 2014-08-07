@@ -55,11 +55,17 @@ class SocketManager
 					if result? and result is true
 						socket.broadcast.emit('eventChanged', event)
 						socket.emit('eventChanged', event)
-						callback(true)
+						callback(true) if callback?
 					else 
-						callback(false)
+						callback(false) if callback?
 
-				api.setEvent(next, event)
+				try
+					api.setEvent(next, event)
+				catch e
+					console.error e
+					callback false
+					
+				
 
 
 			socket.on 'getCalls', (data, callback)->
