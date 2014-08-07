@@ -19,7 +19,7 @@ class exports
         connector.getEvents(callback)
 
     @setEvent : (callback, event)->
-        if not callback? or typeof event.seen isnt 'boolean' or typeof event.deleted isnt 'boolean'
+        if not callback? or typeof event?.seen isnt 'boolean' or typeof event?.deleted isnt 'boolean'
             throw 'bad arguments'
         connector.setEvent(callback, event)
 

@@ -45,7 +45,7 @@ module Events {
         //  ANGULAR FILTERS
 
         public nameFilter: string;
-        public couloirFilter: string;
+        public corridorFilter: string;
         public typeFilter: string;
         public dateDirectionFilter: string;
 
@@ -133,43 +133,48 @@ module Events {
             }
         }
 
-        public filterEvents(): void {
+        /*public filterEvents(name: string, corridor: string, type: string, limit: number): Event[] {
             
             var newList: Array<Event> = [];
 
-            // Filters
+            // regexps
 
-            var nameFilter: string;
-                if(this.nameFilter) nameFilter = this.nameFilter.toUpperCase();
-            var couloirFilter: string;
-                if(this.couloirFilter) couloirFilter = this.couloirFilter.toUpperCase();
+            var nameRegExp = new RegExp(name, 'gi');
+            var corridorRegExp = new RegExp(corridor, 'gi');
+            var typeRegExp = new RegExp(type, 'gi');
 
+
+            // ----
 
             var length = this.events.length;
-            var event: Event;
-            
-                if (nameFilter) {
-                    var apps = this.grouper['apps'];
-                    for (var app in apps ) {
-                        if (app.indexOf(nameFilter) > -1) {
-                            newList = newList.concat(apps[app]);
-                        }
-                    }
-                }
-                    
-            
-            this.displayedEvents = newList;
+            var i = 0, event: Event = null, found  = 0;
+            while(i < length && found < limit){
+                event = this.events[i];
+                // 
+                var match : boolean = (
+                    typeRegExp.test(event.type)
+                    &&
+                    nameRegExp.test(event.codeapp)
+                    &&
+                    corridorRegExp.test(event.couloir)
 
-            if (!this.scope.$$phase) {
-                this.scope.$apply();
-            }            
-        }
+                );
+                if(match){
+                    newList.push(event);
+                    found++;
+                }
+                i++;
+            }
+
+            newList.sort(function(a, b){
+                return b.start_time.getTime() - a.start_time.getTime();
+            });
+            return newList;
+        }*/
 
         public getStyleOf(event: Event): any {
             return {
                 'background-color': this.colorBuilder(event.type),
-                
-
             }
         }
 

@@ -17,7 +17,7 @@
 				| Refresh
 .row
 	.col-md-12
-		.event.animate.col-md-4(ng-repeat="event in vm.events  | filter: {codeapp: vm.codeappFilter, couloir: vm.couloirFilter, type: vm.typeFilter}  | orderBy: 'start_time': true  | limitTo:100 ", ng-click='vm.selectEvent(event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
+		.event.animate.col-md-4(ng-repeat="event in vm.events  | filter: {codeapp: vm.codeappFilter, couloir: vm.couloirFilter, type: vm.typeFilter}    | limitTo:100 ", ng-click='vm.selectEvent(event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
 			.event-wrapper(ng-style='vm.getStyleOf(event)')
 				div(style='float: right;') [[event.couloir]]
 				div [[event.codeapp]][[vm.getDescriptionOf(event)]]

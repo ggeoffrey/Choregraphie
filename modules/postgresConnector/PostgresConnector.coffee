@@ -87,10 +87,10 @@ class Connector
 
 		@getEvents : (callback, forceUpdate)->
 			queryText = "
-				SELECT *
+				SELECT codeapp, couloir, codetype, start_time, seen, deleted, old_value, value, diff_stddev, type, id
 				FROM ccol.metric_events
-				ORDER BY start_time DESC
-				;
+				GROUP BY start_time, codeapp, couloir, type, seen, deleted, old_value, value, diff_stddev, type, id
+				ORDER BY start_time DESC;
 			"
 			if not Connector.cache.events? or forceUpdate is on
 				Connector.getClient (client, done)->

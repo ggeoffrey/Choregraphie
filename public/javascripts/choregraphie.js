@@ -107426,35 +107426,6 @@ var Events;
             }
         };
 
-        EventsController.prototype.filterEvents = function () {
-            var newList = [];
-
-            var nameFilter;
-            if (this.nameFilter)
-                nameFilter = this.nameFilter.toUpperCase();
-            var couloirFilter;
-            if (this.couloirFilter)
-                couloirFilter = this.couloirFilter.toUpperCase();
-
-            var length = this.events.length;
-            var event;
-
-            if (nameFilter) {
-                var apps = this.grouper['apps'];
-                for (var app in apps) {
-                    if (app.indexOf(nameFilter) > -1) {
-                        newList = newList.concat(apps[app]);
-                    }
-                }
-            }
-
-            this.displayedEvents = newList;
-
-            if (!this.scope.$$phase) {
-                this.scope.$apply();
-            }
-        };
-
         EventsController.prototype.getStyleOf = function (event) {
             return {
                 'background-color': this.colorBuilder(event.type)
