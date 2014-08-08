@@ -1,7 +1,7 @@
 /// <reference path="../angular.d.ts" />
 /// <reference path="../d3.d.ts" />
 /// <reference path="../window.d.ts" />
-/// <reference path="../underscore.d.ts" />
+
 /// <reference path="../moment.d.ts" />
 
 /*

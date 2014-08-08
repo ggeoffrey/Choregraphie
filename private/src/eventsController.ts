@@ -2,7 +2,9 @@
 /// <reference path="../d3.d.ts" />
 /// <reference path="../window.d.ts" />
 /// <reference path="../snap.d.ts" />
-/// <reference path="../underscore.d.ts" />
+
+
+declare var _ : any; // underscore
 
 
 
@@ -48,10 +50,13 @@ module Events {
         public corridorFilter: string;
         public typeFilter: string;
         public dateDirectionFilter: string;
+        public limitShownFilter: number;
 
         // Objects Groupper
 
         private grouper: any;
+        public filteredGroup: any;
+        public filteredGroupKeys: any;
 
         // autres
 
@@ -102,75 +107,81 @@ module Events {
         }
 
         private parseData(): void {
-            this.grouper = {};
-            this.grouper['apps'] = {};
-            this.grouper['couloirs'] = {};
-            this.grouper['types'] = {};
+
 
             var length = this.events.length;
             var event: any;
             while (length--) {
                 event = this.events[length];
                 event.description = this.getDescriptionOf(event);
-
-
                 event.start_time = new Date(event.start_time);
-
-                if (!this.grouper['apps'][event.codeapp]) {
-                    this.grouper['apps'][event.codeapp] = [];
-                }
-                this.grouper['apps'][event.codeapp].push(event);
-
-                if (!this.grouper['couloirs'][event.couloir]) {
-                    this.grouper['couloirs'][event.couloir] = [];
-                }
-                this.grouper['couloirs'][event.couloir].push(event);
-
-                if (!this.grouper['types'][event.type]) {
-                    this.grouper['types'][event.type] = [];
-                }
-                this.grouper['types'][event.type].push(event);
             }
+
+            var apps = _.groupBy(this.events, function(event){ return event.codeapp });
+            var corridors = _.groupBy(this.events, function(event){ return event.couloir });
+            var type = _.groupBy(this.events, function(event){ return event.type });
+            var date = _.groupBy(this.events, function(event){ return event.start_time });
+
+            this.grouper = {
+                apps: apps,
+                corridors: corridors,
+                types: type,
+                date: date
+            };
+            
+            this.filterEvents();
         }
 
-        /*public filterEvents(name: string, corridor: string, type: string, limit: number): Event[] {
-            
-            var newList: Array<Event> = [];
+        public filterEvents(): void { //  {[index:stringDate]: Event[]}
+            var newGroup: any = {}; // {[index:stringDate]: Event[]}
 
+            var limit = this.limitShownFilter || 100;
             // regexps
 
-            var nameRegExp = new RegExp(name, 'gi');
-            var corridorRegExp = new RegExp(corridor, 'gi');
-            var typeRegExp = new RegExp(type, 'gi');
+            var nameRegExp = new RegExp(this.nameFilter, 'gi');
+            var corridorRegExp = new RegExp(this.corridorFilter, 'gi');
+            var typeRegExp = new RegExp(this.typeFilter, 'gi');
 
 
             // ----
 
-            var length = this.events.length;
-            var i = 0, event: Event = null, found  = 0;
-            while(i < length && found < limit){
-                event = this.events[i];
-                // 
-                var match : boolean = (
-                    typeRegExp.test(event.type)
-                    &&
-                    nameRegExp.test(event.codeapp)
-                    &&
-                    corridorRegExp.test(event.couloir)
+        
+            var found : number = 0;
+            _.each(this.grouper['date'], function( events: Event[], date: string ){
+                var actualFoundEvents = found; // copy
+                if(found < limit){
+                    var key = moment(date).calendar();
+                    newGroup[key] = [];
+                    _.each(events, function(event: Event){
+                        if(found < limit){
+                            var match : boolean = (
+                                typeRegExp.test(event.type)
+                                &&
+                                nameRegExp.test(event.codeapp)
+                                &&
+                                corridorRegExp.test(event.couloir)
+                            );
+                            if(match){
+                                newGroup[key].push(event);
+                                found++;
+                            }                        
+                        }
+                    });
 
-                );
-                if(match){
-                    newList.push(event);
-                    found++;
+                    if(found === actualFoundEvents){ // no events where found at this date
+                        delete newGroup[key];
+                    }
                 }
-                i++;
-            }
-
-            newList.sort(function(a, b){
-                return b.start_time.getTime() - a.start_time.getTime();
             });
-            return newList;
-        }*/
+
+            this.filteredGroup = newGroup;
+            var keys = _.keys(newGroup);
+            keys.sort(function(a, b){
+                return new Date(b).getTime() - new Date(a).getTime();
+            });
+            this.filteredGroupKeys = keys;
+
+        }
 
         public getStyleOf(event: Event): any {
             return {
@@ -254,25 +265,19 @@ module Events {
             
         }
 
-        public getByCouple(codeapp: string, couloir: string, callback: any) {
+        public getByCouple(codeapp: string, corridor: string, callback: any) {
             if (!this.grouper) { // si le grouper n'est pas défini c'est qu'on est encor en chargement, on attends
                 setTimeout(() => {
-                    this.getByCouple(codeapp, couloir, callback);
+                    this.getByCouple(codeapp, corridor, callback);
                 }, 50);
                 
             }
             else {
-                var retour: Array<Event> = [];
-                var arr = this.grouper['apps'][codeapp];
-                if (arr && arr.length && arr.length > 0) {
-                    var position = arr.length;
-                    while (position--) {
-                        if (arr[position].couloir === couloir) {
-                            retour.unshift(arr[position]);
-                        }
-                    }
-                }
-                callback(retour);
+                var ret: Array<Event> = [];
+                var arrApp = this.grouper['apps'][codeapp];
+                var arrCorridor = this.grouper['corridors'][corridor];
+                ret = <any>_.intersection(arrApp, arrCorridor);
+                callback(ret);
             }
         }
 

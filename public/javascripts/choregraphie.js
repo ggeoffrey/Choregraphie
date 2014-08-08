@@ -105324,12 +105324,6 @@ var Server;
 })(Server || (Server = {}));
 
 var Database = new Server.Database();
-Array.prototype.forEach = function (fn) {
-    for (var i = 0, len = this.length; i < len; i++) {
-        fn.call(null, this[i], i, this);
-    }
-};
-
 window.objectSize = function (object) {
     var size = 0;
     for (var i in object) {
@@ -107350,6 +107344,7 @@ var CallTree;
             $scope.vm = new CallTree.CallTreeController($scope, $http);
         }]);
 })();
+
 var Events;
 (function (Events) {
     var EventsController = (function () {
@@ -107396,34 +107391,74 @@ var Events;
         };
 
         EventsController.prototype.parseData = function () {
-            this.grouper = {};
-            this.grouper['apps'] = {};
-            this.grouper['couloirs'] = {};
-            this.grouper['types'] = {};
-
             var length = this.events.length;
             var event;
             while (length--) {
                 event = this.events[length];
                 event.description = this.getDescriptionOf(event);
-
                 event.start_time = new Date(event.start_time);
-
-                if (!this.grouper['apps'][event.codeapp]) {
-                    this.grouper['apps'][event.codeapp] = [];
-                }
-                this.grouper['apps'][event.codeapp].push(event);
-
-                if (!this.grouper['couloirs'][event.couloir]) {
-                    this.grouper['couloirs'][event.couloir] = [];
-                }
-                this.grouper['couloirs'][event.couloir].push(event);
-
-                if (!this.grouper['types'][event.type]) {
-                    this.grouper['types'][event.type] = [];
-                }
-                this.grouper['types'][event.type].push(event);
             }
+
+            var apps = _.groupBy(this.events, function (event) {
+                return event.codeapp;
+            });
+            var corridors = _.groupBy(this.events, function (event) {
+                return event.couloir;
+            });
+            var type = _.groupBy(this.events, function (event) {
+                return event.type;
+            });
+            var date = _.groupBy(this.events, function (event) {
+                return event.start_time;
+            });
+
+            this.grouper = {
+                apps: apps,
+                corridors: corridors,
+                types: type,
+                date: date
+            };
+
+            this.filterEvents();
+        };
+
+        EventsController.prototype.filterEvents = function () {
+            var newGroup = {};
+
+            var limit = this.limitShownFilter || 100;
+
+            var nameRegExp = new RegExp(this.nameFilter, 'gi');
+            var corridorRegExp = new RegExp(this.corridorFilter, 'gi');
+            var typeRegExp = new RegExp(this.typeFilter, 'gi');
+
+            var found = 0;
+            _.each(this.grouper['date'], function (events, date) {
+                var actualFoundEvents = found;
+                if (found < limit) {
+                    var key = moment(date).calendar();
+                    newGroup[key] = [];
+                    _.each(events, function (event) {
+                        if (found < limit) {
+                            var match = (typeRegExp.test(event.type) && nameRegExp.test(event.codeapp) && corridorRegExp.test(event.couloir));
+                            if (match) {
+                                newGroup[key].push(event);
+                                found++;
+                            }
+                        }
+                    });
+
+                    if (found === actualFoundEvents) {
+                        delete newGroup[key];
+                    }
+                }
+            });
+
+            this.filteredGroup = newGroup;
+            var keys = _.keys(newGroup);
+            keys.sort(function (a, b) {
+                return new Date(b).getTime() - new Date(a).getTime();
+            });
+            this.filteredGroupKeys = keys;
         };
 
         EventsController.prototype.getStyleOf = function (event) {
@@ -107492,24 +107527,18 @@ var Events;
             }
         };
 
-        EventsController.prototype.getByCouple = function (codeapp, couloir, callback) {
+        EventsController.prototype.getByCouple = function (codeapp, corridor, callback) {
             var _this = this;
             if (!this.grouper) {
                 setTimeout(function () {
-                    _this.getByCouple(codeapp, couloir, callback);
+                    _this.getByCouple(codeapp, corridor, callback);
                 }, 50);
             } else {
-                var retour = [];
-                var arr = this.grouper['apps'][codeapp];
-                if (arr && arr.length && arr.length > 0) {
-                    var position = arr.length;
-                    while (position--) {
-                        if (arr[position].couloir === couloir) {
-                            retour.unshift(arr[position]);
-                        }
-                    }
-                }
-                callback(retour);
+                var ret = [];
+                var arrApp = this.grouper['apps'][codeapp];
+                var arrCorridor = this.grouper['corridors'][corridor];
+                ret = _.intersection(arrApp, arrCorridor);
+                callback(ret);
             }
         };
         return EventsController;

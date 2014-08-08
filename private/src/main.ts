@@ -1,6 +1,6 @@
 /// <reference path="../angular.d.ts" />
 /// <reference path="../window.d.ts" />
-/// <reference path="../underscore.d.ts" />
+
 /// <reference path="../moment.d.ts" />
 
 
@@ -22,11 +22,11 @@
 	Customizing some methods
 */
 
-Array.prototype.forEach = function(fn) : void {
+/*Array.prototype.forEach = function(fn) : void {
 	for (var i = 0, len = this.length; i < len; i++) {
 		fn.call(null,this[i],i,this);
 	}
-};
+};*/
 
 window.objectSize = function(object: any) : number  {
 	var size : number = 0;

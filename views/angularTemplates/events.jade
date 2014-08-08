@@ -1,41 +1,49 @@
 //- events.jade
 
 .row
-	.well.row.controls
-		.col-md-11.form-inline
-			input.form-control(type='search', ng-model='vm.codeappFilter', placeholder='Application')
-			input.form-control(type='search', ng-model='vm.couloirFilter', placeholder='Couloir')
-			select.form-control(ng-model='vm.typeFilter')
-				option(value='', selected='selected') All
-				option(value='appels') Calls
-				option(value='erreurs') Errors
-				option(value='tendance') Behaviour
+		.well.row.controls
+			.col-md-11.form-inline(ng-init='vm.filterEvents()')
+				input.form-control(type='search', ng-model='vm.nameFilter', placeholder='/^Application$/gi', ng-change='vm.filterEvents()')
+				input.form-control(type='search', ng-model='vm.corridorFilter', placeholder='Corridor', ng-change='vm.filterEvents()')
+				select.form-control(ng-model='vm.typeFilter', ng-change='vm.filterEvents()')
+					option(value='', selected='selected') All
+					option(value='appels') Calls
+					option(value='erreurs') Errors
+					option(value='tendance') Behaviour
+				input.form-control(type='number', ng-model='vm.limitShownFilter', placeholder='Max displayed', ng-change='vm.filterEvents()', ng-init='vm.limitShownFilter = 100')
 
-		.col-md-1
-			button.btn.btn-info(ng-click='vm.load()')
-				span.glyphicon.glyphicon-refresh
-				| Refresh
-.row
+			.col-md-1
+				button.btn.btn-info(ng-click='vm.load()')
+					span.glyphicon.glyphicon-refresh
+					| Refresh
+
+.row.event-section(ng-repeat="date in vm.filteredGroupKeys")
 	.col-md-12
-		.event.animate.col-md-4(ng-repeat="event in vm.events  | filter: {codeapp: vm.codeappFilter, couloir: vm.couloirFilter, type: vm.typeFilter}    | limitTo:100 ", ng-click='vm.selectEvent(event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
-			.event-wrapper(ng-style='vm.getStyleOf(event)')
-				div(style='float: right;') [[event.couloir]]
-				div [[event.codeapp]][[vm.getDescriptionOf(event)]]
-				div(am-time-ago='event.start_time')
-				.details(ng-show='event.selected')
-					div
-						b [[event.start_time.toLocaleString()]] 
+		.row(valign='bottom')
+			.col-md-3
+				h2 [[date]]
+			
+			h2(am-time-ago='date', style='float:right')
+				
+			
+		.row
+			.event.col-md-4(ng-repeat="event in vm.filteredGroup[date]", ng-click='vm.selectEvent(event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
+				.event-wrapper(ng-style='vm.getStyleOf(event)')
+					div(style='float: right;') [[event.couloir]]
+					div [[event.codeapp]][[event.description]]
+					//-div(am-time-ago='event.start_time')
 					div
 						| About:
 						b [[event.codetype]]
-					div
-						| Value:
-						b [[event.oldValue]]→[[event.value]]
-					hr
-					span
-						| Seen:
-						input(type='checkbox', ng-model='event.seen', ng-change='vm.setEventSeen(event)')
-						| [[event.seen ? 'Yes': 'No']]
-						a.btn.btn-default.push-right(target='_blank', ng-href='#/history/[[event.codeapp]]/[[event.couloir]]')
-							span.glyphicon.glyphicon-arrow-right
-							| Watch history
+					.details(ng-show='event.selected')
+						div
+							| Value:
+							b [[event.oldValue]]→[[event.value]]
+						hr
+						span
+							| Seen:
+							input(type='checkbox', ng-model='event.seen', ng-change='vm.setEventSeen(event)')
+							| [[event.seen ? 'Yes': 'No']]
+							a.btn.btn-default.push-right(target='_blank', ng-href='#/history/[[event.codeapp]]/[[event.couloir]]')
+								span.glyphicon.glyphicon-arrow-right
+								| Watch history
