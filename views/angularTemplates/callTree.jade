@@ -1,12 +1,16 @@
 div
-	.col-xs-12
+	.col-md-12
 		div#callTree
 			canvas#webglTarget
-			span.legende.panelInterface
+			.row.legende.panelInterface
+				.col-md-2
+					input#date-start.form-control(type='date')
+				.col-md-8
+					svg#brushContainer(style='width: 100%; height: 20px;')
+				.col-md-2
+					input#date-end.form-control(type='date')
 				div
-					svg#brushContainer(style='width: 99%; height: 20px;')
-				div
-					.col-xs-12
+					.col-md-12
 						.btn-group
 							button.btn.btn-default.dropdown-toggle.btn-callTree(type='button', ng-click='toggleListeNoeuds()')
 								span.glyphicon.glyphicon-search

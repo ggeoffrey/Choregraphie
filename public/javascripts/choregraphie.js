@@ -105885,6 +105885,15 @@ var CallTree;
 
                 d3.select(_this.canvas).transition().duration(window.getTransitionDuration()).style('opacity', '1');
 
+                var datePickerChange = function () {
+                    var start = new Date($('#date-start').val());
+                    var end = new Date($('#date-end').val());
+
+                    _this.updateDiagram(start, end);
+                };
+                $('#date-start').change(datePickerChange);
+                $('#date-end').change(datePickerChange);
+
                 if (!_this.$scope.$$phase) {
                     _this.$scope.$apply();
                 }
@@ -105978,9 +105987,8 @@ var CallTree;
                 brushedTimeout = setTimeout(function () {
                     var value = brush.extent();
 
-                    var minDate = value[0];
-                    var maxDate = new Date(minDate);
-                    maxDate = new Date(maxDate.setDate(maxDate.getDate() + 1));
+                    $('#date-start').val(window.toDateInputValue(value[0]));
+                    $('#date-end').val(window.toDateInputValue(value[1]));
 
                     _this.updateDiagram(value[0], value[1]);
                 }, 50);

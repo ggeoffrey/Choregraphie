@@ -302,6 +302,15 @@ module CallTree {
 					.duration(window.getTransitionDuration())
 					.style('opacity', '1');
 
+				var datePickerChange = ()=>{
+					var start = new Date($('#date-start').val());
+					var end = new Date($('#date-end').val());
+
+					this.updateDiagram(start, end);
+				};
+				$('#date-start').change(datePickerChange);
+                $('#date-end').change(datePickerChange);
+
 				if (!this.$scope.$$phase) {
 					this.$scope.$apply();
 				}
@@ -440,12 +449,9 @@ module CallTree {
 				brushedTimeout = setTimeout(() => {
 					var value = brush.extent();
 
-					var minDate = value[0];
-					var maxDate = new Date(minDate);
-					maxDate = new Date(maxDate.setDate(maxDate.getDate() + 1));   // Pas = un jour
+					$('#date-start').val(window.toDateInputValue(value[0]));
+                    $('#date-end').val(window.toDateInputValue(value[1]));
 
-					//var width = timeScale(maxDate) - timeScale(minDate);
-					//$('svg g.brush rect.extent').attr('width', width+'px');
 					this.updateDiagram(value[0], value[1]);
 				}, 50);
 			}
