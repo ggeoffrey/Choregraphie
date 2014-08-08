@@ -11,6 +11,7 @@
 					option(value='erreurs') Errors
 					option(value='tendance') Behaviour
 				input.form-control(type='number', ng-model='vm.limitShownFilter', placeholder='Max displayed', ng-change='vm.filterEvents()', ng-init='vm.limitShownFilter = 100')
+				
 
 			.col-md-1
 				button.btn.btn-info(ng-click='vm.load()')

@@ -22,11 +22,10 @@
 	Customizing some methods
 */
 
-/*Array.prototype.forEach = function(fn) : void {
-	for (var i = 0, len = this.length; i < len; i++) {
-		fn.call(null,this[i],i,this);
-	}
-};*/
+window.toDateInputValue = function(date: Date) : string {
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    return date.toJSON().slice(0,10);
+};
 
 window.objectSize = function(object: any) : number  {
 	var size : number = 0;

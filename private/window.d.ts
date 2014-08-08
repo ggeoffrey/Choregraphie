@@ -3,6 +3,7 @@ interface Window {
     startLoader(): void;
     stopLoader(): void;
     ChoregraphieControllers: any;
+    toDateInputValue(date: Date): string;
     objectSize(object: any): number;
 
     lastRouteName: string;

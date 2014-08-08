@@ -105324,6 +105324,11 @@ var Server;
 })(Server || (Server = {}));
 
 var Database = new Server.Database();
+window.toDateInputValue = function (date) {
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    return date.toJSON().slice(0, 10);
+};
+
 window.objectSize = function (object) {
     var size = 0;
     for (var i in object) {
@@ -109200,17 +109205,15 @@ describe('Main', function () {
         });
     });
 
-    describe('Array.prototype.forEach', function () {
+    describe('window.toDateInputValue', function () {
         it('should be a Function', function () {
-            Should(Array.prototype.forEach).be.a.Function;
+            Should(window.toDateInputValue).be.a.Function;
         });
 
-        it('should iterate over an array', function () {
-            var array = [1, 2, 3, 4, 5];
-            array.forEach(function (value, index) {
-                var indexOfValue = array.indexOf(value);
-                Should(indexOfValue).be.exactly(index);
-            });
+        it('should return a string matching', function () {
+            var d = new Date();
+            var dString = window.toDateInputValue(d);
+            Should(dString).match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/);
         });
     });
 

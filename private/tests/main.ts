@@ -51,17 +51,15 @@ describe('Main', function(){
 	});
 
 
-	describe('Array.prototype.forEach', function(){
+	describe('window.toDateInputValue', function(){
 		it('should be a Function', function(){
-			Should(Array.prototype.forEach).be.a.Function;
+			Should(window.toDateInputValue).be.a.Function;
 		});
 
-		it('should iterate over an array', function(){
-			var array: Array<number> = [1,2,3,4,5];
-			array.forEach(function(value, index){
-				var indexOfValue = array.indexOf(value);
-				Should(indexOfValue).be.exactly(index);
-			});
+		it('should return a string matching', function(){
+			var d = new Date();
+			var dString = window.toDateInputValue(d);
+			Should(dString).match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/);
 		});
 	});
 
