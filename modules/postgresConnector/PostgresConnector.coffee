@@ -89,7 +89,7 @@ class Connector
 			queryText = "
 				SELECT codeapp, couloir, codetype, start_time, seen, deleted, old_value, value, diff_stddev, type, id
 				FROM ccol.metric_events
-				GROUP BY start_time, codeapp, couloir, type, seen, deleted, old_value, value, diff_stddev, type, id
+				GROUP BY start_time, codeapp, couloir, type, codetype, seen, deleted, old_value, value, diff_stddev, type, id
 				ORDER BY start_time DESC;
 			"
 			if not Connector.cache.events? or forceUpdate is on
