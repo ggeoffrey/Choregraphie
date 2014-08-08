@@ -31,11 +31,12 @@
 			.event.col-md-4(ng-repeat="event in vm.filteredGroup[date]", ng-click='vm.selectEvent(event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
 				.event-wrapper(ng-style='vm.getStyleOf(event)')
 					div(style='float: right;') [[event.couloir]]
-					div [[event.codeapp]][[event.description]]
+					div 
+						b [[event.codeapp]]
+						span [[event.description]]
 					//-div(am-time-ago='event.start_time')
 					div
-						| About:
-						b [[event.codetype]]
+						| About: [[event.codetype]]
 					.details(ng-show='event.selected')
 						div
 							| Value:

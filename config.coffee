@@ -1,11 +1,20 @@
 ###
-
 	Chorégraphie main configuration
 
-	if you are looking for the database configuration,
-	you should search in ./modules/<your_database_type>Connector/config.js
-
+	Are you looking for the database configuration? ->
+		you should search in ./modules/<your_database_type>Connector/config.js
 ###
 
 module.exports = 
-	port: 3001
+	port: 3001    # Be careful ! *HttpServer* will listen on this port but *Express* will still listen on 3000
+	
+	# If the following boolean is set to true, only the applications/corridors listed bellow will be shown in Chorégraphie
+	# It allows you to hide some applications/corridor even if they exist in your database
+	
+	limitDataToConfigSpecifiedList : false
+	apps : [
+		"VMIR"
+	]
+	corridors : [
+		"X_00"
+	]

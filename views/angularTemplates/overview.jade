@@ -65,7 +65,9 @@
 						.event(ng-repeat='event in vm.eventsController.events | limitTo:20', ng-mouseenter='vm.eventsController.selectEvent(event)', ng-mouseleave='vm.eventsController.unSelectEvent(event)', ng-class='event.selected ? \'selected\' : event.seen ? \'seen\' : \'\' ')
 							.event-wrapper(ng-style='vm.eventsController.getStyleOf(event)')
 								div(style='float: right;') [[event.couloir]]
-								div [[event.codeapp]][[vm.eventsController.getDescriptionOf(event)]]
+								div 
+									b [[event.codeapp]]
+									span [[vm.eventsController.getDescriptionOf(event)]]
 								div(am-time-ago='event.start_time')
 								.details(ng-show='event.selected')
 									div

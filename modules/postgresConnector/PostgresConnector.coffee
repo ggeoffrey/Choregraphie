@@ -6,6 +6,7 @@ Node = require './Node'
 Link = require './Link'
 Event = require './Event'
 
+appConfig = require '../../config'
 
 
 
@@ -38,52 +39,64 @@ class Connector
 	class @PgConnector
 
 		@getApplications : (callback, forceUpdate) ->
-			queryText = "
-				SELECT DISTINCT codeapp
-				FROM ccol.appli
-				ORDER BY codeapp;
-			"
 
-			if not Connector.cache.applications? or forceUpdate is on
-				Connector.getClient (client, done)->
-					query = client.query queryText
-					result = []
-
-					query.on 'row', (row)-> result.push row.codeapp
-
-					query.on 'end', ->
-						callback(result)
-						done()
-						Connector.cache.applications = result
-
-					query.on 'error', (err) -> console.log(err)
+			# Read from config if data are limited to it
+			if appConfig.limitDataToConfigSpecifiedList is true
+				callback(appConfig.apps or [])
 			else
-				callback(Connector.cache.applications)
+				# read from database if config allows it
+				queryText = "
+					SELECT DISTINCT codeapp
+					FROM ccol.appli
+					ORDER BY codeapp;
+				"
+
+				if not Connector.cache.applications? or forceUpdate is on
+					Connector.getClient (client, done)->
+						query = client.query queryText
+						result = []
+
+						query.on 'row', (row)-> result.push row.codeapp
+
+						query.on 'end', ->
+							callback(result)
+							done()
+							Connector.cache.applications = result
+
+						query.on 'error', (err) -> console.log(err)
+				else
+					callback(Connector.cache.applications)
 
 		@getCorridors : (callback, forceUpdate)->
-			queryText = "
-				SELECT DISTINCT couloir
-				FROM ccol.appli
-				ORDER BY couloir
-				;
-			"
 
-			if not Connector.cache.corridors? or forceUpdate is on
-				Connector.getClient (client, done)->
-					query = client.query queryText
-					result = []
-
-					query.on 'row', (row)-> result.push row.couloir
-
-					query.on 'end', ->
-						callback(result)
-						done()
-						Connector.cache.corridors = result
-
-					query.on 'error', (err) -> console.log(err)
-
+			# Read from config if data are limited to it
+			if appConfig.limitDataToConfigSpecifiedList is true
+				callback(appConfig.corridors or [])
 			else
-				callback(Connector.cache.corridors)
+				# read from database if config allows it
+				queryText = "
+					SELECT DISTINCT couloir
+					FROM ccol.appli
+					ORDER BY couloir
+					;
+				"
+
+				if not Connector.cache.corridors? or forceUpdate is on
+					Connector.getClient (client, done)->
+						query = client.query queryText
+						result = []
+
+						query.on 'row', (row)-> result.push row.couloir
+
+						query.on 'end', ->
+							callback(result)
+							done()
+							Connector.cache.corridors = result
+
+						query.on 'error', (err) -> console.log(err)
+
+				else
+					callback(Connector.cache.corridors)
 
 		@getEvents : (callback, forceUpdate)->
 			queryText = "
