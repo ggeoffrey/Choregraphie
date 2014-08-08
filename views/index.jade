@@ -6,7 +6,7 @@ block content
 				include navbar.jade
 			if tests
 				#mocha
-			#view(ng-view='ng-view')
+			#view.view-animate(ng-view)
 		div(snap-drawer='right')
 			#conf-container(ng-controller='configController')
 				.row

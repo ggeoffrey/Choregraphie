@@ -110,30 +110,10 @@ window.objectSize = function(object: any) : number  {
 			
 
 			$rootScope.$on('$locationChangeStart', (event, current, next) => { // When the page begin to load
-				
 				document.body.style.cursor = 'wait';
-
-				window.lastRouteName = window.routeName;
-				window.routeName = '#'+$location.path();
-
-                if (window.lastRouteName === '#/callTree') {
-                    var duration = window.getTransitionDuration() / 2;
-                    if (duration > 0) {
-                        event.preventDefault();
-                        $(' #view, #snap-drawer-left, #snap-drawer-right').fadeOut(duration, function () {
-                            console.log(current);
-                            console.log(next);
-                            window.location = current;
-                        });
-                    }
-                }
-                
-
 			});
 
 			$rootScope.$on('$routeChangeSuccess', (event, current, preview) => { // if the page hase changed successfully
-				$(' #view, #snap-drawer-left, #snap-drawer-right').fadeIn(window.getTransitionDuration());
-
 				document.body.style.cursor = 'auto';
 			});
 
@@ -212,25 +192,6 @@ module Main {
 	 	private _links: Array<Link>;
 	 	
 
-
-	 	// weather and fades
-	 	private minDuration = 600;
-	 	private maxDuration = 4000;
-
-	 	private weather: any;
-	 	private rangeTransition: any; // D3.scale.linear
-	 	private sunRise: Date;
-		private sunSet : Date;  
-		private sunEndRise: Date; // 2h after
-		private sunBeginSet: Date; // 2h before
-		public luminosity: number;
-
-		public iconUrl: string;
-
-		public disableTransition: boolean;
-		public forceTransition: boolean;
-		
-
 		constructor( $scope, $http, $rootParams) {
 			this.scope = $scope;
 			this.http = $http;
@@ -271,105 +232,14 @@ module Main {
 			];
 			
 
-            
-
-			this.getWeather();
-
-			setInterval(()=>{
-				this.getWeather(true);
-			}, 7200000); // 2h
-
-			this.rangeTransition = d3.scale.linear()
-									 .domain([0, 100])
-									 .range([this.maxDuration, this.minDuration]);
-
-			window.getTransitionDuration = this.getTransitionDuration;
-
-			this.disableTransition = !!parseInt(sessionStorage.getItem('disableTransition')) || false;
-			this.forceTransition = !!parseInt(sessionStorage.getItem('forceTransition')) || false;
 
 		}
 
 		get links() :Array<Link> {
 			return this._links;
 		}
+	
 		
-
-		private getWeather(update?: boolean):void {
-
-            var next = () => {
-                if (this.weather) {
-
-                    this.luminosity = 100 - this.weather.clouds.all;
-                    this.sunRise = new Date(this.weather.sys.sunrise);
-                    this.sunSet = new Date(this.weather.sys.sunset);
-                    this.sunEndRise = new Date(this.weather.sys.sunrise);
-                    this.sunEndRise.setHours(this.sunEndRise.getHours() + 2);
-                    this.sunBeginSet = new Date(this.weather.sys.sunset);
-                    this.sunBeginSet.setHours(this.sunBeginSet.getHours() - 2);
-
-                    this.iconUrl = 'http://openweathermap.org/img/w/' + this.weather.weather[0].icon + '.png';
-                }
-                
-				if(!this.scope.$$phase) this.scope.$apply();
-			}
-
-			var weather = sessionStorage.getItem('weather');
-			if(weather && !update){
-				this.weather = JSON.parse(weather);
-				next();
-			}
-			else{
-				$.get('http://api.openweathermap.org/data/2.5/weather?q=Metz,FR')
-					.done((data)=>{
-						sessionStorage.setItem('weather', JSON.stringify(data));
-						data.sys.sunrise *= 1000;
-						data.sys.sunset *= 1000;
-						this.weather = data;
-						
-						next();
-					});
-				
-			}
-		}
-
-		private getTransitionDuration(): number {
-            var finalDuration: number = 0;
-
-            if (this.weather) {
-                finalDuration = this.minDuration;
-                var now: Date = new Date();
-
-                var isNight = (now < this.sunRise) || (now > this.sunSet);
-                var isDark = !isNight && (now < this.sunEndRise) && (now > this.sunBeginSet);
-
-                if (this.disableTransition) finalDuration = 0;
-                else if (this.forceTransition) finalDuration = this.maxDuration;
-                else if (isNight) finalDuration = this.maxDuration;
-                else if (isDark || this.luminosity <= 10) finalDuration = this.maxDuration * (0.75);
-                else {
-                    finalDuration = this.rangeTransition(this.luminosity);
-                }
-            }
-
-			return finalDuration;
-
-		}
-
-		public updatePreferences = (lastSelected : string): void =>{
-
-			if(this.disableTransition && this.forceTransition){
-				this[lastSelected] = false;
-			}
-
-			var str = ''+(this.disableTransition?1:0);
-			sessionStorage.setItem('disableTransition', str );
-
-			str = ''+ (this.forceTransition?1:0 );
-			sessionStorage.setItem('forceTransition', str );
-		}
-
-
 
 		public isActiveLink = (link: Link) : string => {
 			return link.href == window.routeName ? 'active' : '' ;

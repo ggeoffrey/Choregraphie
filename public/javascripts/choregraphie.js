@@ -105375,26 +105375,9 @@ window.objectSize = function (object) {
         '$rootScope', '$location', 'amMoment', function ($rootScope, $location, amMoment) {
             $rootScope.$on('$locationChangeStart', function (event, current, next) {
                 document.body.style.cursor = 'wait';
-
-                window.lastRouteName = window.routeName;
-                window.routeName = '#' + $location.path();
-
-                if (window.lastRouteName === '#/callTree') {
-                    var duration = window.getTransitionDuration() / 2;
-                    if (duration > 0) {
-                        event.preventDefault();
-                        $(' #view, #snap-drawer-left, #snap-drawer-right').fadeOut(duration, function () {
-                            console.log(current);
-                            console.log(next);
-                            window.location = current;
-                        });
-                    }
-                }
             });
 
             $rootScope.$on('$routeChangeSuccess', function (event, current, preview) {
-                $(' #view, #snap-drawer-left, #snap-drawer-right').fadeIn(window.getTransitionDuration());
-
                 document.body.style.cursor = 'auto';
             });
         }
@@ -105436,20 +105419,6 @@ var Main;
 (function (Main) {
     var MainController = (function () {
         function MainController($scope, $http, $rootParams) {
-            var _this = this;
-            this.minDuration = 600;
-            this.maxDuration = 4000;
-            this.updatePreferences = function (lastSelected) {
-                if (_this.disableTransition && _this.forceTransition) {
-                    _this[lastSelected] = false;
-                }
-
-                var str = '' + (_this.disableTransition ? 1 : 0);
-                sessionStorage.setItem('disableTransition', str);
-
-                str = '' + (_this.forceTransition ? 1 : 0);
-                sessionStorage.setItem('forceTransition', str);
-            };
             this.isActiveLink = function (link) {
                 return link.href == window.routeName ? 'active' : '';
             };
@@ -105484,19 +105453,6 @@ var Main;
                     classes: 'glyphicon glyphicon-resize-full'
                 }
             ];
-
-            this.getWeather();
-
-            setInterval(function () {
-                _this.getWeather(true);
-            }, 7200000);
-
-            this.rangeTransition = d3.scale.linear().domain([0, 100]).range([this.maxDuration, this.minDuration]);
-
-            window.getTransitionDuration = this.getTransitionDuration;
-
-            this.disableTransition = !!parseInt(sessionStorage.getItem('disableTransition')) || false;
-            this.forceTransition = !!parseInt(sessionStorage.getItem('forceTransition')) || false;
         }
         Object.defineProperty(MainController.prototype, "links", {
             get: function () {
@@ -105505,67 +105461,6 @@ var Main;
             enumerable: true,
             configurable: true
         });
-
-        MainController.prototype.getWeather = function (update) {
-            var _this = this;
-            var next = function () {
-                if (_this.weather) {
-                    _this.luminosity = 100 - _this.weather.clouds.all;
-                    _this.sunRise = new Date(_this.weather.sys.sunrise);
-                    _this.sunSet = new Date(_this.weather.sys.sunset);
-                    _this.sunEndRise = new Date(_this.weather.sys.sunrise);
-                    _this.sunEndRise.setHours(_this.sunEndRise.getHours() + 2);
-                    _this.sunBeginSet = new Date(_this.weather.sys.sunset);
-                    _this.sunBeginSet.setHours(_this.sunBeginSet.getHours() - 2);
-
-                    _this.iconUrl = 'http://openweathermap.org/img/w/' + _this.weather.weather[0].icon + '.png';
-                }
-
-                if (!_this.scope.$$phase)
-                    _this.scope.$apply();
-            };
-
-            var weather = sessionStorage.getItem('weather');
-            if (weather && !update) {
-                this.weather = JSON.parse(weather);
-                next();
-            } else {
-                $.get('http://api.openweathermap.org/data/2.5/weather?q=Metz,FR').done(function (data) {
-                    sessionStorage.setItem('weather', JSON.stringify(data));
-                    data.sys.sunrise *= 1000;
-                    data.sys.sunset *= 1000;
-                    _this.weather = data;
-
-                    next();
-                });
-            }
-        };
-
-        MainController.prototype.getTransitionDuration = function () {
-            var finalDuration = 0;
-
-            if (this.weather) {
-                finalDuration = this.minDuration;
-                var now = new Date();
-
-                var isNight = (now < this.sunRise) || (now > this.sunSet);
-                var isDark = !isNight && (now < this.sunEndRise) && (now > this.sunBeginSet);
-
-                if (this.disableTransition)
-                    finalDuration = 0;
-                else if (this.forceTransition)
-                    finalDuration = this.maxDuration;
-                else if (isNight)
-                    finalDuration = this.maxDuration;
-                else if (isDark || this.luminosity <= 10)
-                    finalDuration = this.maxDuration * (0.75);
-                else {
-                    finalDuration = this.rangeTransition(this.luminosity);
-                }
-            }
-
-            return finalDuration;
-        };
         return MainController;
     })();
     Main.MainController = MainController;
@@ -105882,8 +105777,6 @@ var CallTree;
                     purgeLinks: _this.purgeLinks,
                     updateDiagram: _this.updateDiagram
                 };
-
-                d3.select(_this.canvas).transition().duration(window.getTransitionDuration()).style('opacity', '1');
 
                 var datePickerChange = function () {
                     var start = new Date($('#date-start').val());

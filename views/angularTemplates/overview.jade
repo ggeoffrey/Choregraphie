@@ -78,6 +78,6 @@
 										| Seen:
 										input(type='checkbox', ng-model='event.seen', ng-change='vm.eventsController.setEventSeen(event)')
 										| [[event.seen ? 'Oui': 'Non']]
-									a.btn.btn-default.push-right(target='_blank', ng-href='#/history/[[event.codeapp]]/[[event.couloir]]')
+									a.btn.btn-default.push-right(ng-href='#/history/[[event.codeapp]]/[[event.couloir]]')
 										span.glyphicon.glyphicon-arrow-right
 										| Watch history

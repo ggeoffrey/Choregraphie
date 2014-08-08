@@ -22,11 +22,7 @@ div(ng-controller='mainController')
 								| [[link.label]]
 					ul.nav.navbar-nav.navbar-right
 						ul.nav.navbar-nav.links
-							
-							li
-								a(href='', data-toggle='modal', data-target='#meteoModal')
-									span.glyphicon.glyphicon-adjust
-									| [[100-vm.luminosity]]%
+
 							li
 								a(snap-toggle='right')
 									span.glyphicon.glyphicon-cog
@@ -35,32 +31,3 @@ div(ng-controller='mainController')
 								a(href='')
 									span.glyphicon.glyphicon-arrow-right
 									| Se déconnecter
-						
-		#meteoModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true', data-backdrop='false')
-			.modal-dialog
-				.modal-content
-					.modal-header
-						button.close(type='button', data-dismiss='modal')
-							span(aria-hidden='true') ×
-							span.sr-only Fermer
-						h4#myModalLabel.modal-title Protégez vos yeux!
-					.modal-body
-						| Chorégraphie pense à vos yeux et adapte les transitions de couleurs en fonction de l'heure ou de la luminosité exterieur.
-						br
-						| Le diagramme des appels est sur fond noir, le reste sur fond blanc. Si vous consultez l'application souvent lorsque le soleil est couché, proche de l'horizon, ou caché par les nuages vous apprécierez certainement les transitions permettant à vos yeux de s'adapter sans douleur.
-						br
-						br
-						.row
-							.col-md-5
-								b
-									| Désactiver les transitions:
-									br
-									| Forcer les transition:
-								br
-							.col-md-6
-								input(type='checkbox', ng-model='vm.disableTransition', ng-change='vm.updatePreferences(\'forceTransition\')')
-								| (je préfère gagner du temps)
-								br
-								input(type='checkbox', ng-model='vm.forceTransition', ng-change='vm.updatePreferences(\'disableTransition\')')
-								| (Mon bureau c'est la batcave!)
-					.modal-footer

@@ -297,10 +297,7 @@ module CallTree {
 				};
 
 
-				d3.select(this.canvas)
-					.transition()
-					.duration(window.getTransitionDuration())
-					.style('opacity', '1');
+				
 
 				var datePickerChange = ()=>{
 					var start = new Date($('#date-start').val());
