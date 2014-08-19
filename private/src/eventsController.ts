@@ -79,6 +79,15 @@ module Events {
             window.Database.socket.on('eventChanged', (event)=>{
                 this.updateEvent(event);
             });
+
+            var $bubble = $('#bubble');
+
+            $bubble.on('mouseover', (event)=>{
+                event.preventDefault();
+                event.stopPropagation();
+                this.selectEvent(this.selectedEvent);
+                this.forceUpdate();
+            });
 		}
 
 		private init = (): void=>{
@@ -101,7 +110,7 @@ module Events {
 
                 window.stopLoader();
 
-                if(!this.scope.$$phase) this.scope.$apply();
+                this.forceUpdate();
                 
             });	
         }
@@ -183,9 +192,17 @@ module Events {
 
         }
 
-        public getStyleOf(event: Event): any {
-            return {
-                'background-color': this.colorBuilder(event.type),
+        public getStyleOf(event?: Event): any {
+
+            if(event){
+                return {
+                    'background-color': this.colorBuilder(event.type),
+                }
+            }
+            else if (this.selectedEvent) {
+                return {
+                    'background-color': this.colorBuilder(this.selectedEvent.type),
+                }   
             }
         }
 
@@ -203,30 +220,63 @@ module Events {
             return description;
         }
 
-        public selectEvent(event: Event) {
+        public selectEvent(event: Event, $event?: any) {
+            if(this.unselectTimeout){
+                clearTimeout(this.unselectTimeout);
+            }
             if (this.selectedEvent) {
                 this.selectedEvent.selected = false;
             }
             this.selectedEvent = event;
+            
+
+            if ($event) {
+                var $bubble = $('#bubble');
+                var $target = $($event.currentTarget);
+                var newOffset = $target.offset();
+
+                newOffset.left += ($target.width() / 3) * 2;
+                
+                
+                newOffset.top += ($target.height() - $bubble.height() / 2) - $('#container').offset().top;
+                $bubble.css('z-index', 999);
+                $bubble.stop().clearQueue().animate(newOffset);
+            }
+
             this.selectedEvent.selected = true;
-        }  
+            this.forceUpdate();
+        }
+
+
+        private unselectTimeout;
 
         public unSelectEvent(event: Event) {
             if (this.selectedEvent) {
                 this.selectedEvent.selected = false;
             }
+            var previous = $('#bubble').offset();
+            this.unselectTimeout = setTimeout(function () {
+                $('#bubble').animate({ left: '100%' }, 500, function(){
+                    $(this).css('z-index', 0);
+                    previous.top = previous.top - $('#container').offset().top;
+                    $(this).animate(previous);
+                });
+            }, 1000);
         }
 
-        public setEventSeen(event: Event) {
+        public setEventSeen() {
             //window.startLoader();
 
+            var event = this.selectedEvent;
             var confirm = function(success){
                 if(!success){
                     event.selected = !event.selected;
-                    if(!this.scope.$$phase) this.scope.$apply();
+                    this.forceUpdate();
                 }
             }
 
+
+            event.seen = !event.seen;
             window.Database.setEvent(confirm, event);
 
             /*this.http.get('api/set/events?action=seen&target='+event.id+'&value='+event.seen)
@@ -284,6 +334,11 @@ module Events {
 		public toggle = (): void => {
 			this.window.toggleEvents();
 		}
+
+
+        private forceUpdate(): void {
+            if(!this.scope.$$phase) this.scope.$apply();
+        }
 	}
 // module end
 }

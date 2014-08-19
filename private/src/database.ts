@@ -14,6 +14,9 @@ module Server {
 		constructor(){
 			try{
 				this.socket = io.connect();
+				setInterval(()=>{
+					this.purgeCache();
+				}, 600);
 			}
 			catch(err){
 				console.error(err);
@@ -46,6 +49,10 @@ module Server {
 
 		private clearCache(flag: string): void{
 			sessionStorage.removeItem(flag);
+		}
+
+		private purgeCache() :void {
+			sessionStorage.clear();
 		}
 
 		public getApplications( callback: Function ):void {

@@ -23,6 +23,11 @@ class Connector
 				Connector.connectionString += ":#{config.pass}"
 
 			Connector.connectionString += "@#{config.host}/#{config.databaseName}"
+
+			# Emty cache every 10 minutes
+			setInterval ->
+					cache = {}
+				, 600
 		
 		return Connector.PgConnector
 

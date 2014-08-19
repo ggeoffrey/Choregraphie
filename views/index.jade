@@ -9,36 +9,37 @@ block content
 			#view.view-animate(ng-view)
 		div(snap-drawer='right')
 			#conf-container(ng-controller='configController')
-				.row
-					button.btn.btn-warning(snap-close='snap-close')
-						span.glyphicon.glyphicon-arrow-left
-					img#logo(style='width: 72%;', src='/images/logo.png')
+				
 				#conf-content
 					.row
-						.col-md-12
-							.row
-								.col-md-6
-									b Corridors
-									.btn-group-vertical
-										input.form-control(type='text', placeholder='Name', ng-model="vm.newCorridor", ng-change="bblockAddCorridor = vm.checkExists(vm.newCorridor, 'couloir')")
-										button.btn.btn-default.form-control(type='button', ng-disabled='bblockAddCorridor', ng-click='vm.addCouloir(vm.newCorridor)') Add
-									.row.settings-item(ng-repeat='couloir in vm.corridors | filter:vm.newCorridor')
-										.col-xs-1.remove-item
-											button.btn.btn-default.btn-xs(ng-click='vm.deleteCouloir(couloir)')
-												| ✗
-										.col-xs-5 [[couloir]]
-								.col-md-6
-									b Applications
-									.btn-group-vertical
-										input.form-control(type='text', placeholder='Name', ng-model='vm.newApplications', ng-change='blockAddApp = vm.checkExists(vm.newApplications, \'application\')')
-										button.btn.btn-default.from-control(type='button', ng-disabled='blockAddApp', ng-click='vm.addApplication(vm.newApplications)') Add
+						.col-md-6
+							b Corridors
+							.input-group
+								input.form-control(type='text', placeholder='Name', ng-model="vm.newCorridor", ng-change="bblockAddCorridor = vm.checkExists(vm.newCorridor, 'couloir')")
+								.input-group-btn
+									button.btn.btn-info.form-control(type='button', ng-disabled='bblockAddCorridor', ng-click='vm.addCouloir(vm.newCorridor)')
+										span.glyphicon.glyphicon-plus
+							.row.settings-item(ng-repeat='couloir in vm.corridors | filter:vm.newCorridor')
+								.col-xs-1.remove-item
+									button.btn.btn-default.btn-xs(ng-click='vm.deleteCouloir(couloir)')
+										| ✗
+								.col-xs-5 [[couloir]]
+						.col-md-6
+							b Applications
+							.input-group
+								input.form-control(type='text', placeholder='Name', ng-model='vm.newApplications', ng-change='blockAddApp = vm.checkExists(vm.newApplications, \'application\')')
+								.input-group-btn
+									button.btn.btn-info.from-control(type='button', ng-disabled='blockAddApp', ng-click='vm.addApplication(vm.newApplications)')
+										span.glyphicon.glyphicon-plus
 
-									.row.settings-item(ng-repeat='application in vm.applications | filter:vm.newApplications')
-										.col-xs-1.remove-item
-											button.btn.btn-default.btn-xs(ng-click='vm.deleteApplication(application)')
-												| ✗
-										.col-xs-5 [[application]]
+							.row.settings-item(ng-repeat='application in vm.applications | filter:vm.newApplications')
+								.col-xs-1.remove-item
+									button.btn.btn-default.btn-xs(ng-click='vm.deleteApplication(application)')
+										| ✗
+								.col-xs-5 [[application]]
 	span#snap-dragger .
+
+	
 	
 	script(src="/socket.io/socket.io.js")
 	script(type='text/javascript', src='/javascripts/choregraphie.js')

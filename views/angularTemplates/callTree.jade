@@ -14,11 +14,11 @@ div
 						.btn-group
 							button.btn.btn-default.dropdown-toggle.btn-callTree(type='button', ng-click='toggleListeNoeuds()')
 								span.glyphicon.glyphicon-search
-								| Rechercher
+								| Find
 						.dropdown-menu.listeNoeuds.panelInterface(role='menu')
-							input.form-control(type='search', placeholder='Filtrer les éléments', ng-model='filtreNoeuds')
+							input.form-control(type='search', placeholder='Filter items...', ng-model='filtreNoeuds')
 							ul
-								// The flter directive only work on array, we have to filter by hand here
+								// The filter directive only work on array, we have to filter by hand here
 								li.nodeSelector(ng-repeat='(nom, color) in vm.getNodes(filtreNoeuds)', ng-click='vm.selectNode(nom, false)')
 									span(style='background-color: [[color]]; border-radius: 20px;')
 										| &nbsp;&nbsp;&nbsp;&nbsp;
@@ -52,7 +52,7 @@ div
 								.btn-group
 									button.btn.btn-default.btn-callTree.dropdown-toggle(ng-click='vm.toggleStackTrace()')
 										span.glyphicon.glyphicon-indent-left
-										| Pile des appels
+										| Calls stack
 								.dropdown-menu.stackTrace.panelInterface(role='menu')
 									ul
 										li(ng-repeat='record in vm.getStackTrace() track by $index', style='padding-left: [[record.depth]]em;')

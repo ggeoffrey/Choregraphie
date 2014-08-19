@@ -1,7 +1,7 @@
 connector = require '../postgresConnector'
 
 
-class exports
+class Api
 
     @getApplications :  (callback) ->
         if not callback?
@@ -47,4 +47,4 @@ class exports
         connector.getCalls(callback, false)
 
     
-module.exports = exports
+module.exports = Api

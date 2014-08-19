@@ -3,14 +3,60 @@
 .well {
 	min-height: 20px;
 	padding: 0;
-	margin: -0.5em 2em 0 2em;
+/* 	margin: -0.5em 2em 0 2em; */
 	background-color: rgba(255,255,255,0.8);
-	border-radius: 2px;
-	box-shadow: 0 0 1em lightgray;
+/* 	border-radius: 2px; */
+/* 	box-shadow: 0 0 1em lightgray; */
+	border: 0;
+	box-shadow: none;
 }
 
 .row{
 	margin: 0;
+}
+button.btn{
+	border-top-left-radius:0;	
+	border-top-right-radius:0;
+	border-bottom-left-radius:0;
+	border-bottom-right-radius:0;
+	border: 0;
+}
+
+input, input.form-control, select, select.form-control{
+	border-radius: 0;
+	border: 1px #5bc0de solid;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	box-shadow: none;
+	transition: 0.2s ease all;
+}
+
+input:focus, input.form-control:focus, select {
+	border: 3px orange solid;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	outline: 0;
+	box-shadow: none;
+/* 	padding: 0 0.1em; */
+	transition: 0.2s ease all;
+}
+
+.nav a > span {
+	padding-right: 0.25em;
+}
+
+.nav a > span , .navbar-default .navbar-nav>li>a{
+	color: gray;
+}
+.nav a:hover > span , .navbar-default .navbar-nav>li>a:hover{
+	color: orange;
+	transition: 0.2s ease all;
+}
+.navbar-default .navbar-nav>li>a:hover {
+	border-top: 2px orange solid;
+	transition: 0.2s ease all;
 }
 
 .modal.in .modal-dialog {
@@ -52,14 +98,42 @@
   opacity: 0.5;
 }
 
+/* bubble */
 
+#bubble {
+	position: absolute;
+	float:right;
+	z-index: 9999;
+	
+	overflow: hidden;
+	border-radius: 100%;
+	height: 5em;
+	top: -3em;
+	left: 75%;
+	
+	
+	
+/* 	background-color: #39b3d7; */
+}
+
+#bubble .btn {
+	display: block;
+	margin-bottom: 0.2em;
+	padding-bottom: 0.55em;
+	width: 5em;
+	border-radius: 0;
+}
 
 
 /*main*/
 
-body{
+body{	
 	padding: 0 1%;
-	margin: 1%
+	margin: 1%;	
+}
+
+.snap-content {
+	overflow-x: hidden;
 }
 
 body.snapjs-left #snap-drawer-right, body.snapjs-expand-left #snap-drawer-right{
@@ -92,24 +166,25 @@ a{
 	border-radius: 0;
 }
 .navbar-default{
-	/*  background: rgba(255,255,255,0.75) url(/web/bundles/ccol/images/drag.png) 67% center no-repeat;  */
+	background-color: white;
 	position: absolute;
 	width: 100%;
 	left: 0px;
 	top: 0px;
 	border: none;
 	z-index: 9999;
-    
-	
 }
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
-	text-decoration:  underline
-}
+
 
 #conf-container {
 	text-align: center;
 	padding-bottom: 100px;
 	/*overflow-y: scroll;*/
+}
+#conf-container input{
+	outline: 0;
+	padding:0;
+	box-shadow: none;
 }
 
 #conf-container #conf-content {
@@ -128,16 +203,17 @@ a{
 
 #conf-container .settings-item:hover  button{
 	color:white;
-	background-color: orange;
+	background-color: red;
 }
 #conf-container .settings-item:hover  div{
 	font-weight: bold;
-	font-size: 1.2em;
 	opacity: 1;
+	transition: 0.2s ease all;
 }
 
 
 #view{
+	
 	padding-top: 2.65em;
 	padding: 1em 0;
     background-color: rgba(255,255,255,0.85);
@@ -192,13 +268,14 @@ a{
 
 }
 .row#container{
+	
 	padding-bottom: 1em;
 	margin-bottom: 1em;
     background-color: rgba(255, 255, 255, 0.70);
 }
 
 .controls{
-	padding: 0.5em 0;
+	padding: 0.5em 1em;
     margin-top:3em;
 }
 
@@ -226,6 +303,7 @@ a{
 	/* border-bottom: 1px whitesmoke solid;
 	border-top: 1px whitesmoke solid; */
 }
+
 .body{
 	padding: 0 15px;
 }
@@ -277,17 +355,24 @@ a{
 
 .events-container{
     position: relative;
+	
 }
 .events-container .event.selected{
     width: 100%;
+	
+	
 }
     .events-container .event.selected .event-wrapper {
-        margin-left: -4em;
-        box-shadow: 0 0 20px gray;
+		
+/*         margin-left: -4em; */
+/* 		padding-left: 3.5em; */
+/*         box-shadow: 0 0 20px gray; */
         -moz-transition: 400ms ease all;
         -o-transition: 400ms ease all;
         -webkit-transition: 400ms ease all;
         transition: 400ms ease all;
+		border-bottom: 1px white solid;
+		border-top: 1px white solid;
     }
 /* Events*/
 
@@ -306,7 +391,8 @@ a{
 }
 .event.selected{
     
-    /*position: absolute;*/
+	
+/*     position: absolute; */
     z-index: 100;
     width: 33%;
 }
@@ -314,12 +400,14 @@ a{
     padding: 0.5em 1em;
 }
 .event-wrapper:hover{
-    box-shadow: 0 0 10px gray;   
+/*     box-shadow: 0 0 10px gray;    */
 }
 .event.selected .event-wrapper{
-    box-shadow: 0 0 100px gray; 
+/*     box-shadow: 0 0 100px gray;  */
     position: absolute;
     width: 100%;
+	border-top: 1px white solid;
+	border-bottom: 1px white solid;
 }
 
 .event.details {
