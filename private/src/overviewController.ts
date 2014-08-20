@@ -93,6 +93,13 @@ module Overview {
 			this.types = {};
             this.eventsController = eventsController;
 			this.init();
+			var $bubble = $('#bubble');
+
+            $bubble.on('mouseover', (event)=>{
+                event.preventDefault();
+                event.stopPropagation();
+                this.eventsController.selectEvent(this.eventsController.selectedEvent);
+            });
 		}
 
 		

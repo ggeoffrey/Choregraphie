@@ -1,3 +1,4 @@
+#bubble(style='background-color: rgb(31, 119, 180); height: 5em; width: 5em')
 .cas-par-cas
     .row
         form.form-inline(role='form')
@@ -53,8 +54,9 @@
               a.btn.btn-default.btn-width-histogramme(href='', ng-disabled='vm.resizeDisabled', ng-click='vm.resizeHistogram()')
                 span.glyphicon.glyphicon.glyphicon-resize-full
               svg
+            
             span#anchor-pie-normal(style='width: 1px; height: 1px;') .
-            span#pie
+            span#pie.bubble-anchor
               div(style='width:100%;text-align:center;font-weight:bold')
                 | [[vm.pieChartType]]
               svg

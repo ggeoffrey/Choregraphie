@@ -1,10 +1,11 @@
 //- events.jade
+.bubble-anchor(style='position: fixed; top: 3em; left: 55%') &nbsp;
 #bubble
 	button.btn.btn-default(ng-click="vm.setEventSeen()", ng-style='vm.getStyleOf()')
 		span.glyphicon(ng-class="vm.selectedEvent.seen ? 'glyphicon-eye-close' : 'glyphicon-eye-open' ")
 	a.btn.btn-default(ng-href='#/history/[[vm.selectedEvent.codeapp]]/[[vm.selectedEvent.couloir]]', ng-style='vm.getStyleOf()')
 		span.glyphicon.glyphicon-signal
-#container			
+#container
 	.row
 			.well.row.controls
 				.col-md-11.form-inline(ng-init='vm.filterEvents()')
@@ -34,9 +35,9 @@
 				
 			.row
 				.event.col-md-4(ng-repeat="event in vm.filteredGroup[date]", ng-click='vm.selectEvent(event, $event)', ng-class="event.selected ? 'selected' : event.seen ? 'seen' : '' ")
+					div.event-color(ng-style='vm.getStyleOf(event)')
 					.event-wrapper
-						div.event-color(ng-style='vm.getStyleOf(event)')
-						div(style='float: right;') [[event.couloir]]
+						div(style='float: right; position: relative; z-index:3') [[event.couloir]]
 						div 
 							b [[event.codeapp]]
 							span [[event.description]]

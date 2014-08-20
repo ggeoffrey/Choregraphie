@@ -115,6 +115,38 @@ window.objectSize = function(object: any) : number  {
 
 			$rootScope.$on('$routeChangeSuccess', (event, current, preview) => { // if the page hase changed successfully
 				document.body.style.cursor = 'auto';
+
+				setTimeout(function () {
+					var $anchor = $('.bubble-anchor');
+	                var $bubble = $('#bubble');                
+
+	                var anchorOffset = $anchor.offset();
+						                
+	                $bubble.css('opacity', '1');
+	                if (current.$$route.controller === 'historyController') {
+	                    var $pie = $('#pie');
+	                    $bubble.animate({
+                            top: anchorOffset.top,
+                            left: anchorOffset.left,
+                            'width': $pie.width(),
+                            'height': $pie.width()
+                        }).animate({
+                            'margin-top': '1em',
+                            'margin-left': '-1em',
+                        });
+	                }
+	                else if (current.$$route.controller === 'callTreeController'){
+	                	$bubble.animate(anchorOffset);
+	                }
+	                else {
+	               		anchorOffset.top -= $bubble.height() / 3;
+	                	anchorOffset.left += $bubble.width() / 2;                 
+	                    $bubble.children('.btn').css({
+	                        'background-color': 'gray'
+	                    });
+	                    $bubble.animate(anchorOffset);	                    
+	                }
+                }, 1500);
 			});
 
 		}
@@ -461,3 +493,6 @@ module Main {
 		$scope.vm = new Main.ConfigController($scope, $http, $window);
 	}]);
 })();
+
+
+

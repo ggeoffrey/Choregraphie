@@ -1,18 +1,37 @@
 #bubble
-	button.btn.btn-warning(ng-click="vm.eventsController.setEventSeen()")
+	button.btn.btn-default(ng-click="vm.eventsController.setEventSeen()", ng-style='vm.eventsController.getStyleOf()')
 		span.glyphicon(ng-class="vm.eventsController.selectedEvent.seen ? 'glyphicon-eye-close' : 'glyphicon-eye-open' ")
-	a.btn.btn-warning(ng-href='#/history/[[vm.eventsController.selectedEvent.codeapp]]/[[vm.eventsController.selectedEvent.couloir]]')
+	a.btn.btn-default(ng-href='#/history/[[vm.eventsController.selectedEvent.codeapp]]/[[vm.eventsController.selectedEvent.couloir]]', , ng-style='vm.eventsController.getStyleOf()')
 		span.glyphicon.glyphicon-signal
 #container.row
 		.well.controls
-				span(style='font-size: 1.5em;') Resume for [[ vm.data[0].date.toLocaleString().split(' ')[0] ]]
-				input(type='text', ng-model='filtre_tableau', placeholder='Filtrer le tableau')
-				button.push-right.btn.btn-info(ng-click='vm.update()')
+				button.push-right.btn.btn-info(ng-click='vm.update()', material, raised, colored)
 					span.glyphicon.glyphicon-refresh
 					| Refresh
+				//span.push-right(style='font-size: 1.5em;') Resume for [[ vm.data[0].date.toLocaleString().split(' ')[0] ]]
+				input.push-right(type='text', ng-model='filtre_tableau', placeholder='Filter table...')
 			.col-md-12
 				.row.message.alert.alert-warning(ng-show="vm.data.length == 0") Nothing to show for this day
 				.row
+					.events-container.col-md-4
+						h4(align='center') Recent events
+							span.bubble-anchor :&nbsp;
+
+						hr
+						.event(ng-repeat='event in vm.eventsController.events | limitTo:20', ng-mouseenter='vm.eventsController.selectEvent(event, $event)', ng-mouseleave='vm.eventsController.unSelectEvent(event)', ng-class='event.selected ? \'selected\' : event.seen ? \'seen\' : \'\' ')
+							div.event-color(ng-style='vm.eventsController.getStyleOf(event)')
+							.event-wrapper
+								div(style='float: right;') [[event.couloir]]
+								div 
+									b [[event.codeapp]]
+									span [[vm.eventsController.getDescriptionOf(event)]]
+								div(am-time-ago='event.start_time')
+								.details(ng-show='event.selected')
+									div
+										b [[event.start_time.toLocaleString()]] 
+									div
+										| Value:
+										b [[event.oldValue]]→[[event.value]]
 					.tableau.panel.panel-default.col-md-8(ng-show='vm.data.length')
 						.header.panel-heading(ng-init='inverse = true')
 							.row
@@ -64,19 +83,3 @@
 								.col-md-2
 									| x̄ =
 									span(ng-class='vm.getClassWithHealth(vm.stats.sante)')
-					.events-container.col-md-4
-						h4(align='center') Evenements récents
-						hr
-						.event(ng-repeat='event in vm.eventsController.events | limitTo:20', ng-mouseenter='vm.eventsController.selectEvent(event, $event)', ng-mouseleave='vm.eventsController.unSelectEvent(event)', ng-class='event.selected ? \'selected\' : event.seen ? \'seen\' : \'\' ')
-							.event-wrapper(ng-style='vm.eventsController.getStyleOf(event)')
-								div(style='float: right;') [[event.couloir]]
-								div 
-									b [[event.codeapp]]
-									span [[vm.eventsController.getDescriptionOf(event)]]
-								div(am-time-ago='event.start_time')
-								.details(ng-show='event.selected')
-									div
-										b [[event.start_time.toLocaleString()]] 
-									div
-										| Value:
-										b [[event.oldValue]]→[[event.value]]

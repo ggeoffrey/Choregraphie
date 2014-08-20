@@ -105387,6 +105387,36 @@ window.objectSize = function (object) {
 
             $rootScope.$on('$routeChangeSuccess', function (event, current, preview) {
                 document.body.style.cursor = 'auto';
+
+                setTimeout(function () {
+                    var $anchor = $('.bubble-anchor');
+                    var $bubble = $('#bubble');
+
+                    var anchorOffset = $anchor.offset();
+
+                    $bubble.css('opacity', '1');
+                    if (current.$$route.controller === 'historyController') {
+                        var $pie = $('#pie');
+                        $bubble.animate({
+                            top: anchorOffset.top,
+                            left: anchorOffset.left,
+                            'width': $pie.width(),
+                            'height': $pie.width()
+                        }).animate({
+                            'margin-top': '1em',
+                            'margin-left': '-1em'
+                        });
+                    } else if (current.$$route.controller === 'callTreeController') {
+                        $bubble.animate(anchorOffset);
+                    } else {
+                        anchorOffset.top -= $bubble.height() / 3;
+                        anchorOffset.left += $bubble.width() / 2;
+                        $bubble.children('.btn').css({
+                            'background-color': 'gray'
+                        });
+                        $bubble.animate(anchorOffset);
+                    }
+                }, 1500);
             });
         }
     ]);
@@ -106705,6 +106735,14 @@ var CallTree;
             this.isAnaglyphe = !this.isAnaglyphe;
         };
 
+        CallTreeController.prototype.switchMode = function () {
+            if (this.mode === '2D') {
+                this.switch3D();
+            } else if (this.mode === '3D') {
+                this.switch2D();
+            }
+        };
+
         CallTreeController.prototype.generateText = function (text, color) {
             var textMaterial = new THREE.MeshBasicMaterial({ color: color });
             var materialSide = new THREE.MeshBasicMaterial({ color: 0xffffff });
@@ -107421,11 +107459,11 @@ var Events;
                 var $target = $($event.currentTarget);
                 var newOffset = $target.offset();
 
-                newOffset.left += ($target.width() / 3) * 2;
+                newOffset.left += ($target.width() / 4) * 3;
 
                 newOffset.top += ($target.height() - $bubble.height() / 2) - $('#container').offset().top;
                 $bubble.css('z-index', 999);
-                $bubble.stop().clearQueue().animate(newOffset);
+                $bubble.stop().clearQueue().animate(newOffset, 'fast');
             }
 
             this.selectedEvent.selected = true;
@@ -107436,12 +107474,15 @@ var Events;
             if (this.selectedEvent) {
                 this.selectedEvent.selected = false;
             }
-            var previous = $('#bubble').offset();
+            var $bubble = $('#bubble');
+            var $anchor = $('.bubble-anchor');
+            var anchorOffset = $anchor.offset();
+            anchorOffset.top -= $('#container').offset().top;
+
+            anchorOffset.left += $bubble.width() / 2;
             this.unselectTimeout = setTimeout(function () {
-                $('#bubble').animate({ left: '100%' }, 500, function () {
-                    $(this).css('z-index', 0);
-                    previous.top = previous.top - $('#container').offset().top;
-                    $(this).animate(previous);
+                $bubble.animate(anchorOffset, 'fast', function () {
+                    $bubble.css('z-index', -1);
                 });
             }, 1000);
         };
@@ -107585,6 +107626,8 @@ var HistoryModule;
                 if (this._pct_err > 1000)
                     this._pct_err = Math.floor(this._pct_err);
             }
+
+            $('#bubble').fadeOut();
         }
         Object.defineProperty(Statistique.prototype, "isFake", {
             set: function (bool) {
@@ -108739,12 +108782,20 @@ var Overview;
 
     var OverviewController = (function () {
         function OverviewController($scope, $http, eventsController) {
+            var _this = this;
             this.$scope = $scope;
             this.$http = $http;
 
             this.types = {};
             this.eventsController = eventsController;
             this.init();
+            var $bubble = $('#bubble');
+
+            $bubble.on('mouseover', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                _this.eventsController.selectEvent(_this.eventsController.selectedEvent);
+            });
         }
         OverviewController.prototype.init = function () {
             var _this = this;

@@ -25,6 +25,12 @@ module HistoryModule {
 
 		constructor( codetype: string, value?: number, http?: number) {
 
+			
+
+			
+
+
+
 			var nom:string;
 			var capitalizer : Array<string> = [];
 			nom = codetype.replace('nb_erreur', '');
@@ -54,6 +60,11 @@ module HistoryModule {
 				this._pct_err = Math.round(((this._http/this._value)*100)*100)/100;
 				if(this._pct_err > 1000) this._pct_err = Math.floor(this._pct_err);				
 			}
+
+
+			$('#bubble').fadeOut();
+
+
 		}
 
 		public static fakeStat = (codetype: string): Statistique => {

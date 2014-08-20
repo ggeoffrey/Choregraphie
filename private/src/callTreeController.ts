@@ -1567,6 +1567,15 @@ module CallTree {
 		}
 
 
+		public switchMode(){
+			if(this.mode === '2D'){
+				this.switch3D();
+			}
+			else if (this.mode === '3D'){
+				this.switch2D();
+			}
+		}
+
 
 
 		private generateText(text: string, color: any): any {

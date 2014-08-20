@@ -1,3 +1,9 @@
+#bubble(style='height: 5em; width: 5em')
+	button.btn.btn-warning(style='height: 100%', ng-click="vm.switchMode()")
+		span.glyphicon(ng-class="vm.mode == '2D' ? 'glyphicon-unchecked' : 'glyphicon-record' ")
+		| [[vm.mode]]
+	
+.bubble-anchor(style='position: fixed; bottom: 5.5em; right: 6em')
 div
 	.col-md-12
 		div#callTree
@@ -20,24 +26,13 @@ div
 							ul
 								// The filter directive only work on array, we have to filter by hand here
 								li.nodeSelector(ng-repeat='(nom, color) in vm.getNodes(filtreNoeuds)', ng-click='vm.selectNode(nom, false)')
-									span(style='background-color: [[color]]; border-radius: 20px;')
-										| &nbsp;&nbsp;&nbsp;&nbsp;
+									div(style='background-color: [[color]]; border-radius: 20px; width: 1.4em; height: 1.4em; display: inline-block; vertical-align:middle')
 									span(style='padding-left: 1em;')
 										| [[nom]]
 						.btn-group
 							a.btn.btn-default.btn-callTree(href='', ng-repeat='(type, color) in vm.getNodeTypes()', ng-click='vm.toggleNodes(type)')
-
-								span(style='background-color:[[color]];border-radius:20px')
-									| &nbsp;&nbsp;&nbsp;&nbsp;
-
 								span(style='color: [[color]]; font-weight: bold;')  [[type]]
 						.btn-group
-							a.btn.btn-default.btn-callTree(href='', ng-click='vm.switch2D()', title='Vue 2D')
-								span.glyphicon.glyphicon-unchecked
-								| 2D
-							a.btn.btn-default.btn-callTree(href='', ng-click='vm.switch3D()', title='Vue 3D')
-								span.glyphicon.glyphicon-record
-								| 3D
 							a.btn.btn-default.btn-callTree(href='', ng-click='vm.switchAnaglyphe()', title='Vue Anaglyphe')
 								span.glyphicon.glyphicon-unchecked(style='color: red;')
 								span.glyphicon.glyphicon-unchecked(style='color: blue;')

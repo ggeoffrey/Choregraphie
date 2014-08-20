@@ -60,7 +60,7 @@ module Events {
 
         // autres
 
-        private selectedEvent: Event; // Evenement actuellement séléctionné. 
+        public selectedEvent: Event; // Evenement actuellement séléctionné. 
 
 
 
@@ -235,12 +235,12 @@ module Events {
                 var $target = $($event.currentTarget);
                 var newOffset = $target.offset();
 
-                newOffset.left += ($target.width() / 3) * 2;
+                newOffset.left += ($target.width() / 4) * 3;
                 
                 
                 newOffset.top += ($target.height() - $bubble.height() / 2) - $('#container').offset().top;
                 $bubble.css('z-index', 999);
-                $bubble.stop().clearQueue().animate(newOffset);
+                $bubble.stop().clearQueue().animate(newOffset, 'fast');
             }
 
             this.selectedEvent.selected = true;
@@ -254,12 +254,15 @@ module Events {
             if (this.selectedEvent) {
                 this.selectedEvent.selected = false;
             }
-            var previous = $('#bubble').offset();
+            var $bubble = $('#bubble');
+            var $anchor = $('.bubble-anchor');
+            var anchorOffset = $anchor.offset();
+            anchorOffset.top -= $('#container').offset().top;
+            //anchorOffset.top -= $bubble.height()/2;
+            anchorOffset.left += $bubble.width() / 2;
             this.unselectTimeout = setTimeout(function () {
-                $('#bubble').animate({ left: '100%' }, 500, function(){
-                    $(this).css('z-index', 0);
-                    previous.top = previous.top - $('#container').offset().top;
-                    $(this).animate(previous);
+                $bubble.animate(anchorOffset, 'fast', function () {
+                    $bubble.css('z-index', -1);
                 });
             }, 1000);
         }
