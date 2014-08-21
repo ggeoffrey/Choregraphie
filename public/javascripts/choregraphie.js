@@ -105250,6 +105250,18 @@ var Server;
             }
         };
 
+        Database.prototype.addApplication = function (app, callback) {
+            if (app && callback) {
+                this.socket.emit('addApplication', app, callback);
+            }
+        };
+
+        Database.prototype.addCorridor = function (corridor, callback) {
+            if (corridor && callback) {
+                this.socket.emit('addCorridor', corridor, callback);
+            }
+        };
+
         Database.prototype.getCorridors = function (callback) {
             var _this = this;
             var fromCache = this.getFromCache('corridor');
@@ -105525,33 +105537,17 @@ var Main;
             this.newCorridor = '';
             this.newApplication = '';
 
-            function formatData(data) {
-                var dataArray = [];
-                if (_.isObject(data)) {
-                    var str;
-                    for (str in data) {
-                        if (str) {
-                            dataArray.push(data[str]);
-                        }
-                    }
-                }
-                for (var i = 0; i < dataArray.length; i++) {
-                    dataArray[i] = dataArray[i].toUpperCase();
-                }
-                return dataArray;
-            }
-
             window.startLoader();
 
             window.Database.getApplications(function (data) {
-                _this.applications = formatData(data);
+                _this.applications = data;
                 window.stopLoader();
             });
 
             window.startLoader();
 
             window.Database.getCorridors(function (data) {
-                _this.corridors = formatData(data);
+                _this.corridors = data;
                 window.stopLoader();
             });
         };
@@ -105560,14 +105556,14 @@ var Main;
             var _this = this;
             if (application) {
                 var item = application.toUpperCase();
-                if (this.applications.indexOf(item) === -1 && item.length === 4) {
+                var found = _.findWhere(this.applications, { name: item });
+
+                if (!found && item.length === 4) {
                     window.startLoader();
-                    this.$http.get("api/set/config?action=add&target=application&value=" + item).success(function (data) {
+                    window.Database.addApplication(item, function () {
                         _this.init();
                         window.stopLoader();
                         _this.askRefresh();
-                    }).error(function (error) {
-                        window.stopLoader();
                     });
                 }
             }
@@ -105577,7 +105573,8 @@ var Main;
             var _this = this;
             if (application) {
                 var item = application.toUpperCase();
-                if (this.applications.indexOf(item) > -1) {
+                var found = _.findWhere(this.applications, { name: item });
+                if (!found) {
                     if (window.confirm("Did you confirm the deletion of " + item + "?")) {
                         window.startLoader();
                         this.$http.get("api/set/config?action=delete&target=application&value=" + item).success(function (data) {
@@ -105596,7 +105593,8 @@ var Main;
             var _this = this;
             if (corridor) {
                 var item = corridor.toUpperCase();
-                if (this.corridors.indexOf(item) === -1 && (item.length === 4 || item.length === 5)) {
+                var found = _.findWhere(this.corridors, { name: item });
+                if (!found && (item.length === 4 || item.length === 5)) {
                     window.startLoader();
                     this.$http.get("api/set/config?action=add&target=corridor&value=" + item).success(function (data) {
                         _this.init();
@@ -105613,7 +105611,8 @@ var Main;
             var _this = this;
             if (corridor) {
                 var item = corridor.toUpperCase();
-                if (this.corridors.indexOf(item) > -1) {
+                var found = _.findWhere(this.corridors, { name: item });
+                if (!found) {
                     if (window.confirm("Did you confirm the deletion of " + item + "?")) {
                         window.startLoader();
                         this.$http.get("api/set/config?action=delete&target=corridor&value=" + item).success(function (data) {
@@ -105644,7 +105643,7 @@ var Main;
                     item = item.toUpperCase();
 
                     for (var i = 0; i < this.corridors.length; i++) {
-                        if (this.corridors[i] === item) {
+                        if (this.corridors[i].name === item) {
                             found = true;
                             break;
                         }
@@ -105652,7 +105651,7 @@ var Main;
 
                     if (!found) {
                         for (var i = 0; i < this.applications.length; i++) {
-                            if (this.applications[i] === item) {
+                            if (this.applications[i].name === item) {
                                 found = true;
                                 break;
                             }

@@ -22,6 +22,11 @@ class SocketManager
 				api.getApplications (data) ->
 					callback compress(data)
 
+			socket.on 'addApplication', (data, callback)->
+				api.addApplication(data, callback)
+
+			socket.on 'addCorridor', (data, callback)->
+				api.addCorridor(data, callback)
 
 			socket.on 'getCorridors',  (data, callback) ->
 				api.getCorridors (data)->

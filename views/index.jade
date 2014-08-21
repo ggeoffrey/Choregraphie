@@ -9,6 +9,10 @@ block content
 			#view.view-animate(ng-view)
 		div(snap-drawer='right')
 			#conf-container(ng-controller='configController')
+				.row(style='text-align:center')
+					span Origin : 
+					span= (config.limitDataToConfigSpecifiedList ? 'restricted list ' : 'database ')
+					span= ( !config.limitDataToConfigSpecifiedList && (config.apps.length > 0 || config.corridors.length > 0) ? '+ defined list' : '' )
 				
 				#conf-content
 					.row
@@ -19,11 +23,14 @@ block content
 								.input-group-btn
 									button.btn.btn-info.form-control(type='button', ng-disabled='bblockAddCorridor', ng-click='vm.addCouloir(vm.newCorridor)')
 										span.glyphicon.glyphicon-plus
-							.row.settings-item(ng-repeat='couloir in vm.corridors | filter:vm.newCorridor')
+							.row.settings-item(ng-repeat='corridor in vm.corridors | filter:vm.newCorridor')
 								.col-xs-1.remove-item
-									button.btn.btn-default.btn-xs(ng-click='vm.deleteCouloir(couloir)')
+									button.btn.btn-default.btn-xs(ng-click='vm.deleteCouloir(corridor)', ng-show="corridor.type == 'config'")
 										| ✗
-								.col-xs-5 [[couloir]]
+								if config.limitDataToConfigSpecifiedList
+									.col-xs-5 [[corridor.name]]
+								else
+									.col-xs-5(ng-style="corridor.type == 'config' ? {color: 'orange'}:{color: 'black'}") [[corridor.name]]
 						.col-md-6
 							b Applications
 							.input-group
@@ -34,9 +41,13 @@ block content
 
 							.row.settings-item(ng-repeat='application in vm.applications | filter:vm.newApplications')
 								.col-xs-1.remove-item
-									button.btn.btn-default.btn-xs(ng-click='vm.deleteApplication(application)')
+									button.btn.btn-default.btn-xs(ng-click='vm.deleteApplication(application)', ng-show="application.type == 'config'" )
 										| ✗
-								.col-xs-5 [[application]]
+								if config.limitDataToConfigSpecifiedList
+									.col-xs-5 [[application.name]]
+								else
+									.col-xs-5(ng-style="application.type == 'config' ? {color: 'orange'}:{color: 'black'}") [[application.name]]
+
 	span#snap-dragger .
 
 	

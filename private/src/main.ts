@@ -219,6 +219,16 @@ module Main {
 		click?: string;
 	}
 
+
+	export interface Application {
+		name: string;
+		type: string;
+	}
+	export interface Corridor {
+		name: string;
+		type: string;
+	}
+
 	export class MainController{
 		private scope;
 		private http;
@@ -292,8 +302,8 @@ module Main {
 
 		// Members
 
-		public corridors: Array<string>;
-		public applications: Array<string>;
+		public corridors: Corridor[];
+		public applications: Application[];
 
 		public newCorridor : string;
 		public newApplication: string;
@@ -317,34 +327,18 @@ module Main {
 			this.newApplication = '';
 
 
-			function formatData( data: any ) : Array<string>{
-				var dataArray: Array<string> = []; // Data transformation: strings to UpperCase and Objects to Arrays
-				if(_.isObject(data)){
-					var str : string;
-					for (str in data){
-						if(str){
-							dataArray.push(data[str]);
-						}
-					}
-				}
-				for (var i = 0; i < dataArray.length; i++){
-					dataArray[i] = dataArray[i].toUpperCase();
-				}
-				return dataArray;
-			}
-
 			window.startLoader();
 
-			window.Database.getApplications((data:string[])=>{	
-				this.applications =  formatData(data);
+			window.Database.getApplications((data:Application[])=>{
+				this.applications =  data;
 				window.stopLoader();
 			});
 
 
 			window.startLoader();
 
-			window.Database.getCorridors((data:string[])=>{
-				this.corridors =  formatData(data);
+			window.Database.getCorridors((data:Corridor[])=>{
+				this.corridors =  data;
 				window.stopLoader();
 			});
 		}
@@ -353,18 +347,15 @@ module Main {
 		public addApplication(application: string): void {
 			if(application){
 				var item = application.toUpperCase();
-				if(this.applications.indexOf(item) === -1 && item.length === 4){
-					window.startLoader();
-					this.$http.get("api/set/config?action=add&target=application&value="+item)
-						.success( (data :any)=>{
-							this.init(); // on recharge
-							window.stopLoader();
-							this.askRefresh(); // Demande de rafraichissement de la page. l'user peut refuser pour Ajouter/supprimer d'autres items
-						})
+				var found = _.findWhere(this.applications, {name: item});
 
-						.error(function(error){
-							window.stopLoader();
-						});
+				if( !found && item.length === 4){
+					window.startLoader();
+					window.Database.addApplication(item, ()=>{
+						this.init();
+						window.stopLoader();
+						this.askRefresh();
+					});
 				}
 			}
 		}
@@ -372,7 +363,8 @@ module Main {
 		public deleteApplication(application: string): void {
 			if(application){
 				var item = application.toUpperCase();
-				if(this.applications.indexOf(item) > -1){
+				var found = _.findWhere(this.applications, {name: item});
+				if(!found){
 
 					if( window.confirm("Did you confirm the deletion of "+ item +"?")){
 
@@ -395,7 +387,8 @@ module Main {
 		public addCorridor(corridor: string): void {
 			if(corridor){
 				var item = corridor.toUpperCase();
-				if(this.corridors.indexOf(item) === -1 && ( item.length === 4 || item.length === 5)){
+				var found = _.findWhere(this.corridors, {name: item});
+				if(!found && ( item.length === 4 || item.length === 5)){
 					window.startLoader();
 					this.$http.get("api/set/config?action=add&target=corridor&value="+item)
 						.success( (data :any)=>{
@@ -414,7 +407,8 @@ module Main {
 		public deleteCorridor(corridor: string): void {
 			if(corridor){
 				var item = corridor.toUpperCase();
-				if(this.corridors.indexOf(item) > -1){
+				var found = _.findWhere(this.corridors, {name: item});
+				if(!found){
 
 					if( window.confirm("Did you confirm the deletion of "+ item +"?")){
 
@@ -457,7 +451,7 @@ module Main {
 					item = item.toUpperCase();
 
 					for (var i = 0; i < this.corridors.length; i++){
-						if(this.corridors[i] === item){
+						if(this.corridors[i].name === item){
 							found = true;
 							break;
 						}
@@ -465,7 +459,7 @@ module Main {
 
 					if (!found){
 						for (var i = 0; i < this.applications.length; i++){
-							if(this.applications[i] === item){
+							if(this.applications[i].name === item){
 								found = true;
 								break;
 							}

@@ -68,6 +68,18 @@ module Server {
 			}
 		}
 
+		public addApplication (app : string, callback : Function) : void {
+			if(app && callback){
+				this.socket.emit('addApplication', app, callback );
+			}
+		}
+
+		public addCorridor (corridor : string, callback : Function) : void {
+			if(corridor && callback){
+				this.socket.emit('addCorridor', corridor, callback );
+			}
+		}
+
 		public getCorridors( callback: Function ):void {
 			var fromCache = this.getFromCache('corridor');
 			if(fromCache){
