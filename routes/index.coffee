@@ -9,6 +9,8 @@ _ = require 'underscore'
 router.get '/', (req, res)->
 
 	getConfig (config)->
+
+		console.log config
 	
 		params = 
 			title: 'Express'
@@ -46,3 +48,5 @@ getConfig = (callback)->
 			delete require.cache[configPath]
 
 			callback require '../config'
+		else
+			callback actualConfig

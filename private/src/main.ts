@@ -364,21 +364,16 @@ module Main {
 			if(application){
 				var item = application.toUpperCase();
 				var found = _.findWhere(this.applications, {name: item});
-				if(!found){
+				if(found){
 
 					if( window.confirm("Did you confirm the deletion of "+ item +"?")){
 
 						window.startLoader();
-						this.$http.get("api/set/config?action=delete&target=application&value="+item)
-							.success( (data :any) => {
-								this.init(); // on recharge
-								window.stopLoader();
-								this.askRefresh(); // Demande de rafraichissement de la page. l'user peut refuser pour Ajouter/supprimer d'autres items
-							})
-
-							.error(function(error){
-								window.stopLoader();
-							});
+						window.Database.deleteApplication( item,  (data :any) => {
+							this.init(); // on recharge
+							window.stopLoader();
+							this.askRefresh(); // Demande de rafraichissement de la page. l'user peut refuser pour Ajouter/supprimer d'autres items
+						});
 					}
 				}
 			}
@@ -390,16 +385,11 @@ module Main {
 				var found = _.findWhere(this.corridors, {name: item});
 				if(!found && ( item.length === 4 || item.length === 5)){
 					window.startLoader();
-					this.$http.get("api/set/config?action=add&target=corridor&value="+item)
-						.success( (data :any)=>{
+					window.Database.addCorridor( corridor,  (data :any)=>{
 							this.init(); // on recharge
 							window.stopLoader();
 							this.askRefresh(); // Demande de rafraichissement de la page. l'user peut refuser pour Ajouter/supprimer d'autres items
-						})
-
-						.error(function(error){
-							window.stopLoader();
-						});
+					});
 				}
 			}
 		}
@@ -408,21 +398,16 @@ module Main {
 			if(corridor){
 				var item = corridor.toUpperCase();
 				var found = _.findWhere(this.corridors, {name: item});
-				if(!found){
+				if(found){
 
 					if( window.confirm("Did you confirm the deletion of "+ item +"?")){
 
 						window.startLoader();
-						this.$http.get("api/set/config?action=delete&target=corridor&value="+item)
-							.success( (data :any) => {
-								this.init(); // on recharge
-								window.stopLoader();
-								this.askRefresh(); // Demande de rafraichissement de la page. l'user peut refuser pour Ajouter/supprimer d'autres items
-							})
-
-							.error(function(error){
-								window.stopLoader();
-							});
+						window.Database.deleteCorridor( item,  (data :any) => {
+							this.init(); // on recharge
+							window.stopLoader();
+							this.askRefresh(); // Demande de rafraichissement de la page. l'user peut refuser pour Ajouter/supprimer d'autres items
+						});
 					}
 				}
 			}

@@ -105253,12 +105253,16 @@ var Server;
         Database.prototype.addApplication = function (app, callback) {
             if (app && callback) {
                 this.socket.emit('addApplication', app, callback);
+            } else {
+                throw ("Bad arguments");
             }
         };
 
-        Database.prototype.addCorridor = function (corridor, callback) {
-            if (corridor && callback) {
-                this.socket.emit('addCorridor', corridor, callback);
+        Database.prototype.deleteApplication = function (app, callback) {
+            if (app && callback) {
+                this.socket.emit('deleteApplication', app, callback);
+            } else {
+                throw ("Bad arguments");
             }
         };
 
@@ -105272,6 +105276,22 @@ var Server;
                     callback(_this.decompress(encodedData));
                     _this.storeInCache('corridor', encodedData);
                 });
+            }
+        };
+
+        Database.prototype.addCorridor = function (corridor, callback) {
+            if (corridor && callback) {
+                this.socket.emit('addCorridor', corridor, callback);
+            } else {
+                throw ("Bad arguments");
+            }
+        };
+
+        Database.prototype.deleteCorridor = function (corridor, callback) {
+            if (corridor && callback) {
+                this.socket.emit('deleteCorridor', corridor, callback);
+            } else {
+                throw ("Bad arguments");
             }
         };
 
@@ -105574,15 +105594,13 @@ var Main;
             if (application) {
                 var item = application.toUpperCase();
                 var found = _.findWhere(this.applications, { name: item });
-                if (!found) {
+                if (found) {
                     if (window.confirm("Did you confirm the deletion of " + item + "?")) {
                         window.startLoader();
-                        this.$http.get("api/set/config?action=delete&target=application&value=" + item).success(function (data) {
+                        window.Database.deleteApplication(item, function (data) {
                             _this.init();
                             window.stopLoader();
                             _this.askRefresh();
-                        }).error(function (error) {
-                            window.stopLoader();
                         });
                     }
                 }
@@ -105596,12 +105614,10 @@ var Main;
                 var found = _.findWhere(this.corridors, { name: item });
                 if (!found && (item.length === 4 || item.length === 5)) {
                     window.startLoader();
-                    this.$http.get("api/set/config?action=add&target=corridor&value=" + item).success(function (data) {
+                    window.Database.addCorridor(corridor, function (data) {
                         _this.init();
                         window.stopLoader();
                         _this.askRefresh();
-                    }).error(function (error) {
-                        window.stopLoader();
                     });
                 }
             }
@@ -105612,15 +105628,13 @@ var Main;
             if (corridor) {
                 var item = corridor.toUpperCase();
                 var found = _.findWhere(this.corridors, { name: item });
-                if (!found) {
+                if (found) {
                     if (window.confirm("Did you confirm the deletion of " + item + "?")) {
                         window.startLoader();
-                        this.$http.get("api/set/config?action=delete&target=corridor&value=" + item).success(function (data) {
+                        window.Database.deleteCorridor(item, function (data) {
                             _this.init();
                             window.stopLoader();
                             _this.askRefresh();
-                        }).error(function (error) {
-                            window.stopLoader();
                         });
                     }
                 }

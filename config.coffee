@@ -21,6 +21,6 @@ module.exports =
 	# If the following boolean is set to true, only the applications/corridors listed bellow will be shown in Chorégraphie
 	# It allows you to hide some applications/corridor even if they exist in your database
 	
-	limitDataToConfigSpecifiedList : yes
+	limitDataToConfigSpecifiedList : no
 	apps : restrictedData.apps
 	corridors : restrictedData.corridors

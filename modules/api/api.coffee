@@ -22,12 +22,12 @@ class Api
 			throw 'bad arguments'
 
 		@getConfig (config)->
-			if config.limitDataToConfigSpecifiedList and config.apps?.length > 0
+			if config.limitDataToConfigSpecifiedList is on and config.apps?.length > 0
 				objectApps = []
 				for app in config.apps
 					objectApps.push new Application(app, 'config')
 				callback(objectApps)
-			else if config.apps?.length > 0
+			else 
 				connector.getApplications (dbApps)->
 					apps = _.union(config.apps, dbApps).sort()
 					objectApps = []
@@ -36,7 +36,7 @@ class Api
 							objectApps.push new Application(app, 'config')
 						else
 							objectApps.push new Application(app, 'db')
-					
+
 					callback objectApps
 
 	@addApplication : (app, callback)->
@@ -54,18 +54,33 @@ class Api
 
 				callback()
 
-	
+	@deleteApplication : (app, callback)->
+		if not app? or typeof app isnt 'string'
+			throw 'bad arguments: expected \'app\' <string>'
+		if not callback?
+			throw 'bad arguments: callback expected'
+
+		app = new Application(app, 'config')
+
+		@getConfig (config)=>
+			config.apps = _.reject config.apps, (item) -> item is app.name
+
+			@saveConfig config, (err)->
+				console.log err if err?
+				callback()
+
+
 	@getCorridors :  (callback) ->
 		if not callback?
 			throw 'bad arguments'
 
 		@getConfig (config)->
-			if config.limitDataToConfigSpecifiedList and config.corridors?.length > 0
+			if config.limitDataToConfigSpecifiedList is on and config.corridors?.length > 0
 				objectCorridor = []
 				for corridor in config.corridors
 					objectCorridor.push new Corridor(corridor, 'config')
 				callback(objectCorridor)
-			else if config.corridors?.length > 0
+			else
 				connector.getCorridors (dbCorridors)->
 					corridors = _.union(config.corridors, dbCorridors).sort()
 					objectCorridor = []
@@ -76,6 +91,35 @@ class Api
 							objectCorridor.push new Corridor(corridor, 'db')
 					
 					callback objectCorridor
+
+	@addCorridor : (corridor, callback)->
+		if not corridor? or typeof corridor isnt 'string'
+			throw 'bad arguments: expected \'corridor\' <string>'
+		if not callback?
+			throw 'bad arguments: callback expected'
+
+		corridor = new Corridor(corridor, 'config')
+		@getConfig (config)=>
+			config.corridors = _.union(config.corridors, [corridor.name])
+
+			@saveConfig config, (err)->
+				console.log err if err?
+
+				callback()
+
+	@deleteCorridor : (corridor, callback)->
+		if not corridor? or typeof corridor isnt 'string'
+			throw 'bad arguments: expected \'corridor\' <string>'
+		if not callback?
+			throw 'bad arguments: callback expected'
+
+		corridor = new Corridor(corridor, 'config')
+
+		@getConfig (config)=>
+			config.corridors = _.reject config.corridors, (item) -> item is corridor.name
+			@saveConfig config, (err)->
+				console.log err if err?
+				callback()				
 
 
 	

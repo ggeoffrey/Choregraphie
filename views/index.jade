@@ -21,11 +21,11 @@ block content
 							.input-group
 								input.form-control(type='text', placeholder='Name', ng-model="vm.newCorridor", ng-change="bblockAddCorridor = vm.checkExists(vm.newCorridor, 'couloir')")
 								.input-group-btn
-									button.btn.btn-info.form-control(type='button', ng-disabled='bblockAddCorridor', ng-click='vm.addCouloir(vm.newCorridor)')
+									button.btn.btn-info.form-control(type='button', ng-disabled='bblockAddCorridor', ng-click='vm.addCorridor(vm.newCorridor)')
 										span.glyphicon.glyphicon-plus
 							.row.settings-item(ng-repeat='corridor in vm.corridors | filter:vm.newCorridor')
 								.col-xs-1.remove-item
-									button.btn.btn-default.btn-xs(ng-click='vm.deleteCouloir(corridor)', ng-show="corridor.type == 'config'")
+									button.btn.btn-default.btn-xs(ng-click='vm.deleteCorridor(corridor.name)', ng-show="corridor.type == 'config'")
 										| ✗
 								if config.limitDataToConfigSpecifiedList
 									.col-xs-5 [[corridor.name]]
@@ -41,7 +41,7 @@ block content
 
 							.row.settings-item(ng-repeat='application in vm.applications | filter:vm.newApplications')
 								.col-xs-1.remove-item
-									button.btn.btn-default.btn-xs(ng-click='vm.deleteApplication(application)', ng-show="application.type == 'config'" )
+									button.btn.btn-default.btn-xs(ng-click='vm.deleteApplication(application.name)', ng-show="application.type == 'config'" )
 										| ✗
 								if config.limitDataToConfigSpecifiedList
 									.col-xs-5 [[application.name]]

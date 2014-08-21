@@ -72,13 +72,21 @@ module Server {
 			if(app && callback){
 				this.socket.emit('addApplication', app, callback );
 			}
-		}
-
-		public addCorridor (corridor : string, callback : Function) : void {
-			if(corridor && callback){
-				this.socket.emit('addCorridor', corridor, callback );
+			else{
+				throw("Bad arguments");
 			}
 		}
+
+		public deleteApplication (app : string, callback : Function) : void {
+			if(app && callback){
+				this.socket.emit('deleteApplication', app, callback );
+			}
+			else{
+				throw("Bad arguments");
+			}
+		}
+
+		
 
 		public getCorridors( callback: Function ):void {
 			var fromCache = this.getFromCache('corridor');
@@ -92,6 +100,28 @@ module Server {
 				});
 			}
 		}
+
+		public addCorridor (corridor : string, callback : Function) : void {
+			if(corridor && callback){
+				this.socket.emit('addCorridor', corridor, callback );
+			}
+			else{
+				throw("Bad arguments");
+			}
+		}
+
+
+
+		public deleteCorridor (corridor : string, callback : Function) : void {
+			if(corridor && callback){
+				this.socket.emit('deleteCorridor', corridor, callback );
+			}
+			else{
+				throw("Bad arguments");
+			}
+		}
+
+
 
 		public getOverviewData( callback: Function ):void {
 			var fromCache = this.getFromCache('overview');

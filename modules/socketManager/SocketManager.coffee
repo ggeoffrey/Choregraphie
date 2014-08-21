@@ -25,12 +25,19 @@ class SocketManager
 			socket.on 'addApplication', (data, callback)->
 				api.addApplication(data, callback)
 
-			socket.on 'addCorridor', (data, callback)->
-				api.addCorridor(data, callback)
+			socket.on 'deleteApplication', (data, callback)->
+				api.deleteApplication(data, callback)
+
 
 			socket.on 'getCorridors',  (data, callback) ->
 				api.getCorridors (data)->
 					callback(compress(data))
+
+			socket.on 'addCorridor', (data, callback)->
+				api.addCorridor(data, callback)
+
+			socket.on 'deleteCorridor', (data, callback)->
+				api.deleteCorridor(data, callback)
 
 			socket.on 'getOverviewData', (data, callback) ->
 				api.getOverviewData (data)->
