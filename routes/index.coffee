@@ -1,14 +1,11 @@
 router = require('express').Router()
-path = require 'path'
-fs = require 'fs'
-_ = require 'underscore'
-
+ConfigManager = require '../modules/ConfigManager'
 # GET home page.
 
 
 router.get '/', (req, res)->
 
-	getConfig (config)->
+	ConfigManager.getConfig (config)->
 	
 		params = 
 			title: 'Express'
@@ -23,28 +20,3 @@ router.get '/', (req, res)->
 
 
 module.exports = router;
-
-
-
-
-
-
-
-
-# Tools
-
-lastEdited = 0
-getConfig = (callback)->
-
-	configPath = path.normalize __dirname+'/../config.coffee'
-	actualConfig = require '../config'
-	fs.stat configPath, (err, stat)->
-		if err or not stat.mtime
-			callback actualConfig
-		else if lastEdited < stat.mtime?.getTime()
-			lastEdited = stat.mtime.getTime()
-			delete require.cache[configPath]
-
-			callback require '../config'
-		else
-			callback actualConfig

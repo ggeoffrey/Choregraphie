@@ -5,6 +5,8 @@ _ = require 'underscore'
 
 connector = require '../postgresConnector'
 
+ConfigManager = require '../ConfigManager'
+
 Application  = require './Application'
 Corridor  = require './Corridor'
 
@@ -12,16 +14,13 @@ Corridor  = require './Corridor'
 
 
 
-class Api
-
-	@configPath = "../../config.coffee"
-	@fullConfigPath = path.normalize "#{__dirname}/#{@configPath}"
+class Api	
 
 	@getApplications :  (callback) ->
 		if not callback?
 			throw 'bad arguments'
 
-		@getConfig (config)->
+		ConfigManager.getConfig (config)->
 			if config.limitDataToConfigSpecifiedList is on and config.apps?.length > 0
 				objectApps = []
 				for app in config.apps
@@ -46,10 +45,10 @@ class Api
 			throw 'bad arguments: callback expected'
 
 		app = new Application(app, 'config')
-		@getConfig (config)=>
+		ConfigManager.getConfig (config)=>
 			config.apps = _.union(config.apps, [app.name])
 
-			@saveConfig config, (err)->
+			ConfigManager.saveConfig config, (err)->
 				console.log err if err?
 
 				callback()
@@ -62,10 +61,10 @@ class Api
 
 		app = new Application(app, 'config')
 
-		@getConfig (config)=>
+		ConfigManager.getConfig (config)=>
 			config.apps = _.reject config.apps, (item) -> item is app.name
 
-			@saveConfig config, (err)->
+			ConfigManager.saveConfig config, (err)->
 				console.log err if err?
 				callback()
 
@@ -74,7 +73,7 @@ class Api
 		if not callback?
 			throw 'bad arguments'
 
-		@getConfig (config)->
+		ConfigManager.getConfig (config)->
 			if config.limitDataToConfigSpecifiedList is on and config.corridors?.length > 0
 				objectCorridor = []
 				for corridor in config.corridors
@@ -99,10 +98,10 @@ class Api
 			throw 'bad arguments: callback expected'
 
 		corridor = new Corridor(corridor, 'config')
-		@getConfig (config)=>
+		ConfigManager.getConfig (config)=>
 			config.corridors = _.union(config.corridors, [corridor.name])
 
-			@saveConfig config, (err)->
+			ConfigManager.saveConfig config, (err)->
 				console.log err if err?
 
 				callback()
@@ -115,9 +114,9 @@ class Api
 
 		corridor = new Corridor(corridor, 'config')
 
-		@getConfig (config)=>
+		ConfigManager.getConfig (config)=>
 			config.corridors = _.reject config.corridors, (item) -> item is corridor.name
-			@saveConfig config, (err)->
+			ConfigManager.saveConfig config, (err)->
 				console.log err if err?
 				callback()				
 
@@ -158,34 +157,9 @@ class Api
 		connector.getCalls(callback, false)
 
 
-	# Tools
+	
 
-	lastEdited = 0
-	@getConfig : (callback)->
 
-		
-		actualConfig = require @configPath
-		
-		fs.stat @fullConfigPath, (err, stat)=>
-			if err or not stat.mtime
-				callback actualConfig
-			else if lastEdited < stat.mtime?.getTime()
-				lastEdited = stat.mtime.getTime()
-				delete require.cache[@fullConfigPath]
-				callback require @configPath
-			else
-				callback actualConfig
-
-	@saveConfig : (config, callback)->
-		restrictedDataPath = path.normalize path.dirname(@fullConfigPath) + "/restrictedData.json"
-
-		newData = 
-			apps: config.apps
-			corridors: config.corridors
-
-		json = JSON.stringify newData, null, '\t'
-
-		fs.writeFile restrictedDataPath, json, callback
 
 
 

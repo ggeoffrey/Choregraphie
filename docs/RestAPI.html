@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>RestAPI.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="Application.html">
+                Application.coffee
+              </a>
+            
+              
+              <a class="source" href="Corridor.html">
+                Corridor.coffee
+              </a>
+            
+              
+              <a class="source" href="api.html">
+                api.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+              
+              <a class="source" href="ConfigManager.html">
+                ConfigManager.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+              
+              <a class="source" href="Call.html">
+                Call.coffee
+              </a>
+            
+              
+              <a class="source" href="Event.html">
+                Event.coffee
+              </a>
+            
+              
+              <a class="source" href="Link.html">
+                Link.coffee
+              </a>
+            
+              
+              <a class="source" href="Node.html">
+                Node.coffee
+              </a>
+            
+              
+              <a class="source" href="PostgresConnector.html">
+                PostgresConnector.coffee
+              </a>
+            
+              
+              <a class="source" href="config.html">
+                config.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+              
+              <a class="source" href="RestAPI.html">
+                RestAPI.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+              
+              <a class="source" href="SocketManager.html">
+                SocketManager.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>RestAPI.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>express = <span class="hljs-built_in">require</span> <span class="hljs-string">'express'</span>
+api = <span class="hljs-built_in">require</span> <span class="hljs-string">'../api'</span>
+
+router = express.Router()
+
+
+router.get <span class="hljs-string">'/applications'</span>, <span class="hljs-function"><span class="hljs-params">(req, res)</span>-&gt;</span>
+	api.getApplications <span class="hljs-function"><span class="hljs-params">(apps)</span> -&gt;</span>
+		res.send(apps)
+		res.end()
+
+
+router.get <span class="hljs-string">'/corridors'</span>,  <span class="hljs-function"><span class="hljs-params">(req, res)</span> -&gt;</span>
+	api.getCorridors <span class="hljs-function"><span class="hljs-params">(c)</span>-&gt;</span>
+		res.send(c)
+		res.end()
+
+
+router.get <span class="hljs-string">'/overviewData'</span>,  <span class="hljs-function"><span class="hljs-params">(req, res)</span> -&gt;</span>
+	api.getOverviewData <span class="hljs-function"><span class="hljs-params">(data)</span>-&gt;</span>
+		res.send(data)
+		res.end()
+
+
+router.get <span class="hljs-string">'/events'</span>,  <span class="hljs-function"><span class="hljs-params">(req, res)</span> -&gt;</span>
+	api.getEvents <span class="hljs-function"><span class="hljs-params">(events)</span> -&gt;</span>
+		res.send(events)
+		res.end()
+
+
+router.get <span class="hljs-string">'/history/:app/:corridor'</span>, <span class="hljs-function"><span class="hljs-params">(req, res)</span> -&gt;</span>
+	params =
+		app : req.params.app
+		corridor : req.params.corridor
+
+	api.getHistory <span class="hljs-function"><span class="hljs-params">(history)</span>-&gt;</span>
+			res.send(history)
+			res.end()
+		, params 
+
+
+router.get <span class="hljs-string">'/trend/:app/:corridor'</span>, <span class="hljs-function"><span class="hljs-params">(req, res)</span> -&gt;</span>
+	
+	params =
+		app : req.params.app
+		corridor : req.params.corridor
+
+
+	api.getTrend <span class="hljs-function"><span class="hljs-params">(trend)</span>-&gt;</span>
+			res.send(trend)
+			res.end()
+		, params
+
+
+router.get <span class="hljs-string">'/calls'</span>, <span class="hljs-function"><span class="hljs-params">(req, res)</span>-&gt;</span>
+	api.getCalls <span class="hljs-function"><span class="hljs-params">(calls)</span>-&gt;</span>
+		res.send(  JSON.stringify(calls, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>)  )
+		res.end()
+
+
+
+<span class="hljs-built_in">module</span>.exports = router;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

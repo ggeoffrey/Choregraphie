@@ -7,14 +7,14 @@
               .form-group
                 label Couloir →
                 select.form-control(ng-disabled='bloqueCouloirs', ng-model='vm.couloir')
-                  option(ng-repeat='c in vm.couloirs', ng-value='c') [[c]]
+                  option(ng-repeat='c in vm.couloirs', ng-value='c.name') [[c.name]]
               span(style='font-size: 3em;')
                 span(ng-show='!vm.chosen && !vm.noMatches') &#8644;
                 span(ng-show='vm.chosen', style='color: #86B22D;') &#8621;
                 span(ng-show='vm.noMatches', style='color: red;') &#8622;
               .form-group
                 select.form-control(ng-disabled='vm.bloqueApplications', ng-model='vm.application')
-                  option(ng-repeat='app in vm.applications', ng-value='app') [[app]]
+                  option(ng-repeat='app in vm.applications', ng-value='app.name') [[app.name]]
                 label ← Application
               //- a : ng-click='vm.load()'
               a.btn.btn-info(ng-disabled="vm.application == '' || vm.couloir == '' ", ng-href='#/history/[[vm.application]]/[[vm.couloir]]')
