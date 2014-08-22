@@ -9,8 +9,6 @@ _ = require 'underscore'
 router.get '/', (req, res)->
 
 	getConfig (config)->
-
-		console.log config
 	
 		params = 
 			title: 'Express'

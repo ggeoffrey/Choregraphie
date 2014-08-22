@@ -51,7 +51,7 @@ window.objectSize = function(object: any) : number  {
 		Local scope (this)
 
 		Here comes the main module, bound to /home
-		Dependencies are injected with the array notation. By this way, the uglify task will not broke the code.
+		Dependencies are injected with the array notation. By this way, the uglify task will not break the code.
 	*/
 
     var Choregraphie = angular.module('Choregraphie', ['ngRoute', 'ChoregraphieControllers', 'angularMoment', 'snap', 'ngAnimate'])
@@ -106,14 +106,14 @@ window.objectSize = function(object: any) : number  {
 
 	Choregraphie.run([ '$rootScope','$location', 'amMoment', ($rootScope, $location, amMoment) => {	// Called when the module is instantiated 
 			
-			// amMoment -> Angular-MomentMoment
+			// amMoment -> Angular-Moment
 			
 
 			$rootScope.$on('$locationChangeStart', (event, current, next) => { // When the page begin to load
 				document.body.style.cursor = 'wait';
 			});
 
-			$rootScope.$on('$routeChangeSuccess', (event, current, preview) => { // if the page hase changed successfully
+			$rootScope.$on('$routeChangeSuccess', (event, current, preview) => { // if the page has changed successfully
 				document.body.style.cursor = 'auto';
 
 				setTimeout(function () {
@@ -164,7 +164,7 @@ window.objectSize = function(object: any) : number  {
 */
 
 /*
-	Functions the doesn't depend of Angular
+	Functions not depending of Angular
 */
 
 
