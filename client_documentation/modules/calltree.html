@@ -61,6 +61,35 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Everything related to the #/calltree view.</p>
+					</div>
+					<p>The calls tree is a JSON object like this one:</p>
+					<p>&emsp;{<br>
+						&emsp;&emsp;&quot;nodes&quot;: {<br>
+						&emsp;&emsp;&emsp;&quot;node1&quot;: {<br>
+						&emsp;&emsp;&emsp;&emsp;&quot;name&quot;: &quot;node1&quot;,<br>
+						&emsp;&emsp;&emsp;&emsp;&quot;value&quot;: 10<br>
+						&emsp;&emsp;&emsp;},<br>
+						&emsp;&emsp;&emsp;&quot;node2&quot;: {<br>
+						&emsp;&emsp;&emsp;&emsp;&quot;name&quot;: &quot;node2&quot;,<br>
+						&emsp;&emsp;&emsp;&emsp;&quot;value&quot;: 4<br>
+						&emsp;&emsp;&emsp;}<br>
+						&emsp;&emsp;},<br>
+						&emsp;&emsp;&quot;links&quot;: [<br>
+						&emsp;&emsp;&emsp;{<br>
+						&emsp;&emsp;&emsp;&emsp;&quot;source&quot;: &quot;node1&quot;,<br>
+						&emsp;&emsp;&emsp;&emsp;&quot;target&quot;: &quot;node2&quot;<br>
+						&emsp;&emsp;&emsp;}<br>
+						&emsp;&emsp;]<br>
+					&emsp;}<br></p>
+					<p>The <em>getCalls()</em> method of your server module should return an object like this one.
+						The other Node and/or Link object described in this module are used internally. You should care about theme only for
+					dev purposes.</p>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -107,7 +136,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2557</li>
+									<li>Defined in callTreeController.ts:2959</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -146,9 +175,20 @@
 					<div class="tsd-signature tsd-kind-icon">THREEJS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:14</li>
+							<li>Defined in callTreeController.ts:66</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS instance declared in this module and casted to &lt;any&gt;.</p>
+						</div>
+						<p>This declaration allows the THREEJS usage without definition file.</p>
+						<dl class="tsd-comment-tags">
+							<dt>usedby</dt>
+							<dd><p>CallTreeController</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 		</div>

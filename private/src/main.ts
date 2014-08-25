@@ -34,7 +34,7 @@ function toDateInputValue(date: Date) : string {
 };
 
 /**
-	Give the size of an object (by counting his keys). 
+	Give the size of an object (by counting keys). 
 	@deprecated Use _.size instead
 	@param object An object.
 */

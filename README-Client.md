@@ -39,6 +39,7 @@ Angular help you to keep your data and your DOM up to date. With TypeScript and 
 * [Underscore](http://underscorejs.org/):  When jQuery's symbol is **$**, Underscore is **_**. Underscore is the programmer's swiss knife. It contains everything you need to filter, reduce, map, group, wrap, sort, zip, find, clone and manipulate your data.
 * [LZ-String](http://pieroxy.net/blog/pages/lz-string/index.html) A string compression/decompression library. Used to reduce data size on network.
 * [Socket.io](http://socket.io/) Socket.IO enables real-time bidirectional event-based communication. THE alternative to AJAX.
+* [TweenJS](http://www.createjs.com/#!/TweenJS) Animate anything.
 
 # Overview of the app structure
 

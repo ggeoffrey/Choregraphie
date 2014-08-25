@@ -64,6 +64,34 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<h1 id="controller-managing-the-calls-view-">Controller managing the Calls view.</h1>
+					</div>
+					<p>Bound to Angular and to #/callTree</p>
+					<h2 id="warning-">Warning:</h2>
+					<p>The render loop should be as light and as fast as possible:</p>
+					<ul>
+						<li>immediatly differ with setTimeout when possible</li>
+						<li>use while loops whith length--</li>
+						<li><p>or for with cached length decreasing</p>
+						</li>
+						<li><p>Tasks that doesn&#39;t need to be computed every time should be differed with a %</p>
+						</li>
+						<li><p>don&#39;t use switches</p>
+						</li>
+						<li>don&#39;t use try catch</li>
+						<li>don&#39;t use &#39;new&#39;</li>
+						<li>don&#39;t acces the prototype chain</li>
+						<li>limit &#39;if&#39; as much as possible</li>
+						<li><p>limit loops as much as possible</p>
+						</li>
+						<li><p>Most important : do <strong>not</strong> use console to print to stdout (console.log|warn|err). You will slow <strong>drastically</strong> the rendering and you may freeze the browser.</p>
+						</li>
+					</ul>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -219,9 +247,19 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:221</li>
+									<li>Defined in callTreeController.ts:649</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>deprendencies</dt>
+									<dd><p>$scope, $http(<strong>Deprecated</strong>)</p>
+									</dd>
+									<dt>should</dt>
+									<dd><p>be rewritten to use a clean CLass pattern with Angular ( avoiding $scope.X = this.X and putting X in public visibility instead )</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -246,7 +284,7 @@
 					<div class="tsd-signature tsd-kind-icon">$http<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:221</li>
+							<li>Defined in callTreeController.ts:649</li>
 						</ul>
 					</aside>
 				</section>
@@ -256,9 +294,22 @@
 					<div class="tsd-signature tsd-kind-icon">$j<wbr>Qwindow<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">JQuery</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:144</li>
+							<li>Defined in callTreeController.ts:374</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The <em>window</em> object as a jQuery object.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>use $(window) everytime instead to avoid bugs.</p>
+							</dd>
+							<dt>should</dt>
+							<dd><p>be remove carefully</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_scope" class="anchor"></a>
@@ -266,7 +317,7 @@
 					<div class="tsd-signature tsd-kind-icon">$scope<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:221</li>
+							<li>Defined in callTreeController.ts:649</li>
 						</ul>
 					</aside>
 				</section>
@@ -276,9 +327,14 @@
 					<div class="tsd-signature tsd-kind-icon">anaglyphe<wbr>Effect<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:165</li>
+							<li>Defined in callTreeController.ts:430</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The same as this.classicRenderer with an anaglyph filter</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="auraanimationtime" class="anchor"></a>
@@ -286,9 +342,14 @@
 					<div class="tsd-signature tsd-kind-icon">aura<wbr>Animation<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:689</li>
+							<li>Defined in callTreeController.ts:1091</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Aura animation duration</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="brush" class="anchor"></a>
@@ -296,9 +357,14 @@
 					<div class="tsd-signature tsd-kind-icon">brush<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:203</li>
+							<li>Defined in callTreeController.ts:596</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3js svg brush providing time range selection</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="camera" class="anchor"></a>
@@ -306,9 +372,14 @@
 					<div class="tsd-signature tsd-kind-icon">camera<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:159</li>
+							<li>Defined in callTreeController.ts:411</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS Camera object</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="canvas" class="anchor"></a>
@@ -316,9 +387,14 @@
 					<div class="tsd-signature tsd-kind-icon">canvas<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:170</li>
+							<li>Defined in callTreeController.ts:461</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The &lt;canvas&gt; element</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="classicrenderer" class="anchor"></a>
@@ -326,9 +402,14 @@
 					<div class="tsd-signature tsd-kind-icon">classic<wbr>Renderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:164</li>
+							<li>Defined in callTreeController.ts:426</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The classic (no filter, webgl) renderer.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="color" class="anchor"></a>
@@ -336,9 +417,21 @@
 					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:125</li>
+							<li>Defined in callTreeController.ts:298</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A D3js color function</p>
+							<pre><code>D3.<span class="hljs-keyword">scale</span>.category10()
+</code></pre>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>should</dt>
+							<dd><p>be reviewed, can be @Deprecated</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="colorbuilder" class="anchor"></a>
@@ -346,9 +439,19 @@
 					<div class="tsd-signature tsd-kind-icon">color<wbr>Builder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:197</li>
+							<li>Defined in callTreeController.ts:574</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A D3js color scale.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>usedby</dt>
+							<dd><p>Angluar ng-repeate &amp; THREEJS</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="controls" class="anchor"></a>
@@ -356,9 +459,14 @@
 					<div class="tsd-signature tsd-kind-icon">controls<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:161</li>
+							<li>Defined in callTreeController.ts:421</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS Controls object</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="currentintersectedobject" class="anchor"></a>
@@ -366,9 +474,14 @@
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Intersected<wbr>Object<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:179</li>
+							<li>Defined in callTreeController.ts:503</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The current intersected object. Should be a 3D Node</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="d3forcelinks" class="anchor"></a>
@@ -376,7 +489,7 @@
 					<div class="tsd-signature tsd-kind-icon">d3<wbr>Force<wbr>Links<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:1371</li>
+							<li>Defined in callTreeController.ts:1773</li>
 						</ul>
 					</aside>
 				</section>
@@ -386,7 +499,7 @@
 					<div class="tsd-signature tsd-kind-icon">d3<wbr>Force<wbr>Node<wbr>Positions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:1370</li>
+							<li>Defined in callTreeController.ts:1772</li>
 						</ul>
 					</aside>
 				</section>
@@ -396,9 +509,14 @@
 					<div class="tsd-signature tsd-kind-icon">d3link<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:130</li>
+							<li>Defined in callTreeController.ts:323</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3js object managing links in the force layout.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="d3node" class="anchor"></a>
@@ -406,9 +524,14 @@
 					<div class="tsd-signature tsd-kind-icon">d3node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:133</li>
+							<li>Defined in callTreeController.ts:341</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3js object managing nodes in the force layout</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="force" class="anchor"></a>
@@ -416,9 +539,15 @@
 					<div class="tsd-signature tsd-kind-icon">force<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:126</li>
+							<li>Defined in callTreeController.ts:303</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3js force layout
+							Used to aniamte nodes like a molecule</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="force3d" class="anchor"></a>
@@ -426,9 +555,14 @@
 					<div class="tsd-signature tsd-kind-icon">force3D<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:191</li>
+							<li>Defined in callTreeController.ts:533</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3js 3D force layout</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="isanaglyphe" class="anchor"></a>
@@ -436,7 +570,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Anaglyphe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:1557</li>
+							<li>Defined in callTreeController.ts:1959</li>
 						</ul>
 					</aside>
 				</section>
@@ -446,9 +580,14 @@
 					<div class="tsd-signature tsd-kind-icon">lights<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:175</li>
+							<li>Defined in callTreeController.ts:485</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS Lights list</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="line3dlist" class="anchor"></a>
@@ -456,9 +595,21 @@
 					<div class="tsd-signature tsd-kind-icon">line3DList<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:194</li>
+							<li>Defined in callTreeController.ts:560</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS Lines object</p>
+						</div>
+						<p>Bound to links3DList
+						Owned only by THREEJS</p>
+						<dl class="tsd-comment-tags">
+							<dt>explanation</dt>
+							<dd><p>THREEJS doesn&#39;t care about a link. THREEJS only draw lines.</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="linktoapplications" class="anchor"></a>
@@ -466,9 +617,19 @@
 					<div class="tsd-signature tsd-kind-icon">link<wbr>ToApplications<span class="tsd-signature-symbol">:</span> <a href="../interfaces/calltree.lien.html" class="tsd-signature-type">Lien</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:135</li>
+							<li>Defined in callTreeController.ts:353</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>was use by this.markers</p>
+							</dd>
+							<dt>should</dt>
+							<dd><p>be removed with this.markers</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="links" class="anchor"></a>
@@ -476,9 +637,14 @@
 					<div class="tsd-signature tsd-kind-icon">links<span class="tsd-signature-symbol">:</span> <a href="../interfaces/calltree.lien.html" class="tsd-signature-type">Lien</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:129</li>
+							<li>Defined in callTreeController.ts:318</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Links list transformed from rawLinks</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="links3dlist" class="anchor"></a>
@@ -486,9 +652,20 @@
 					<div class="tsd-signature tsd-kind-icon">links3DList<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:193</li>
+							<li>Defined in callTreeController.ts:551</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>List of links between nodes.
+							Owned only by D3js</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>explanation</dt>
+							<dd><p>D3js doesn&#39;t care about a line. D3js only care about coordonates</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="linkscolor" class="anchor"></a>
@@ -496,9 +673,14 @@
 					<div class="tsd-signature tsd-kind-icon">links<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:185</li>
+							<li>Defined in callTreeController.ts:516</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Default links color</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="markers" class="anchor"></a>
@@ -506,9 +688,19 @@
 					<div class="tsd-signature tsd-kind-icon">markers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:134</li>
+							<li>Defined in callTreeController.ts:347</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>since links doesn&#39;t have markers anymore</p>
+							</dd>
+							<dt>should</dt>
+							<dd><p>be removed carefully</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="mode" class="anchor"></a>
@@ -516,9 +708,15 @@
 					<div class="tsd-signature tsd-kind-icon">mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:157</li>
+							<li>Defined in callTreeController.ts:402</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>View mode
+							in : {&#39;2D&#39;, &#39;3D&#39;}</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="mouse" class="anchor"></a>
@@ -526,9 +724,15 @@
 					<div class="tsd-signature tsd-kind-icon">mouse<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:160</li>
+							<li>Defined in callTreeController.ts:416</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Javascript classic object with x &amp; y.
+							Updated every time the mouse is moved.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="node3d" class="anchor"></a>
@@ -536,9 +740,17 @@
 					<div class="tsd-signature tsd-kind-icon">node3D<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:192</li>
+							<li>Defined in callTreeController.ts:544</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>List of 3D Nodes</p>
+						</div>
+						<p>Shared by D3js and THREEJS</p>
+						<p>D3js compute nodes position</p>
+						<p>THREEJS draw them.</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="node3dcategories" class="anchor"></a>
@@ -546,9 +758,14 @@
 					<div class="tsd-signature tsd-kind-icon">node3DCategories<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:210</li>
+							<li>Defined in callTreeController.ts:625</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A Map<String,Array<Nodes>&gt; allowing selection of nodes by there type.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="node3dvisible" class="anchor"></a>
@@ -556,9 +773,14 @@
 					<div class="tsd-signature tsd-kind-icon">node3DVisible<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:211</li>
+							<li>Defined in callTreeController.ts:630</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A Map<String, Boolean> allow to hide/show nodes by there category</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="nodedefaultsize" class="anchor"></a>
@@ -566,7 +788,7 @@
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Default<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:1155</li>
+							<li>Defined in callTreeController.ts:1557</li>
 						</ul>
 					</aside>
 				</section>
@@ -576,9 +798,16 @@
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Geometry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:195</li>
+							<li>Defined in callTreeController.ts:568</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS Geometry object.
+							Define the shape of a node.</p>
+						</div>
+						<p>If you want to have nyan cats as nodes, you have to change this object.</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="nodesizer" class="anchor"></a>
@@ -586,9 +815,15 @@
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Sizer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:199</li>
+							<li>Defined in callTreeController.ts:586</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3.scale.log</p>
+						</div>
+						<p>Used to size nodes. Smallest nodes are visible. Biggest nodes aren&#39;t huge.</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="nodetypes" class="anchor"></a>
@@ -596,9 +831,16 @@
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:147</li>
+							<li>Defined in callTreeController.ts:381</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Types of nodes mapped to be accessible directly.
+								The key and the value are the same.
+							Map <String, String> : &#39;type1&#39; =&gt; &#39;type1&#39;</p>
+						</div>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-index-signature tsd-parent-kind-property">
 						<a name="nodetypes.nodetypes_index_signature" class="anchor"></a>
 						<h3>node<wbr>Types index signature</h3>
@@ -608,7 +850,7 @@
 						<ul class="tsd-descriptions">
 							<li class="tsd-description"><aside class="tsd-sources">
 									<ul>
-										<li>Defined in callTreeController.ts:147</li>
+										<li>Defined in callTreeController.ts:381</li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -630,9 +872,14 @@
 					<div class="tsd-signature tsd-kind-icon">nodes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:131</li>
+							<li>Defined in callTreeController.ts:328</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>List of transformed nodes fetched from database</p>
+						</div>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-index-signature tsd-parent-kind-property">
 						<a name="nodes.nodes_index_signature" class="anchor"></a>
 						<h3>nodes index signature</h3>
@@ -642,7 +889,7 @@
 						<ul class="tsd-descriptions">
 							<li class="tsd-description"><aside class="tsd-sources">
 									<ul>
-										<li>Defined in callTreeController.ts:131</li>
+										<li>Defined in callTreeController.ts:328</li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -664,9 +911,16 @@
 					<div class="tsd-signature tsd-kind-icon">nodes<wbr>Values<span class="tsd-signature-symbol">:</span> <a href="calltree.noeud.html" class="tsd-signature-type">Noeud</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:132</li>
+							<li>Defined in callTreeController.ts:336</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Array representation of nodes.</p>
+						</div>
+						<p>D3js force layout accept an array as input.
+						As this.nodes is a Map<String, Node>, this.nodesValues is _.values(this.nodes)</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="originalaura" class="anchor"></a>
@@ -674,9 +928,14 @@
 					<div class="tsd-signature tsd-kind-icon">original<wbr>Aura<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:690</li>
+							<li>Defined in callTreeController.ts:1096</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Usee as global variable to animate aura</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="particlemap" class="anchor"></a>
@@ -684,9 +943,14 @@
 					<div class="tsd-signature tsd-kind-icon">particle<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:187</li>
+							<li>Defined in callTreeController.ts:524</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREE Image Texture</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="particlescolor" class="anchor"></a>
@@ -694,9 +958,14 @@
 					<div class="tsd-signature tsd-kind-icon">particles<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:186</li>
+							<li>Defined in callTreeController.ts:520</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Default links color</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="particlescountrange" class="anchor"></a>
@@ -704,9 +973,15 @@
 					<div class="tsd-signature tsd-kind-icon">particles<wbr>Count<wbr>Range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:198</li>
+							<li>Defined in callTreeController.ts:579</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>d3.scale.linear
+							[smallest link .. strongest link] =&gt; [n particles .. m particles]</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="plan2d" class="anchor"></a>
@@ -714,9 +989,18 @@
 					<div class="tsd-signature tsd-kind-icon">plan2D<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:181</li>
+							<li>Defined in callTreeController.ts:509</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd></dd>
+							<dt>should</dt>
+							<dd><p>be removed</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="previousintersectedobject" class="anchor"></a>
@@ -724,7 +1008,7 @@
 					<div class="tsd-signature tsd-kind-icon">previous<wbr>Intersected<wbr>Object<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:993</li>
+							<li>Defined in callTreeController.ts:1395</li>
 						</ul>
 					</aside>
 				</section>
@@ -734,9 +1018,19 @@
 					<div class="tsd-signature tsd-kind-icon">projection<wbr>Offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:178</li>
+							<li>Defined in callTreeController.ts:498</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Intersection location.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>see</dt>
+							<dd><p>raycaster</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="projectionplan" class="anchor"></a>
@@ -744,9 +1038,19 @@
 					<div class="tsd-signature tsd-kind-icon">projection<wbr>Plan<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:177</li>
+							<li>Defined in callTreeController.ts:492</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A invisible plan object faceing to the camera.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>see</dt>
+							<dd><p>raycaster</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="projector" class="anchor"></a>
@@ -754,9 +1058,20 @@
 					<div class="tsd-signature tsd-kind-icon">projector<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:168</li>
+							<li>Defined in callTreeController.ts:444</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A THREEJS projector object.</p>
+						</div>
+						<p>This is not a light. This is an object that allow raycasting.</p>
+						<dl class="tsd-comment-tags">
+							<dt>see</dt>
+							<dd><p>raycaster</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="rawlinks" class="anchor"></a>
@@ -764,9 +1079,14 @@
 					<div class="tsd-signature tsd-kind-icon">raw<wbr>Links<span class="tsd-signature-symbol">:</span> <a href="../interfaces/calltree.lienbrut.html" class="tsd-signature-type">LienBrut</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:128</li>
+							<li>Defined in callTreeController.ts:314</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Raw links list fetched from database</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="raycaster" class="anchor"></a>
@@ -774,9 +1094,24 @@
 					<div class="tsd-signature tsd-kind-icon">raycaster<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:169</li>
+							<li>Defined in callTreeController.ts:456</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A THREEJS raycaster object.</p>
+						</div>
+						<p>Used to detect intersactions between mouse and an object.</p>
+						<dl class="tsd-comment-tags">
+							<dt>explanation</dt>
+							<dd><p>When you want to detect a click in a 2D world, you check to mouse coordinates and your objects sizes and coordinate.
+									If the mouse pointer is <em>in</em> the object, you consider the mouse is over it.
+									In a 3D world you try to select an object with a 2D mouse (you screen is in 2D). To detect intersection between your mouse and an object,
+									you cast a ray between your mouse pointer and the infinity. This ray is perpendicular to a plan facing your camera.
+								If this ray touch an object. the mouse is over it.</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="refreshcount" class="anchor"></a>
@@ -784,9 +1119,14 @@
 					<div class="tsd-signature tsd-kind-icon">refresh<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:802</li>
+							<li>Defined in callTreeController.ts:1201</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Count how many loops has been executed. Used to deffer parral tasks when refreshCount % X == ?</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="renderer" class="anchor"></a>
@@ -794,9 +1134,14 @@
 					<div class="tsd-signature tsd-kind-icon">renderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:166</li>
+							<li>Defined in callTreeController.ts:435</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A pointer to the current selected renderer ( classicRenderer or anaglypheEffect )</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="root3d" class="anchor"></a>
@@ -804,9 +1149,21 @@
 					<div class="tsd-signature tsd-kind-icon">root3D<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:171</li>
+							<li>Defined in callTreeController.ts:470</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ALL the scene is wrapped in a THREEJS.Object3D.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>explanation</dt>
+							<dd><p>the camera is centrerd to look at (0,0,0). But our nodes are placed by D3js. D3 use (0,0,0) at the &quot;top left corner&quot;.
+									Our camera is centered with the scene but not with the objects. the simpler way (and the best for performances) is to put all the objects
+								in an invisible, shapeless Object3D and to move this object to (-width/2, -heigth/2, -depth/2). By this way, our scene is centered</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="rootcontainerposition" class="anchor"></a>
@@ -814,9 +1171,14 @@
 					<div class="tsd-signature tsd-kind-icon">root<wbr>Container<wbr>Position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:172</li>
+							<li>Defined in callTreeController.ts:475</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Position of the root container</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="rootsphere" class="anchor"></a>
@@ -824,9 +1186,16 @@
 					<div class="tsd-signature tsd-kind-icon">root<wbr>Sphere<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:174</li>
+							<li>Defined in callTreeController.ts:480</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>since the bakground world is black</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="scene" class="anchor"></a>
@@ -834,9 +1203,14 @@
 					<div class="tsd-signature tsd-kind-icon">scene<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:158</li>
+							<li>Defined in callTreeController.ts:407</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS Scene object</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="selectedobject" class="anchor"></a>
@@ -844,9 +1218,15 @@
 					<div class="tsd-signature tsd-kind-icon">selected<wbr>Object<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:204</li>
+							<li>Defined in callTreeController.ts:603</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Current object under mouse cursor if left button is down</p>
+						</div>
+						<p>Used to drag nodes</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="selectedobjectaura" class="anchor"></a>
@@ -854,9 +1234,15 @@
 					<div class="tsd-signature tsd-kind-icon">selected<wbr>Object<wbr>Aura<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:207</li>
+							<li>Defined in callTreeController.ts:615</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Aura pulsating around the selected node
+							THREEJS object</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="selectedobjectauraanimation" class="anchor"></a>
@@ -864,9 +1250,14 @@
 					<div class="tsd-signature tsd-kind-icon">selected<wbr>Object<wbr>Aura<wbr>Animation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:208</li>
+							<li>Defined in callTreeController.ts:620</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>TweenJS animation on the selectedObjectAura</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="selectedobjectclick" class="anchor"></a>
@@ -874,9 +1265,15 @@
 					<div class="tsd-signature tsd-kind-icon">selected<wbr>Object<wbr>Click<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:206</li>
+							<li>Defined in callTreeController.ts:609</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Current selected object
+							Used to kepp an node selected</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="stacktrace" class="anchor"></a>
@@ -884,9 +1281,20 @@
 					<div class="tsd-signature tsd-kind-icon">stack<wbr>Trace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:152</li>
+							<li>Defined in callTreeController.ts:393</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>List of strings.
+							Usefull to show the stack trace line by line with ng-repeate</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>usedby</dt>
+							<dd><p>ng-repeate in the stack trace panel.</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="svg" class="anchor"></a>
@@ -894,9 +1302,19 @@
 					<div class="tsd-signature tsd-kind-icon">svg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:127</li>
+							<li>Defined in callTreeController.ts:309</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>since this view use THREEJS</p>
+							</dd>
+							<dt>sould</dt>
+							<dd><p>be removed carefully</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="svgroot" class="anchor"></a>
@@ -904,9 +1322,16 @@
 					<div class="tsd-signature tsd-kind-icon">svg<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:140</li>
+							<li>Defined in callTreeController.ts:365</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>since THREEJS is used</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="textvisible" class="anchor"></a>
@@ -914,9 +1339,14 @@
 					<div class="tsd-signature tsd-kind-icon">text<wbr>Visible<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:150</li>
+							<li>Defined in callTreeController.ts:386</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Global parameter to show/hide ALL labels</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="texts" class="anchor"></a>
@@ -924,9 +1354,14 @@
 					<div class="tsd-signature tsd-kind-icon">texts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array&lt;any&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:200</li>
+							<li>Defined in callTreeController.ts:591</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>THREEJS text objects built from node&#39;s names</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="timeoutselectnode" class="anchor"></a>
@@ -934,7 +1369,7 @@
 					<div class="tsd-signature tsd-kind-icon">timeout<wbr>Select<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:1781</li>
+							<li>Defined in callTreeController.ts:2183</li>
 						</ul>
 					</aside>
 				</section>
@@ -944,9 +1379,22 @@
 					<div class="tsd-signature tsd-kind-icon">zoom<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in callTreeController.ts:138</li>
+							<li>Defined in callTreeController.ts:360</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>D3js zoom behaviour</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>since THREEJS is used and provide a zoom via THREEJS.Camera</p>
+							</dd>
+							<dt>should</dt>
+							<dd><p>be removed carefully</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -960,9 +1408,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:666</li>
+									<li>Defined in callTreeController.ts:1065</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a light at position (x,y,z) looking at center</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -993,9 +1446,22 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:793</li>
+									<li>Defined in callTreeController.ts:1189</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Render loop.</p>
+								</div>
+								<p>Part of the suite:</p>
+								<ul>
+									<li>requestAnimationFrame</li>
+									<li>animate</li>
+									<li>render</li>
+									<li>renderParallel</li>
+									<li>renderFinal</li>
+								</ul>
+							</div>
 						</li>
 					</ul>
 				</section>
@@ -1008,9 +1474,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:691</li>
+									<li>Defined in callTreeController.ts:1100</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Animate aura around selected object</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -1029,9 +1500,15 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:382</li>
+									<li>Defined in callTreeController.ts:795</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Build a D3 brush</p>
+								</div>
+								<p>Use this.links to scale and plot values</p>
+							</div>
 						</li>
 					</ul>
 				</section>
@@ -1044,7 +1521,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1156</li>
+									<li>Defined in callTreeController.ts:1558</li>
 								</ul>
 							</aside>
 						</li>
@@ -1059,7 +1536,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2062</li>
+									<li>Defined in callTreeController.ts:2464</li>
 								</ul>
 							</aside>
 						</li>
@@ -1074,9 +1551,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:213</li>
+									<li>Defined in callTreeController.ts:636</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Cancel all listeners when this view is leaved</p>
+								</div>
+							</div>
 						</li>
 					</ul>
 				</section>
@@ -1089,7 +1571,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2497</li>
+									<li>Defined in callTreeController.ts:2899</li>
 								</ul>
 							</aside>
 						</li>
@@ -1104,7 +1586,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1373</li>
+									<li>Defined in callTreeController.ts:1775</li>
 								</ul>
 							</aside>
 						</li>
@@ -1119,7 +1601,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2522</li>
+									<li>Defined in callTreeController.ts:2924</li>
 								</ul>
 							</aside>
 						</li>
@@ -1134,7 +1616,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2454</li>
+									<li>Defined in callTreeController.ts:2856</li>
 								</ul>
 							</aside>
 						</li>
@@ -1149,7 +1631,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2388</li>
+									<li>Defined in callTreeController.ts:2790</li>
 								</ul>
 							</aside>
 						</li>
@@ -1164,7 +1646,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1882</li>
+									<li>Defined in callTreeController.ts:2284</li>
 								</ul>
 							</aside>
 						</li>
@@ -1179,7 +1661,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1580</li>
+									<li>Defined in callTreeController.ts:1982</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1206,7 +1688,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2442</li>
+									<li>Defined in callTreeController.ts:2844</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1233,7 +1715,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2047</li>
+									<li>Defined in callTreeController.ts:2449</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1257,7 +1739,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1757</li>
+									<li>Defined in callTreeController.ts:2159</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -1275,7 +1757,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1761</li>
+									<li>Defined in callTreeController.ts:2163</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1299,7 +1781,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:962</li>
+									<li>Defined in callTreeController.ts:1364</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -1317,7 +1799,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1898</li>
+									<li>Defined in callTreeController.ts:2300</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -1335,7 +1817,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:980</li>
+									<li>Defined in callTreeController.ts:1382</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -1353,7 +1835,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2349</li>
+									<li>Defined in callTreeController.ts:2751</li>
 								</ul>
 							</aside>
 						</li>
@@ -1368,9 +1850,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:479</li>
+									<li>Defined in callTreeController.ts:890</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Init everything needed by a 3D view (scene, lights, controls, context, etc...)</p>
+								</div>
+							</div>
 						</li>
 					</ul>
 				</section>
@@ -1383,7 +1870,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1932</li>
+									<li>Defined in callTreeController.ts:2334</li>
 								</ul>
 							</aside>
 						</li>
@@ -1398,7 +1885,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1394</li>
+									<li>Defined in callTreeController.ts:1796</li>
 								</ul>
 							</aside>
 						</li>
@@ -1413,7 +1900,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1244</li>
+									<li>Defined in callTreeController.ts:1646</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1437,9 +1924,15 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:324</li>
+									<li>Defined in callTreeController.ts:755</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Load data from database</p>
+								</div>
+								<p>Callback is called when data are ready.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -1458,7 +1951,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2431</li>
+									<li>Defined in callTreeController.ts:2833</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1482,7 +1975,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1099</li>
+									<li>Defined in callTreeController.ts:1501</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1503,7 +1996,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1056</li>
+									<li>Defined in callTreeController.ts:1458</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1524,7 +2017,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:995</li>
+									<li>Defined in callTreeController.ts:1397</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1545,7 +2038,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1082</li>
+									<li>Defined in callTreeController.ts:1484</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1566,7 +2059,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1109</li>
+									<li>Defined in callTreeController.ts:1511</li>
 								</ul>
 							</aside>
 						</li>
@@ -1581,7 +2074,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1753</li>
+									<li>Defined in callTreeController.ts:2155</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1608,7 +2101,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1224</li>
+									<li>Defined in callTreeController.ts:1626</li>
 								</ul>
 							</aside>
 						</li>
@@ -1623,9 +2116,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:804</li>
+									<li>Defined in callTreeController.ts:1206</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Apply</p>
+								</div>
+							</div>
 						</li>
 					</ul>
 				</section>
@@ -1638,7 +2136,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:943</li>
+									<li>Defined in callTreeController.ts:1345</li>
 								</ul>
 							</aside>
 						</li>
@@ -1653,7 +2151,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:911</li>
+									<li>Defined in callTreeController.ts:1313</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1674,7 +2172,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1903</li>
+									<li>Defined in callTreeController.ts:2305</li>
 								</ul>
 							</aside>
 						</li>
@@ -1689,7 +2187,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1782</li>
+									<li>Defined in callTreeController.ts:2184</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1713,7 +2211,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1119</li>
+									<li>Defined in callTreeController.ts:1521</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1737,7 +2235,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1820</li>
+									<li>Defined in callTreeController.ts:2222</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1761,7 +2259,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1409</li>
+									<li>Defined in callTreeController.ts:1811</li>
 								</ul>
 							</aside>
 						</li>
@@ -1776,7 +2274,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1419</li>
+									<li>Defined in callTreeController.ts:1821</li>
 								</ul>
 							</aside>
 						</li>
@@ -1791,7 +2289,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1493</li>
+									<li>Defined in callTreeController.ts:1895</li>
 								</ul>
 							</aside>
 						</li>
@@ -1806,7 +2304,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1558</li>
+									<li>Defined in callTreeController.ts:1960</li>
 								</ul>
 							</aside>
 						</li>
@@ -1821,7 +2319,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1569</li>
+									<li>Defined in callTreeController.ts:1971</li>
 								</ul>
 							</aside>
 						</li>
@@ -1836,7 +2334,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2357</li>
+									<li>Defined in callTreeController.ts:2759</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1860,7 +2358,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1924</li>
+									<li>Defined in callTreeController.ts:2326</li>
 								</ul>
 							</aside>
 						</li>
@@ -1875,7 +2373,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1628</li>
+									<li>Defined in callTreeController.ts:2030</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1899,7 +2397,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1928</li>
+									<li>Defined in callTreeController.ts:2330</li>
 								</ul>
 							</aside>
 						</li>
@@ -1914,7 +2412,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:1620</li>
+									<li>Defined in callTreeController.ts:2022</li>
 								</ul>
 							</aside>
 						</li>
@@ -1929,7 +2427,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2411</li>
+									<li>Defined in callTreeController.ts:2813</li>
 								</ul>
 							</aside>
 						</li>
@@ -1944,7 +2442,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:2111</li>
+									<li>Defined in callTreeController.ts:2513</li>
 								</ul>
 							</aside>
 						</li>
@@ -1959,9 +2457,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in callTreeController.ts:753</li>
+									<li>Defined in callTreeController.ts:1164</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Update the diagram by removing all links and reconnect nodes with link in the time range</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
