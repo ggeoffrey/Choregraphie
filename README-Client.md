@@ -26,7 +26,7 @@ Angular has been shoosen cause:
 * It's backed by Google
 * It fits well with a class oriented language like TypeScript
 
-Angular help you to keep your data and your DOM up to date. With TypeScript and some library such D3js, you have here the best coktail to build data driven dynamic applications.
+Angular help you to keep your data and your DOM up to date. With TypeScript and some library such D3js, you have here the best cocktail to build data driven and dynamic applications.
 
 
 # Dependencies & links
@@ -57,5 +57,5 @@ Angular help you to keep your data and your DOM up to date. With TypeScript and 
 	* CallTree TS module
 		* CallTreeController
 * Server TS module
-	Database controller
+	* Database controller
 * Some global utilities & functions

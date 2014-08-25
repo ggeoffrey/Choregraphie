@@ -332,7 +332,7 @@ module CallTree {
 			Array representation of nodes.
 
 			D3js force layout accept an array as input. 
-			As this.nodes is a Map<String, Node>, this.nodesValues is _.values(this.nodes)
+			As this.nodes is a Map&lt;String, Node&gt;, this.nodesValues is _.values(this.nodes)
 		*/
 		private nodesValues: Array<Noeud>;
 
@@ -621,12 +621,12 @@ module CallTree {
 		private selectedObjectAuraAnimation: any;
 
 		/**
-			A Map<String,Array<Nodes>> allowing selection of nodes by there type.
+			A Map&lt;String,Array&lt;Nodes&gt;&gt; allowing selection of nodes by there type.
 		*/
 		private node3DCategories: any;
 
 		/**
-			A Map<String, Boolean> allow to hide/show nodes by there category
+			A Map&lt;String, Boolean&gt; allow to hide/show nodes by there category
 		*/
 		private node3DVisible: any;
 
@@ -643,11 +643,19 @@ module CallTree {
 
 
 		/**
+			@Deprecated
+		*/
+
+		private $http;
+
+		/**
 			@Deprendencies $scope, $http(**Deprecated**)
 
-			@should be rewritten to use a clean CLass pattern with Angular ( avoiding $scope.X = this.X and putting X in public visibility instead )
+			@should be rewritten to use a clean Class pattern with Angular ( avoiding $scope.X = this.X and putting X in public visibility instead )
 		*/
-		constructor(private $scope, private $http) {
+		constructor(private $scope, $http) {
+
+			this.http = $http;
 
 			/*
 				Liaison avec angular
@@ -658,8 +666,8 @@ module CallTree {
 			$scope.toggleStackTrace = this.toggleStackTrace;
 			$scope.getNodes = this.getNodes;
 
-			$scope.foldAll = this.foldAll;
-			$scope.unFoldAll = this.unFoldAll;
+			//$scope.foldAll = this.foldAll;
+			//$scope.unFoldAll = this.unFoldAll;
 
 			$scope.textVisible = this.textVisible;
 			$scope.toggleText = this.toggleText;
@@ -2253,7 +2261,7 @@ module CallTree {
 		}
 
 		/**
-			Get nodes Map<String,String> with:
+			Get nodes Map&lt;String,String&gt; with:
 			- key: node name
 			- value : hexadecimal color of this kind of node.
 		*/
@@ -2454,8 +2462,6 @@ module CallTree {
 		*/
 		private initDiagram(): void {
 
-
-
 			// $('#helpLabel').fadeOut('slow');
 
 			// var selector = '#callTree'  // Le DIV qui recevra le diagramme
@@ -2566,7 +2572,7 @@ module CallTree {
 
 			//this.computeNodeSizer();
 		}
-
+		/*
 		private getNodeCalls(node: Noeud): number {
 			var count: number = 0;
 
@@ -2580,9 +2586,9 @@ module CallTree {
 			}
 
 			return count;
-		}
+		}*/
 
-		private computeNodeSizer(): void {
+		/*private computeNodeSizer(): void {
 			var max = -Infinity;
 			var min = Infinity;
 			var node: Noeud;
@@ -2601,7 +2607,7 @@ module CallTree {
 			this.nodeSizer = d3.scale.log()
 				.domain([min, max])
 				.range([1, 5]);
-		}
+		}*/
 
 
 		// private redrawZoom(_this): void {
@@ -2631,7 +2637,7 @@ module CallTree {
 			- l'affiche
 		*/
 
-		private updateCallTreeForceDiagram(): void {
+		/*private updateCallTreeForceDiagram(): void {
 
 
 
@@ -2867,17 +2873,17 @@ module CallTree {
 			// 	});
 
 
-		}
+		}*/
 
 		private hardUpdate(): void {
 
-			this.updateCallTreeForceDiagram();
+			//this.updateCallTreeForceDiagram();
 			if (!this.$scope.$$phase) {
 				this.$scope.$apply();
 			}
 		}
 
-		private toggleChildren(node: Noeud, callback: Function): void {
+		/*private toggleChildren(node: Noeud, callback: Function): void {
 			var key: string;
 			var child: Noeud;
 			var listeLiens: Array<Lien>;
@@ -2902,13 +2908,13 @@ module CallTree {
 			callback();
 
 
-		}
+		}*/
 
 		/*
 			Replie tous les noeuds ayant au moins un parent.
 			Replie tout l'arbre.
 		*/
-		private foldAll(): void {
+		/*private foldAll(): void {
 			var name: string;
 			var node: Noeud;
 			for (name in this.nodes) {
@@ -2924,14 +2930,14 @@ module CallTree {
 			});
 
 			this.hardUpdate();
-		}
+		}*/
 
 
 		/*
 			Déplie tous les noeuds.
 			Déplie tout l'arbre.
 		*/
-		private unFoldAll(): void {
+		/*private unFoldAll(): void {
 			var name: string;
 			var node: Noeud;
 			for (name in this.nodes) {
@@ -2945,12 +2951,15 @@ module CallTree {
 			});
 
 			this.hardUpdate();
-		}
+		}*/
 
 
 
 
-		// Donne la taille d'un objet en comptant ses clefs
+		/**
+			Count keys in an object
+			@Deprecated use _.size instead
+		*/
 		private objectSize(obj: any): number {
 			var size: number = 0;
 			var key: any;
@@ -2962,7 +2971,7 @@ module CallTree {
 			return size;
 		}
 
-		private getLienFromPair(parent: Noeud, child: Noeud): Array<Lien> {
+		/*private getLienFromPair(parent: Noeud, child: Noeud): Array<Lien> {
 			var listeLiens: Array<Lien> = new Array();
 			this.links.forEach(function (link: Lien, index: number) {
 				if (parent.name === link.source.name && child.name === link.target.name) {
@@ -2971,7 +2980,7 @@ module CallTree {
 			});
 
 			return listeLiens;
-		}
+		}*/
 
 
 		public exportCSV(): void {
@@ -3017,6 +3026,9 @@ module CallTree {
 
 		}
 
+		/**
+			Show colored axis for debugging purposes
+		*/
 		private drawAxis() {
 			var xMaterial = new THREEJS.LineBasicMaterial({ color: 0xff0000 })
 					var xGeometry = new THREEJS.Geometry();
@@ -3042,6 +3054,9 @@ module CallTree {
 		}
 
 
+		/**
+			Draw some lambert shapes for debugging purposes
+		*/
 		private drawTestShapes(): void {
 			var geometry = new THREEJS.BoxGeometry(20, 20, 20);
 
@@ -3149,7 +3164,9 @@ module CallTree {
 
 
 }
-// Encapsulé
+
+
+// Export to angular
 (function () {
 	window.ChoregraphieControllers.controller('callTreeController', ['$scope', '$http', function ($scope, $http) {
 		$scope.vm = new CallTree.CallTreeController($scope, $http);

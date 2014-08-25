@@ -4,66 +4,186 @@
 /// <reference path="../snap.d.ts" />
 
 
+/**
+    Underscore instance declared in *window* and casted to &lt;any&gt;.
+
+    This declaration allows the Underscore usage without definition file.
+
+*/
 declare var _ : any; // underscore
 
 
 
+/**
+    Manage Events
+*/
 module Events {
 
+    /**
+        Used to extract data from URL
+    */
 	interface RouteParams{
 		codeapp: string;
 		couloir: string;
     }
 
+    /**
+        This interface is **not** the Event object you have to implement in your server module.
+        This interface is only used internaly.
+    */
     export interface Event {
+        /**
+            ID comming from the database
+        */
         id: number;
+        /**
+            Application name
+        */
         codeapp: string;
+        /**
+            Corridor name
+            @should be translated
+        */
         couloir: string;
+        /**
+            Raw error code
+        */
         codetype: string;
-        start_time: Date; // string puis Date
+        /**
+            Event's date
+        */
+        start_time: Date;
+        /**
+            Event has been acknowledged?
+        */
         seen: boolean;
+        /**
+            Event is maked 'deleted' and should be hidden
+        */
         deleted: boolean;
+
+        /**
+            Used for behaviour events [oldValue] -> [newValue]
+        */
         oldValue: number;
+        /**
+            Classic or new value
+        */
         value: number;
+        /**
+            standard deviation difference.
+        */
         diffStddev: number;
+        /**
+            Event type
+        */
         type: string;
+        /**
+            A string representation of this event
+        */
         description: string;
+        /**
+            Event curretly selected ?
+        */
         selected: boolean;
     }
 
+    /**
+        # Angular Controller
+        Bound to the #/events view
+    */
     export class EventsController {
 
 		private scope: ng.IScope;
+        /**
+            @Deprecated
+        */
 		private http: ng.IHttpService;
 		private routeParams: RouteParams;
 		
+        /**
+            $window : Angular $window
+        */
         private window: any;
 
+        /**
+            Events list
+        */
         private events: Array<Event>;
-        public displayedEvents: Array<Event>;
 
-        private colorBuilder: any; // D3.scale.categoryXX();
+        
+
+        /**
+            Used to color links by their types
+            D3js scale.categoryXX();
+        */
+        private colorBuilder: any;
 
         //  ANGULAR FILTERS
 
-        public nameFilter: string;
-        public corridorFilter: string;
-        public typeFilter: string;
-        public dateDirectionFilter: string;
-        public limitShownFilter: number;
+        /**
+            Angular filter. Managed by Angular.
 
+            Filter Events by app name. Can be a RegExp
+        */
+        public nameFilter: string;
+        /**
+            Angular filter. Managed by Angular
+
+            Filter Events by corridor name. Can be a RegExp
+        */
+        public corridorFilter: string;
+        /**
+            Angular filter. Managed by Angular
+
+            Filter events by type. Used with a &lt;select&gt; element.
+        */
+        public typeFilter: string;
+        /**
+            Angular filter. Managed by Angular
+
+            @WARN not implemented yet
+        */
+        public dateDirectionFilter: string;
+
+        /**
+            Angular filter. Managed by Angular
+
+            Number of visible Events. Used with an &lt;input type="number" /&gt;
+        */
+        public limitShownFilter: number;
+        
         // Objects Groupper
 
+        /**
+            Group Events by caracteristics to access theme quickly
+        */
         private grouper: any;
+
+        /**
+            A filtered part of grouper.
+        */
         public filteredGroup: any;
+
+        /**
+            Keys (Dates) of filteredGroup. Values are Dates in the time format : "1408979235077"
+
+            This format allow ng-repeat to correctly sort the events list
+        */
         public filteredGroupKeys: any;
 
         // autres
 
-        public selectedEvent: Event; // Evenement actuellement séléctionné. 
+        /**
+            Currently selected Event
+        */
+        public selectedEvent: Event;
 
 
 
+        /**
+            @param $http Deprecated
+        */
 		constructor($scope, $http, $routeParams, $window) {
 			this.scope = $scope;
 			this.http = $http;
@@ -72,9 +192,9 @@ module Events {
 
             this.colorBuilder = d3.scale.category20();
 
-            this.displayedEvents = [];
+            
 
-			this.init();
+			this.load();
 
             window.Database.socket.on('eventChanged', (event)=>{
                 this.updateEvent(event);
@@ -90,10 +210,9 @@ module Events {
             });
 		}
 
-		private init = (): void=>{
-			this.load();
-		}
-
+        /**
+            Fetch data from Database
+        */
 		private load(): void {
             window.startLoader();
             window.Database.getEvents((data:any[])=>{
@@ -115,6 +234,9 @@ module Events {
             });	
         }
 
+        /**
+            Transform a raw event list to an Event list
+        */
         private parseData(): void {
 
 
@@ -138,9 +260,13 @@ module Events {
                 date: date
             };
             
+            // triggered to initialize variables
             this.filterEvents();
         }
 
+        /**
+            Use Angular filters to filter events and popular filteredGroup.
+        */
         public filterEvents(): void { //  {[index:stringDate]: Event[]}
             var newGroup: any = {}; // {[index:stringDate]: Event[]}
 
@@ -189,9 +315,11 @@ module Events {
                 return new Date(b).getTime() - new Date(a).getTime();
             });
             this.filteredGroupKeys = keys;
-
         }
 
+        /**
+            Give the style of an event depending of it's type
+        */
         public getStyleOf(event?: Event): any {
 
             if(event){
@@ -206,20 +334,28 @@ module Events {
             }
         }
 
+        /**
+            Get an understandable resume of an event.
+            @should be translated
+        */
         public getDescriptionOf(event: Event): string {
             var description: string = "";
             if (event.type === 'erreurs') {
-                description += ": Nbr d'erreurs inhabituel";
+                description += ": Unusual error amount";
             }
             else if (event.type === 'appels') {
-                description += ": Nbr de transactions inhabituel";
+                description += ": Unusual transactions amount";
             }
             else if (event.type === 'tendance') {
-                description += " a changé de comportement";
+                description += "'s behaviour has changed";
             }
             return description;
         }
 
+        /**
+            Select an event
+            @calledBy ng-click
+        */
         public selectEvent(event: Event, $event?: any) {
             if(this.unselectTimeout){
                 clearTimeout(this.unselectTimeout);
@@ -248,8 +384,14 @@ module Events {
         }
 
 
+        /**
+            Used to replace the bubble to it's original position
+        */
         private unselectTimeout;
 
+        /**
+            Unselect an Event an replace the bubble.
+        */
         public unSelectEvent(event: Event) {
             if (this.selectedEvent) {
                 this.selectedEvent.selected = false;
@@ -267,6 +409,9 @@ module Events {
             }, 1000);
         }
 
+        /**
+            Acknowledged an Event and save it to the Database
+        */
         public setEventSeen() {
             //window.startLoader();
 
@@ -282,20 +427,12 @@ module Events {
             event.seen = !event.seen;
             window.Database.setEvent(confirm, event);
 
-            /*this.http.get('api/set/events?action=seen&target='+event.id+'&value='+event.seen)
-                .success((data: any) => {
-                    console.log(data);
-
-                    window.stopLoader();
-                })
-
-                .error((err) => {
-                    console.error("Event.seen -> impossible de metter à jour");
-                    console.error(err);
-                    window.stopLoader();
-                });		*/
         }
 
+
+        /**
+            Find an event by id and replace it's values with the new ones comming from the database.
+        */
         private updateEvent(newEvent: Event){
             newEvent.start_time = new Date(<any>newEvent.start_time);
             var length = this.events.length;
@@ -318,6 +455,9 @@ module Events {
             
         }
 
+        /**
+            Get a list of events for the couple APPxCorridor.
+        */
         public getByCouple(codeapp: string, corridor: string, callback: any) {
             if (!this.grouper) { // si le grouper n'est pas défini c'est qu'on est encor en chargement, on attends
                 setTimeout(() => {
@@ -334,11 +474,10 @@ module Events {
             }
         }
 
-		public toggle = (): void => {
-			this.window.toggleEvents();
-		}
 
-
+        /**
+            Force Angular to rewatch data change.
+        */
         private forceUpdate(): void {
             if(!this.scope.$$phase) this.scope.$apply();
         }
@@ -346,6 +485,8 @@ module Events {
 // module end
 }
 
+
+// binding to angular
 (function(){
 	window.ChoregraphieControllers.controller('eventsController', ['$scope', '$http', '$routeParams', '$window', function($scope, $http, $routeParams, $window){
 		$scope.vm = new Events.EventsController($scope, $http, $routeParams, $window); // notre module dépend de scope et de http

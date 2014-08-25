@@ -105194,6 +105194,7 @@ mocha.run = function(fn){
 Mocha.process = process;
 })();
 
+
 var Server;
 (function (Server) {
     var Database = (function () {
@@ -105210,8 +105211,6 @@ var Server;
         }
         Database.prototype.decompress = function (lzEncodedBase64String) {
             var decompressedJSON = LZString.decompressFromBase64(lzEncodedBase64String);
-
-            console.log('Compression: ' + (Math.round(100 - (lzEncodedBase64String.length / decompressedJSON.length) * 100)) + '%');
 
             return JSON.parse(decompressedJSON);
         };
@@ -105318,6 +105317,7 @@ var Server;
                 });
             }
         };
+
         Database.prototype.getTrend = function (options, callback) {
             var _this = this;
             if (!options || typeof options.app !== 'string' || typeof options.corridor !== 'string') {
@@ -105370,7 +105370,7 @@ function toDateInputValue(date) {
 }
 ;
 
-window.objectSize = function (object) {
+function objectSize(object) {
     var size = 0;
     for (var i in object) {
         if (object.hasOwnProperty(i)) {
@@ -105378,7 +105378,8 @@ window.objectSize = function (object) {
         }
     }
     return size;
-};
+}
+;
 
 (function () {
     var Choregraphie = angular.module('Choregraphie', ['ngRoute', 'ChoregraphieControllers', 'angularMoment', 'snap', 'ngAnimate']).config([
@@ -105488,6 +105489,12 @@ function startLoader() {
 
 var Main;
 (function (Main) {
+    
+
+    
+
+    
+
     var MainController = (function () {
         function MainController($scope, $http, $rootParams) {
             this.isActiveLink = function (link) {
@@ -105693,6 +105700,7 @@ var Main;
         }]);
 })();
 
+
 var CallTree;
 (function (CallTree) {
     var THREEJS = THREE;
@@ -105708,6 +105716,10 @@ var CallTree;
         };
         return Noeud;
     })();
+
+    
+
+    
 
     
 
@@ -105770,9 +105782,6 @@ var CallTree;
             $scope.toggleStackTrace = this.toggleStackTrace;
             $scope.getNodes = this.getNodes;
 
-            $scope.foldAll = this.foldAll;
-            $scope.unFoldAll = this.unFoldAll;
-
             $scope.textVisible = this.textVisible;
             $scope.toggleText = this.toggleText;
 
@@ -105809,27 +105818,6 @@ var CallTree;
                 _this.animate();
                 _this.switch2D();
 
-                window.view3D = {
-                    scene: _this.scene,
-                    camera: _this.camera,
-                    mouse: _this.mouse,
-                    controls: _this.controls,
-                    renderer: _this.renderer,
-                    canvas: _this.canvas,
-                    projector: _this.projector,
-                    raycaster: _this.raycaster,
-                    force3D: _this.force3D,
-                    node3D: _this.node3D,
-                    root3D: _this.root3D,
-                    links3DList: _this.links3DList,
-                    line3DList: _this.line3DList,
-                    nodeGeometry: _this.nodeGeometry,
-                    colorBuilder: _this.colorBuilder,
-                    switch2D: _this.switch2D,
-                    purgeLinks: _this.purgeLinks,
-                    updateDiagram: _this.updateDiagram
-                };
-
                 var datePickerChange = function () {
                     var start = new Date($('#date-start').val());
                     var end = new Date($('#date-end').val());
@@ -105856,7 +105844,6 @@ var CallTree;
 
         CallTreeController.prototype.load = function (callback) {
             window.startLoader();
-
             var _this = this;
 
             function next(data) {
@@ -105878,13 +105865,7 @@ var CallTree;
                 window.stopLoader();
             }
 
-            if (false) {
-                next(JSON.parse(sessionStorage.getItem('callTree')));
-            } else {
-                window.Database.getCalls(function (data) {
-                    next(data);
-                });
-            }
+            window.Database.getCalls(next);
         };
 
         CallTreeController.prototype.buildBrush = function () {
@@ -107025,113 +107006,10 @@ var CallTree;
             }
         };
 
-        CallTreeController.prototype.getNodeCalls = function (node) {
-            var count = 0;
-
-            var lengthLinks = this.rawLinks.length;
-            var rawLink;
-            while (lengthLinks--) {
-                rawLink = this.rawLinks[lengthLinks];
-                if (rawLink.source == node.name || rawLink.target == node.name) {
-                    count += rawLink.value;
-                }
-            }
-
-            return count;
-        };
-
-        CallTreeController.prototype.computeNodeSizer = function () {
-            var max = -Infinity;
-            var min = Infinity;
-            var node;
-            for (var name in this.nodes) {
-                node = this.nodes[name];
-
-                if (node.weight > max)
-                    max = node.weight;
-                if (node.weight < min)
-                    min = node.weight;
-            }
-            if (min < 10) {
-                min = 10;
-            }
-
-            console.log(min + '->' + max);
-
-            this.nodeSizer = d3.scale.log().domain([min, max]).range([1, 5]);
-        };
-
-        CallTreeController.prototype.updateCallTreeForceDiagram = function () {
-            var nodesValues = this.nodesValues;
-            var links = this.links;
-
-            return;
-        };
-
         CallTreeController.prototype.hardUpdate = function () {
-            this.updateCallTreeForceDiagram();
             if (!this.$scope.$$phase) {
                 this.$scope.$apply();
             }
-        };
-
-        CallTreeController.prototype.toggleChildren = function (node, callback) {
-            var key;
-            var child;
-            var listeLiens;
-            for (key in node.children) {
-                child = node.children[key];
-
-                if (child.name !== node.name && this.objectSize(child.parents) === 1) {
-                    if (!child.grouped) {
-                        this.toggleChildren(child, function () {
-                        });
-                    }
-                    child.hidden = !child.hidden;
-                }
-
-                listeLiens = this.getLienFromPair(node, child);
-                listeLiens.forEach(function (link, index) {
-                    link.hidden = !link.hidden;
-                });
-            }
-            node.grouped = !node.grouped;
-
-            callback();
-        };
-
-        CallTreeController.prototype.foldAll = function () {
-            var name;
-            var node;
-            for (name in this.nodes) {
-                node = this.nodes[name];
-                node.grouped = true;
-                if (this.objectSize(node.parents) !== 0) {
-                    node.hidden = true;
-                }
-            }
-
-            this.links.forEach(function (link, index) {
-                link.hidden = true;
-            });
-
-            this.hardUpdate();
-        };
-
-        CallTreeController.prototype.unFoldAll = function () {
-            var name;
-            var node;
-            for (name in this.nodes) {
-                node = this.nodes[name];
-                node.grouped = false;
-                node.hidden = false;
-            }
-
-            this.links.forEach(function (link, index) {
-                link.hidden = false;
-            });
-
-            this.hardUpdate();
         };
 
         CallTreeController.prototype.objectSize = function (obj) {
@@ -107143,17 +107021,6 @@ var CallTree;
                 }
             }
             return size;
-        };
-
-        CallTreeController.prototype.getLienFromPair = function (parent, child) {
-            var listeLiens = new Array();
-            this.links.forEach(function (link, index) {
-                if (parent.name === link.source.name && child.name === link.target.name) {
-                    listeLiens.push(link);
-                }
-            });
-
-            return listeLiens;
         };
 
         CallTreeController.prototype.exportCSV = function () {
