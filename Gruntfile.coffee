@@ -158,6 +158,16 @@ module.exports = (grunt)->
 					'modules/**/tests/**/*.coffee'
 				]
 
+		typedoc:
+			build:
+				options:
+					module: 'commonjs'
+					out: './client_documentation'
+					name: 'Chorégraphie - Client'
+					target: 'es5'
+					readme: 'README-Client.md'
+				src: ['./private/src/*']
+
 				
 
 	grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -168,6 +178,7 @@ module.exports = (grunt)->
 	grunt.loadNpmTasks 'grunt-typescript'
 	grunt.loadNpmTasks 'grunt-express-server'
 	grunt.loadNpmTasks 'grunt-mocha-test'
+	grunt.loadNpmTasks 'grunt-typedoc'
 
 	grunt.registerTask('prod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'uglify', 'copy:jscss', 'clean:final'])
 	grunt.registerTask('preprod', ['clean:prod', 'typescript:preprod', 'concat:test', 'concat:prod', 'copy:jscss'])

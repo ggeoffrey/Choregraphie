@@ -24,6 +24,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.17",
     "grunt-mocha-test": "^0.11.0",
+    "grunt-typedoc": "^0.2.1",
     "grunt-typescript": "^0.3.6",
     "should": "^4.0.4"
   },

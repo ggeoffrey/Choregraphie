@@ -105364,10 +105364,11 @@ var Server;
 })(Server || (Server = {}));
 
 var Database = new Server.Database();
-window.toDateInputValue = function (date) {
+function toDateInputValue(date) {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     return date.toJSON().slice(0, 10);
-};
+}
+;
 
 window.objectSize = function (object) {
     var size = 0;

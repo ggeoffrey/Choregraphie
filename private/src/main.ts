@@ -12,7 +12,7 @@
 		- Change Angular symbols {{}}
 		- Manage routing
 		- Create a controller for the configuration view
-		- Mange animations and effects not provided by Angular
+		- Manage animations and effects not provided by Angular
 			 (buttons in the navbar is an exemple)
 */
 
@@ -22,12 +22,23 @@
 	Customizing some methods
 */
 
-window.toDateInputValue = function(date: Date) : string {
+/**
+	Transform a Date to a well formated string able, to be put in an &lt;input type="date"/&gt; element.
+	@param date A javascript Date object.
+	@return "2014-08-25"
+
+*/
+function toDateInputValue(date: Date) : string {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     return date.toJSON().slice(0,10);
 };
 
-window.objectSize = function(object: any) : number  {
+/**
+	Give the size of an object (by counting his keys). 
+	@deprecated Use _.size instead
+	@param object An object.
+*/
+function objectSize(object: any) : number  {
 	var size : number = 0;
 	for(var i in object){
 		if(object.hasOwnProperty(i)){
@@ -172,13 +183,21 @@ window.objectSize = function(object: any) : number  {
 	Spinner management
 */
 
+/**
+	A jquery object pointing to the spinner GIF in the navbar. Saved in a variable to improve perfs.
+*/
 var $loader: JQuery = $(".loader");
 
+/**
+	Record how many loading procedures are pendings. The loader GIF is visible if loadcount > 0
+*/
 var loadCount : number = 0;
 
+/**
+	Decrement loadCount and hide $loader if loadcount < 1
+	@return the current loadCount
+*/
 function stopLoader() : number{
-
-
 	loadCount--;
 	if(loadCount < 1){
 		$loader.animate({
@@ -192,6 +211,10 @@ function stopLoader() : number{
 	return loadCount;
 }
 
+/**
+	Increment loadCount and show $loader if $loader's opacity is 0
+	@return the current loadCount
+*/
 function startLoader() : number {
 
 	loadCount++;
@@ -209,26 +232,64 @@ function startLoader() : number {
 
 
 
-
+/**
+	# Main module
+	Managing configuration panel and the navbar.
+	The contained controllers aren't bound to ng-view and not registered in the Angular Router, they are available on every views (everywhere in the app).
+*/
 module Main {
 	
+	/**
+		A link in the navbar
+		@usedBy MainController 
+	*/
 	export interface Link{
+		/**
+			The visible name of the link
+		*/
 		label: string;
+		/**
+			For icons, classes listed in this string are applied to the element.
+		*/
 		classes: string;
+		/**
+			relative href listed in the Angular router,  eg: '#/events'
+		*/
 		href: string;
+		/**
+			@Deprecated
+		*/
 		click?: string;
 	}
 
 
+	/**
+		An application
+		@usedBy ConfigController
+	*/
 	export interface Application {
+
 		name: string;
+		/**
+			Origin
+			@In {'db', 'config'} see the global documentation -> Limiting data to a specified list
+		*/
 		type: string;
 	}
+	/**
+		Same as an Application.
+		@usedBy ConfigController
+	*/
 	export interface Corridor {
 		name: string;
 		type: string;
 	}
 
+	/**
+		Controller bound to the navbar.
+
+		Available eveywhere in the app. (doesn't depends of ng-view)
+	*/
 	export class MainController{
 		private scope;
 		private http;
@@ -237,7 +298,10 @@ module Main {
 	 	private _links: Array<Link>;
 	 	
 
-		constructor( $scope, $http, $rootParams) {
+	 	/**
+			@dependencies $scope, $http(**Deprecated**), $rootParams(**Deprecated**)
+	 	*/
+		constructor($scope, $http, $rootParams) {
 			this.scope = $scope;
 			this.http = $http;
 			this.rootParams = $rootParams;
@@ -280,18 +344,32 @@ module Main {
 
 		}
 
+		/**
+			Simple getter
+		*/
 		get links() :Array<Link> {
 			return this._links;
 		}
 	
 		
+		/**
+			Give the 'active' string if the links is the current view.
 
+			Used to apply classes.
+			@calledBy Angular ng-repeat
+
+		*/
 		public isActiveLink = (link: Link) : string => {
 			return link.href == window.routeName ? 'active' : '' ;
 		}
 	}
 
 
+	/**
+		Bound to the side pannel.
+
+		Allows to manage apps & corridors.
+	*/
 	export class ConfigController {
 		
 		// Angular
@@ -308,6 +386,9 @@ module Main {
 		public newCorridor : string;
 		public newApplication: string;
 
+		/**
+			@dependencies $scope, $http(**Deprecated**), $window
+		*/
 		constructor($scope, $http, $window) {
 
 			this.$scope = $scope;
@@ -322,6 +403,9 @@ module Main {
 			this.init();
 		}
 
+		/**
+			Fetch data from database 
+		*/
 		private init(): void {
 			this.newCorridor = '';
 			this.newApplication = '';
@@ -344,6 +428,13 @@ module Main {
 		}
 
 
+		/**
+			Add an application in the restrictedData.json file on server.
+			Work only if the application or corridor doesn't already exist and if the string is well formated.
+			@param application A 4 character string
+			@calledBy Angular ng-click
+
+		*/
 		public addApplication(application: string): void {
 			if(application){
 				var item = application.toUpperCase();
@@ -360,6 +451,11 @@ module Main {
 			}
 		}
 
+		/**
+			Delete an existing application in restrictedData.json
+			@param application An existing application name
+			@calledBy Angular ng-click
+		*/
 		public deleteApplication(application: string): void {
 			if(application){
 				var item = application.toUpperCase();
@@ -379,6 +475,13 @@ module Main {
 			}
 		}
 
+		/**
+			Add a corridor in the restrictedData.json file on server.
+			Work only if the application or corridor doesn't already exist and if the string is well formated.
+			@param corridor A 4 to 5 character string
+			@calledBy Angular ng-click
+
+		*/
 		public addCorridor(corridor: string): void {
 			if(corridor){
 				var item = corridor.toUpperCase();
@@ -394,6 +497,11 @@ module Main {
 			}
 		}
 
+		/**
+			Delete an existing corridor in restrictedData.json
+			@param corridor An existing corridor name
+			@calledBy Angular ng-click
+		*/
 		public deleteCorridor(corridor: string): void {
 			if(corridor){
 				var item = corridor.toUpperCase();
@@ -413,24 +521,33 @@ module Main {
 			}
 		}
 
+		/**
+			Ask the user to refresh his page to fully apply modifications
+		*/
 		private askRefresh() : void {
 			if(confirm("You must reload the page to complete the changes you made. Reload *now*? "))
 				location.reload()
 		}
 
-		/*
-			Verifi qu'un nom entré n'existe pas déja
-			Le cas échéant, désactive le bouton d'ajout
+		/**
+			Check if an item already exist.
+			
+			If it doesn't, the '+' button is disabled.
+
+			@param item An application name or a corridor name
+			@param type  in: {'couloir', 'application'}
+
+			@should be rewritten in english
 		*/
 
 		public checkExists( item : string, type: string) : boolean {
-			var found: boolean = !item; // true si l'item n'existe pas. quand angular démarre, cette fonction est appelée sans parametres.
+			var found: boolean = !item; // true if item is null, this function is called with empty params when angular starts.
 			if(item){
 				if(type === 'application' && item.length !== 4){
-					found = true; // on le simule existant pour bloquer l'ajout ave cun longueru éronnée.
+					found = true; // we simulate it's existancy to block the button
 				}
 				else if (type === 'couloir' && (item.length < 4 || item.length > 5)){
-					found = true; // idem: on simule l'existance pour bloquer l'ajout
+					found = true; // we simulate it's existancy to block the button
 				}
 				else{
 					item = item.toUpperCase();
@@ -455,6 +572,9 @@ module Main {
 			return found;
 		}
 
+		/**
+			@Deprecated
+		*/
 		public toggle = (): void => {
 			this.window.toggleConfig();
 		}
