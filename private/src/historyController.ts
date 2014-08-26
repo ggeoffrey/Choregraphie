@@ -4,23 +4,77 @@
 
 
 
+/**
+	HistoryModule
 
+	Should be named just `History` but named HistoryModule cause an other History module already exists.
+
+	@should be partialy rewritten & cleaned. Too much spaghetti code.
+*/
 module HistoryModule {
 
-	var Months : Array<string> = ["Jan", "Fev", "Mar", "Avr", "Mai", "Ju", "Jui", "Aou", "Sept", "Oct", "Nov", "Dec"];
+	/**
+		Char used to replace `undefined` or `null` or white spaces.
+
+		Currently '\u2015'.
+	*/
 	var nullSymbol: string = '\u2015';
 
+
+	/**
+		Stats used to build the table.
+	*/
 	export class Statistique {
 
-		private _err : string; // type de l'erreur formaté
-		private raw_err: string; // type de l'erreur brut
+		/**
+			Well formated error type
+		*/
+		private _err : string;
+
+		/**
+			Raw error type
+		*/
+		private raw_err: string;
+
+		/**
+			Sum of recorded values
+		*/
 		private _value: number; // nombre d'erreurs enregistrées
+
+		/**
+			Percent computed face to a total
+		*/
 		private _pct: number; // pourcentage par rapport à un total
+
+		/**
+			Amount of HTTP transactions
+		*/
 		private _http: number; //nombre de transactions HTTP
+
+		/**
+			Errors percent
+		*/
 		private _pct_err: number; // pourcentage d'erreur
+
+		/**
+			Errors percents face to total.
+
+			@explanation if you have [{100 calls, 10 errors}, {100 calls, 10 errors}].
+			_pct_err will be 10(%) for each records. _pct_err_total will be 50(%) for the first and 50(%) for the second
+		*/
 		private _pct_err_total: number; // pourcentage d'erreur par rapport au total
 
-		private isHttp: boolean; // SI c'est un stats sur les appels
+
+		/**
+			Is this stats and calls statistic ?
+		*/
+		private isHttp: boolean;
+
+		/**
+			Is this stat a fake stats?
+
+			Fake stats
+		*/
 		private _isFake: boolean;
 
 		constructor( codetype: string, value?: number, http?: number) {
@@ -67,6 +121,9 @@ module HistoryModule {
 
 		}
 
+		/**
+			Used to fill the table
+		*/
 		public static fakeStat = (codetype: string): Statistique => {
 			var stat : Statistique = new Statistique(codetype);
 			stat.isFake = true;
@@ -96,6 +153,10 @@ module HistoryModule {
 			return this._pct_err_total;
 		}
 
+		/**
+			Comput error percent face to a total reference
+			@should be translated
+		*/
 		public calculePourcentage = (totalReference : number): void => {
 			var value: number;
 			var percent: number;
@@ -112,6 +173,11 @@ module HistoryModule {
 			this._pct = percent;
 		};
 
+
+		/**
+			Comput total error percent face to a total reference
+			@should be translated
+		*/
 		public computeErrPct = (totalReference : number): void => {
 			var value: number;
 			var percent: number;
@@ -126,6 +192,9 @@ module HistoryModule {
 				this._pct_err_total = percent;
 		};
 
+		/**
+			Add a value to this stat
+		*/
 		public addValue = (value:number): void => {
 			if(value > 0){
 				if(this.isHttp)
@@ -135,7 +204,12 @@ module HistoryModule {
 			}
 		};
 
-		// retourne value ou Http sous forme >1 ou -
+		/**
+			Give a textual representation of `value`:
+			* 125.46  (example)
+			* <1
+			* nullSymbol
+		*/
 		get value(): string {
 			var retour: string;
 			if(this.isHttp)
@@ -153,11 +227,17 @@ module HistoryModule {
 		}
 	}
 
+	/**
+		Used to extract params from url
+	*/
 	interface RouteParams{
 		codeapp: string;
 		couloir: string;
 	}
 
+	/**
+		A record is value in the line chart
+	*/
 	export interface Record{
 		starttime: any;
 
@@ -177,7 +257,8 @@ module HistoryModule {
 
 
 
-	/*
+	/**
+		Angular controller 
 	Controlleur Angular de la section Cas-Par-Cas
 
 		Les données sont ((COULOIR*APPLICATION) where DATE >min) intersection ((COULOIR*APPLICATION) where DATE < max)
@@ -1377,7 +1458,7 @@ module HistoryModule {
 				}
 			}
 
-			console.log(this.pieChartContainsHttpValues);
+			//console.log(this.pieChartContainsHttpValues);
 			this.pieChartType = (this.pieChartContainsHttpValues ? 'Calls': 'Err (%)');
 			
 

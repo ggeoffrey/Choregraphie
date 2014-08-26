@@ -26,7 +26,7 @@ declare var LZString: any;
 module Server {
 
 	/**
-		The database is on the server. This class is a proxy.
+		Database is on the server. This class is a proxy.
 	*/
 	export class Database{
 
@@ -96,7 +96,7 @@ module Server {
 			Clean alias to sessionStorage.removeItem
 			@param flag object's name
 		*/
-		private clearCache(flag: string): void{
+		public clearCache(flag: string): void{
 			sessionStorage.removeItem(flag);
 		}
 

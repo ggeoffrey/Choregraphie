@@ -16,6 +16,8 @@ declare var _ : any; // underscore
 
 /**
     Manage Events
+
+    Bound to #/events
 */
 module Events {
 

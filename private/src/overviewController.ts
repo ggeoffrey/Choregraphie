@@ -4,31 +4,62 @@
 
 /// <reference path="../moment.d.ts" />
 
-/*
-	Décrit les données
+/**
+	# Overview
+	
 */
 
 module Overview {
 
+	/**
+		A record is a line in the table
+		@should be translated in english
+	*/
 	export interface Record{
 		codeapp: string;
 		couloir: string;
 		codetype: string;
+		/**
+			raw date
+		*/
 		start_time: string;
+		/**
+			parsed date
+		*/
 		date: Date;
 		value: number;
+		/**
+			health score
+		*/
 		sante: number;
+		/**
+			Health score for each error types 
+		*/
 		detailSante: Array<number>;
+		/**
+			Health score kept as representative for this line
+		*/
 		resSante: number; // la santé gardée comme représentative
+		/**
+			Error types
+		*/
 		types: {[index: string]: StatsSante}
 	}
 
+	/**
+		Statistic about **a** line
+		@should be translated
+	*/
 	export interface StatsSante {
 		value: number; 
 		detailSante: Array<number>; // l'ensemble des santées rencontrées
 		resSante: number; // la santé gardée comme représentative
 	}
 
+	/**
+		Describe a statistic resume of the table
+		@should be translated
+	*/
 	export class Statistique{
 		public nb_app: number;
 		public somme_appels: number;
@@ -47,6 +78,10 @@ module Overview {
 			this.sante = 0;
 		}
 
+		/**
+			Add a record (a line) to this stat.
+			@should be translated
+		*/
 		public importerDonneesDe( record: Record): void {
 
 			this.nb_app++;
@@ -64,25 +99,48 @@ module Overview {
 	
 	
 
-	/*
-		Gère la partie "Vue d'ensemble"
+	/**
+		
+		Bound to #/overview
+
+		Show last 20e events and an table describing health for each apps
 	*/
 
 	export class OverviewController {
 
 		// Angular
 		private $scope;
+		/**
+			@Deprecated
+		*/
 		private $http;
 		//-----------
 
 
+		/**
+			Map&lt;string, string&gt;
+			List of all errors types as a map to be accessed by key directly.
+		*/
 		private types : {[index: string]: string}; // Map Types d'erreurs trouvés dans les tableau.
 
+		/**
+			Data source
+		*/
 		public data: Array<Record>;
+
+		/**
+			Stats about this table
+		*/
 		public stats: Statistique;
 
+		/**
+			A instance of Events.EventsController used to fetch the last events
+		*/
         public eventsController: Events.EventsController;
-		
+
+        /**
+        	@param $http Deprecated
+        */		
 		constructor( $scope, $http, eventsController: Events.EventsController) {
 			//super();
 			// Content
@@ -103,40 +161,36 @@ module Overview {
 		}
 
 		
-
+		/**
+			Fetch data from Database
+		*/
 		private init(): void  {
 			window.startLoader();
 
-			var cache : string = sessionStorage.getItem('overview');
-			if(false){ //cache){
-				var data : Array<Record> = JSON.parse(cache);
-				this.data = data; //this.groupDataByApplication(data);
-				this.makeStats();
+			window.Database.getOverviewData(( data: Record[] )=>{
+				if(_.isArray(data)){
+					//sessionStorage.setItem('overview', JSON.stringify(data));
+					this.data = data;//this.groupDataByApplication(data);
+					this.makeStats();						
+				}
+				else
+				{
+					this.data  = [];
+				}
 				window.stopLoader();
-			}
-			else
-			{
-				window.Database.getOverviewData(( data: Record[] )=>{
-
-					if(_.isArray(data)){
-						//sessionStorage.setItem('overview', JSON.stringify(data));
-						this.data = data;//this.groupDataByApplication(data);
-						this.makeStats();						
-					}
-					else
-					{
-						this.data  = [];
-					}
-					window.stopLoader();
 
 
-					if(!this.$scope.$$phase)
-						this.$scope.$apply();
-				});
-				
-			}
+				if(!this.$scope.$$phase)
+					this.$scope.$apply();
+			});
 		}	
 
+		/**
+			Give a link (href) for a given record.
+			Usefull to disable some kind of apps or to add url params depending of a record.
+
+			@returns a relative url
+		*/
 		public getHref(record: Record): string {
 			var href : string;
 			
@@ -149,6 +203,10 @@ module Overview {
 			return  href;
 		}
 
+
+		/**
+			Give the MAX ABSolute value of an array
+		*/
 		private absMax(arrayOfNumbers : Array<number>) : number {
 			var max : number = -Infinity;
 			var absVal: number;
@@ -163,7 +221,9 @@ module Overview {
 			return max;
 		}
 
-
+		/**
+			Compute stats for the whole table
+		*/
 		private makeStats(): void {
 			var stats: Statistique = new Statistique();
 
@@ -177,9 +237,11 @@ module Overview {
 			this.stats = stats;
 		}
 
-
+		/**
+			Drop cache and refresh
+		*/
 		public update(): void {
-			sessionStorage.removeItem('overview');
+			Database.clearCache('overview');
 			this.init();
 
 			if(!this.$scope.$$phase)
@@ -187,8 +249,11 @@ module Overview {
 		}
 
 
+		/**
+			@Deprecated
+		*/
 		public toolbarActive(): void {        
-			$(".links a[href='#/casParCas']")
+			$(".links a[href='#/overview']")
 				.parent()
 				.addClass('active')
 				.siblings()
@@ -196,7 +261,9 @@ module Overview {
         }
 
         
-
+        /**
+			Give a weather-icon class for a health score
+        */
 		public getClassWithHealth(sante: number): string {
 			var strClass : string; // par défaut les éclairs
 			switch (sante)
@@ -220,6 +287,10 @@ module Overview {
 			 return strClass;
 		}
 
+		/**
+			Alias to jQuery fadeIn. Classic fadeIn ends with {display:none}.
+			This one only fade opacity.
+		*/
 		public fadeIn(jQueryObject: any): void {
 			jQueryObject.animate({
 				opacity: 1
@@ -232,6 +303,7 @@ module Overview {
 }
 
 
+// bind to Angular
 (function(){
 	window.ChoregraphieControllers.controller('overviewController', ['$scope', '$http', '$routeParams',  '$window', function($scope, $http, $routeParams, $window){
         var eventsController: Events.EventsController = new Events.EventsController($scope, $http, $routeParams, $window);

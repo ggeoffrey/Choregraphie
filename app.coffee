@@ -18,10 +18,10 @@ app = express()
 http = require('http').Server(app)
 http.listen config.port
 
-io = require('socket.io')(http)
+io = require 'socket.io'
 
 restApi = require('./modules/restApi')
-socketManager = require('./modules/socketManager')(io)
+socketManager = require('./modules/socketManager')(io, http)
 socketManager.listenToSockets()
 # -----------------------------
 	

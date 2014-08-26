@@ -64,6 +64,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Stats used to build the table.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -123,7 +130,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:25</li>
+									<li>Defined in historyController.ts:79</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -153,9 +160,14 @@
 					<div class="tsd-signature tsd-kind-icon">_err<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:14</li>
+							<li>Defined in historyController.ts:31</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Well formated error type</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_http" class="anchor"></a>
@@ -163,9 +175,14 @@
 					<div class="tsd-signature tsd-kind-icon">_http<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:18</li>
+							<li>Defined in historyController.ts:51</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Amount of HTTP transactions</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_isfake" class="anchor"></a>
@@ -173,9 +190,15 @@
 					<div class="tsd-signature tsd-kind-icon">_is<wbr>Fake<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:23</li>
+							<li>Defined in historyController.ts:77</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Is this stat a fake stats?</p>
+						</div>
+						<p>Fake stats</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_pct" class="anchor"></a>
@@ -183,9 +206,14 @@
 					<div class="tsd-signature tsd-kind-icon">_pct<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:17</li>
+							<li>Defined in historyController.ts:46</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Percent computed face to a total</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_pct_err" class="anchor"></a>
@@ -193,9 +221,14 @@
 					<div class="tsd-signature tsd-kind-icon">_pct_<wbr>err<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:19</li>
+							<li>Defined in historyController.ts:56</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Errors percent</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_pct_err_total" class="anchor"></a>
@@ -203,9 +236,20 @@
 					<div class="tsd-signature tsd-kind-icon">_pct_<wbr>err_<wbr>total<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:20</li>
+							<li>Defined in historyController.ts:64</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Errors percents face to total.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>explanation</dt>
+							<dd><p>if you have [{100 calls, 10 errors}, {100 calls, 10 errors}].
+								_pct_err will be 10(%) for each records. _pct_err_total will be 50(%) for the first and 50(%) for the second</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_value" class="anchor"></a>
@@ -213,9 +257,14 @@
 					<div class="tsd-signature tsd-kind-icon">_value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:16</li>
+							<li>Defined in historyController.ts:41</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Sum of recorded values</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="addvalue" class="anchor"></a>
@@ -223,9 +272,14 @@
 					<div class="tsd-signature tsd-kind-icon">add<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:128</li>
+							<li>Defined in historyController.ts:197</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Add a value to this stat</p>
+						</div>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-function-expression tsd-parent-kind-property">
 						<a name="addvalue.addvalue_function_signature" class="anchor"></a>
 						<h3>add<wbr>Value function signature</h3>
@@ -235,7 +289,7 @@
 						<ul class="tsd-descriptions">
 							<li class="tsd-description"><aside class="tsd-sources">
 									<ul>
-										<li>Defined in historyController.ts:128</li>
+										<li>Defined in historyController.ts:197</li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -254,9 +308,19 @@
 					<div class="tsd-signature tsd-kind-icon">calcule<wbr>Pourcentage<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:98</li>
+							<li>Defined in historyController.ts:159</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Comput error percent face to a total reference</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>should</dt>
+							<dd><p>be translated</p>
+							</dd>
+						</dl>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-function-expression tsd-parent-kind-property">
 						<a name="calculepourcentage.calculepourcentage_function_signature" class="anchor"></a>
 						<h3>calcule<wbr>Pourcentage function signature</h3>
@@ -266,7 +330,7 @@
 						<ul class="tsd-descriptions">
 							<li class="tsd-description"><aside class="tsd-sources">
 									<ul>
-										<li>Defined in historyController.ts:98</li>
+										<li>Defined in historyController.ts:159</li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -285,9 +349,19 @@
 					<div class="tsd-signature tsd-kind-icon">compute<wbr>Err<wbr>Pct<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:114</li>
+							<li>Defined in historyController.ts:180</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Comput total error percent face to a total reference</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>should</dt>
+							<dd><p>be translated</p>
+							</dd>
+						</dl>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-function-expression tsd-parent-kind-property">
 						<a name="computeerrpct.computeerrpct_function_signature" class="anchor"></a>
 						<h3>compute<wbr>Err<wbr>Pct function signature</h3>
@@ -297,7 +371,7 @@
 						<ul class="tsd-descriptions">
 							<li class="tsd-description"><aside class="tsd-sources">
 									<ul>
-										<li>Defined in historyController.ts:114</li>
+										<li>Defined in historyController.ts:180</li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -316,9 +390,14 @@
 					<div class="tsd-signature tsd-kind-icon">fake<wbr>Stat<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:69</li>
+							<li>Defined in historyController.ts:126</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Used to fill the table</p>
+						</div>
+					</div>
 					<section class="tsd-panel tsd-member tsd-kind-function-expression tsd-parent-kind-property">
 						<a name="fakestat.fakestat_function_signature" class="anchor"></a>
 						<h3>fake<wbr>Stat function signature</h3>
@@ -328,7 +407,7 @@
 						<ul class="tsd-descriptions">
 							<li class="tsd-description"><aside class="tsd-sources">
 									<ul>
-										<li>Defined in historyController.ts:69</li>
+										<li>Defined in historyController.ts:126</li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -350,9 +429,14 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Http<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:22</li>
+							<li>Defined in historyController.ts:70</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Is this stats and calls statistic ?</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="raw_err" class="anchor"></a>
@@ -360,9 +444,14 @@
 					<div class="tsd-signature tsd-kind-icon">raw_<wbr>err<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in historyController.ts:15</li>
+							<li>Defined in historyController.ts:36</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Raw error type</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -376,7 +465,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:79</li>
+									<li>Defined in historyController.ts:136</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -394,7 +483,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:150</li>
+									<li>Defined in historyController.ts:224</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -412,7 +501,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:81</li>
+									<li>Defined in historyController.ts:138</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -430,7 +519,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:88</li>
+									<li>Defined in historyController.ts:145</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -448,7 +537,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:94</li>
+									<li>Defined in historyController.ts:151</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns 
@@ -466,9 +555,17 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:138</li>
+									<li>Defined in historyController.ts:212</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Give a textual representation of <code>value</code>:
+									125.46  (example)</p>
+									<p>&lt;1
+									nullSymbol</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns 
 								<span class="tsd-signature-type">string</span>
 							</h4>
@@ -487,7 +584,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description"><aside class="tsd-sources">
 								<ul>
-									<li>Defined in historyController.ts:75</li>
+									<li>Defined in historyController.ts:132</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -610,9 +707,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-container tsd-is-not-exported">
-						<a href="../modules/historymodule.html#months" class="tsd-kind-icon">Months</a>
-					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-container tsd-is-not-exported">
 						<a href="../modules/historymodule.html#nullsymbol" class="tsd-kind-icon">null<wbr>Symbol</a>
 					</li>

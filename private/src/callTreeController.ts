@@ -52,7 +52,7 @@ declare var Ease: any;
 
 
 	The *getCalls()* method of your server module should return an object like this one.
-	The other Node and/or Link object described in this module are used internally. You should care about theme only for
+	The other Node and/or Link objects described in this module are used internally. You should care about theme only for
 	dev purposes.
 */
 module CallTree {

@@ -3,6 +3,31 @@ io = null # io instance initilized in app.js
 api = require '../api'
 
 
+###
+	Configure Socket.IO here
+###
+
+{websocketsOpts} = require '../../config'
+
+
+
+init = (socketIOInstance, httpServer) ->
+	if not io?
+		io = new socketIOInstance httpServer, websocketsOpts
+	return SocketManager
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 compress = ( object ) ->
@@ -86,9 +111,6 @@ class SocketManager
 
 			
 
-init = (socketIOInstance) ->
-	if not io?
-		io = socketIOInstance
-	return SocketManager
+
 
 module.exports = init;
