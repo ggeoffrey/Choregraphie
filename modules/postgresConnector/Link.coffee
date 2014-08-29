@@ -12,7 +12,7 @@ class Connector.Link
 	@value : 0
 	@date : null
 
-	# @param call [Object] A raw call comming from the database.
+	# @param call [Object] A raw call coming from the database.
 	constructor : (call)->
 		@source = call.caller
 		@target = call.called

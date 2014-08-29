@@ -62,10 +62,10 @@ ExpressJS provide you routes, HTTP tools, HTML & CSS preprocessors, session & co
 We are on the server part, so dependencies comes from npm. Look at package.json file for the full list.
 
 * [Async](https://www.npmjs.org/package/async) Higher-order functions and common patterns for asynchronous code
-* [pg](https://www.npmjs.org/package/pg) PostgreSQL client - pure javascript & libpq with the same API
-* [socket.io](https://www.npmjs.org/package/socket.io)  node.js realtime framework server
+* [pg](https://www.npmjs.org/package/pg) PostgreSQL client - pure JavaScript & libpq with the same API
+* [socket.io](https://www.npmjs.org/package/socket.io)  Node.JS real time framework server
 * [underscore](https://www.npmjs.org/package/underscore) JavaScript's functional programming helper library.
-* [jade](http://jade-lang.com/) A very good html template engine.
+* [jade](http://jade-lang.com/) A very good HTML template engine.
 
 
 # App structure overview
@@ -95,7 +95,7 @@ We are on the server part, so dependencies comes from npm. Look at package.json 
 
 The client source code (TypeScript files) stands in the ./private folder. 
 
-The ./public folder is widly accessible via any browser. Place statics files you want to serve in ./public . Other folders *are not* accessible.
+The ./public folder is widely accessible via any browser. Place statics files you want to serve in ./public . Other folders *are not* accessible.
 
 
 # Tools

@@ -14,7 +14,7 @@ config = require './config'
 app = express()
 
 
-# Ajouté par Geoffrey
+# Added by Geoffrey
 http = require('http').Server(app)
 http.listen config.port
 
@@ -64,7 +64,7 @@ app.use (req, res, next)->
 # error handlers
 
 # development error handler
-# will print stacktrace
+# will print stack trace
 if app.get('env') is 'development'
 	app.locals.pretty = on
 	app.use (err, req, res, next)->
@@ -76,7 +76,7 @@ if app.get('env') is 'development'
 
 
 # production error handler
-# no stacktraces leaked to user
+# no stack traces leaked to user
 app.use (err, req, res, next)->
 	res.status err.status or 500
 	res.render 'error', {

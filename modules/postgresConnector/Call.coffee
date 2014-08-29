@@ -8,7 +8,7 @@ class Connector.Call
 
     # @param app [String] caller name
     # @param codetype [String] type
-    # @param hashtagSeparatedString [String] code comming from database matching this example: **```<calledApp>#<service>#<method>#<version>```**
+    # @param hashtagSeparatedString [String] code coming from database matching this example: **```<calledApp>#<service>#<method>#<version>```**
     # If you want a different pattern, be sure to adapt the Connector.getCalls method
     # @param corridor [String]
     # @param value [Number] how many calls ?

@@ -7,8 +7,8 @@ class Connector
 # ** SHOULD ** be translated
 class Connector.Event
 	# 
-	# Extract usefull informations from an Event
-	# @param rawEvent [object] And object comming from the database
+	# Extract useful informations from an Event
+	# @param rawEvent [object] And object coming from the database
 	#
 	constructor: (rawEvent) ->
 		{

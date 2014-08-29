@@ -10,7 +10,7 @@ class Connector
 #
 # @property user [String] Database login user
 #
-# @property pass [String] Database login passwrod
+# @property pass [String] Database login password
 #
 # @property databaseName [String] Database name
 #

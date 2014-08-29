@@ -7,7 +7,7 @@ api = require '../api'
 #
 # Provide same methods as RestApi, but via sockets.
 # 
-# As socket.io is based on websockets, data can't be gziped. We send response in a LZ copressed string as base64.
+# As socket.io is based on websockets, data can't be gziped. We send response in a LZ compressed string as base64.
 # Steps:
 # - Listen to a flag
 # - Get data from Api when this flag is triggered

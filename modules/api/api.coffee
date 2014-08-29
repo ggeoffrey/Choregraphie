@@ -178,7 +178,7 @@ class Api
 		@connector.getEvents(callback)
 
 	#
-	# Set en event in the @connector. Bassically UPDATE it in the database.
+	# Set en event in the @connector. Basically UPDATE it in the database.
 	# @note The connector should find in the database by event.id and persist this new event.
 	# @note If you want update an event, this method is for you
 	# @param [Function] callback sent to the connector

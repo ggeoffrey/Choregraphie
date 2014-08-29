@@ -10,14 +10,14 @@ class Api.Entity
 
 	# @property name [String] Entity's name
 	@name : null
-	# @property type [String] Entity's origine/type   ['db', 'config']
+	# @property type [String] Entity's origin/type   ['db', 'config']
 	@type : null
 
 	#
 	# Create a new Entity
 	# @param name [String] Entity's name
-	# @param type [String] Entity's origine/type   ['db', 'config']
-	# @throw ['Bas arguments'] if unknow type or if name is not a valid name
+	# @param type [String] Entity's origin/type   ['db', 'config']
+	# @throw ['Bas arguments'] if unknown type or if name is not a valid name
 	# @note see checkName
 	# @note see checkType
 	#

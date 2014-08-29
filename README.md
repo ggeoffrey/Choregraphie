@@ -25,6 +25,8 @@ You have the charge of managing a lot of applications in a complex structure? Un
 Data of a particular application:
 ![img](https://raw.github.com/ggeoffrey/Choregraphie/master/readme/history.png)
 
+## A demo website is coming soon!
+
 # Where is the code?
 
 Chorégraphie v1 is using Symfony + PostgreSQL. This repository will be used for the v2.

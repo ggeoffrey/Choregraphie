@@ -61,7 +61,7 @@ class ConfigManager
 
 	#
 	# Serialize and write the config on disk
-	# @param config [object] the modifed config object to save
+	# @param config [object] the modified config object to save
 	# @param callback [Function] called after write on disk is done
 	# @return [undefined]
 	#

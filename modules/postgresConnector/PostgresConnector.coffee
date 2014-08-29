@@ -35,7 +35,7 @@ class Connector
 
 			@connectionString += "@#{config.host}/#{config.databaseName}"
 
-			# Emty cache every 10 minutes
+			# Empty cache every 10 minutes
 			setInterval ->
 					cache = {}
 				, 600
@@ -44,7 +44,7 @@ class Connector
 
 
 	# Get a client from the connections pool
-	# @param callback [Function] callback called with **[client, doneCallback]**. Call the doneCallback to release the connexion to te pool.
+	# @param callback [Function] callback called with **[client, doneCallback]**. Call the doneCallback to release the connexion to the pool.
 	@getClient : (callback)->
 		
 		pg.connect Connector.connectionString, (err, client, done)->
@@ -55,7 +55,7 @@ class Connector
 
 
 	#
-	# Hold all the methods used to comunicate with database.
+	# Hold all the methods used to communicate with database.
 	#
 	# These methods are, except a few of them, the same as API methods
 	class @PostgresConnector
