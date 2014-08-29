@@ -6,20 +6,23 @@ class Connector
 #
 # Database configuration for the current Connector module
 #
-# @property host [String] Server hostname
-#
-# @property user [String] Database login user
-#
-# @property pass [String] Database login password
-#
-# @property databaseName [String] Database name
 #
 class Connector.Config
 
-	@host : 'localhost'
-	@user : 'ccol'
-	@pass : 'ccol'
-	@databaseName : 'ccol'
+	
+	# @property host [String] Server hostname
+	#
+	# @property user [String] Database login user
+	#
+	# @property pass [String] Database login password
+	#
+	# @property databaseName [String] Database name
+	constructor : ->
+
+		@host = 'localhost'
+		@user = 'ccol'
+		@pass = 'ccol'
+		@databaseName = 'ccol'
 
 
 
@@ -28,4 +31,4 @@ class Connector.Config
 
 
 
-module.exports = Connector.Config
+module.exports = new Connector.Config()

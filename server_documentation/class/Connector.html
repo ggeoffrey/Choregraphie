@@ -39,43 +39,12 @@
 </div>
 <div class='tags'>
 </div>
-      <h2>Variables Summary</h2>
-      <dl class='constants'>
-  <dt id='connectionString-variable'>
-    connectionString
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>null</code></pre>
-    
-  </dd>
-  <dt id='cache-variable'>
-    cache
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{}</code></pre>
-    
-  </dd>
-</dl>
-      <h2>Class Method Summary</h2>
+      <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#init-static'>
-        .
-(?)
-<b>init</b><span>(config)</span>
-      </a>
-    </span>
-    <span class='desc'>
-      Read config, connect to Postgre and ensure the cache is flushed at least every 10 minutes 
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#getClient-static'>
-        .
+      <a href='#getClient-dynamic'>
+        #
 (void)
 <b>getClient</b><span>(callback)</span>
       </a>
@@ -85,13 +54,13 @@
     </span>
   </li>
 </ul>
-      <h2>Class Method Details</h2>
+      <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='init-static'>
-      .
-(?)
-<b>init</b><span>(config)</span>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(config)</span>
       <br>
     </p>
     <div class='docstring'>
@@ -111,22 +80,14 @@
       <span class='desc'>config given by index.coffee </span>
     </li>
   </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'></span>
-      (
-        <tt>?</tt>
-      )
-      &mdash;
-      <span class='desc'>a PostgresConnector static object </span>
-    </li>
-  </ul>
 </div>
   </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='getClient-static'>
-      .
+    <p class='signature' id='getClient-dynamic'>
+      #
 (void)
 <b>getClient</b><span>(callback)</span>
       <br>
@@ -145,7 +106,7 @@
         )
       </span>
       &mdash;
-      <span class='desc'>callback called with <strong>[client, doneCallback]</strong>. Call the doneCallback to release the connexion to te pool. </span>
+      <span class='desc'>callback called with <strong>[client, doneCallback]</strong>. Call the doneCallback to release the connexion to the pool. </span>
     </li>
   </ul>
 </div>
@@ -153,7 +114,7 @@
 </div>
     </div>
     <div id='footer'>
-  August 28, 14 18:03:30 by
+  August 29, 14 11:26:14 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

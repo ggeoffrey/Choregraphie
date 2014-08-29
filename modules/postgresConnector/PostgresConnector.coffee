@@ -12,22 +12,15 @@ appConfig = require '../../config'
 #
 # Connect to a PostgreSQL database according to the local config file.
 #
-class Connector
-
-	# Build from the config params
-	@connectionString : null
-
-	# A local cache to improve perfs
-	@cache : {}
+class Connector	
 
 	# Read config, connect to Postgre and ensure the cache is flushed at least every 10 minutes
 	# @param config [Object] config given by index.coffee
-	# @return a PostgresConnector static object
-	@init : ( config ) ->
+	constructor : ( config ) ->
 
+		@cache = {}
 		
-		
-		if not Connector.connectionString?
+		if not @connectionString?
 			@connectionString = "postgres://#{config.user}"
 			
 			if config.pass?
@@ -40,29 +33,35 @@ class Connector
 					cache = {}
 				, 600
 		
-		return @PostgresConnector
+		
 
 
 	# Get a client from the connections pool
 	# @param callback [Function] callback called with **[client, doneCallback]**. Call the doneCallback to release the connexion to the pool.
-	@getClient : (callback)->
+	getClient : (callback)->
 		
-		pg.connect Connector.connectionString, (err, client, done)->
+		
+		pg.connect @connectionString, (err, client, done)->
 			if err?
 				console.warn(err)
 			else
 				callback(client, done)
 
 
-	#
-	# Hold all the methods used to communicate with database.
-	#
-	# These methods are, except a few of them, the same as API methods
-	class @PostgresConnector
+#
+# Hold all the methods used to communicate with database.
+#
+# These methods are, except a few of them, the same as API methods
+class Connector.PostgresConnector
+
+
+		# Create a PostgresConnector containing a raw node-pg instance
+		constructor : (config)->
+			@connector = new Connector(config)
 
 		# Get applications from database
 		# @param forceUpdate [Boolean] ignore cache and update it
-		@getApplications : (callback, forceUpdate) ->
+		getApplications : (callback, forceUpdate) ->
 
 			# Read from config if data are limited to it
 			if appConfig.limitDataToConfigSpecifiedList is true
@@ -75,25 +74,25 @@ class Connector
 					ORDER BY codeapp;
 				"
 
-				if not Connector.cache.applications? or forceUpdate is on
-					Connector.getClient (client, done)->
+				if not @connector.cache.applications? or forceUpdate is on
+					@connector.getClient (client, done)=>
 						query = client.query queryText
 						result = []
 
 						query.on 'row', (row)-> result.push row.codeapp
 
-						query.on 'end', ->
+						query.on 'end', =>
 							callback(result)
 							done()
-							Connector.cache.applications = result
+							@connector.cache.applications = result
 
 						query.on 'error', (err) -> console.log(err)
 				else
-					callback(Connector.cache.applications)
+					callback(@connector.cache.applications)
 
 		# Get an array of corridors name from database
 		# @param forceUpdate [Boolean] ignore cache and update it
-		@getCorridors : (callback, forceUpdate)->
+		getCorridors : (callback, forceUpdate)->
 
 			# Read from config if data are limited to it
 			if appConfig.limitDataToConfigSpecifiedList is true
@@ -107,55 +106,55 @@ class Connector
 					;
 				"
 
-				if not Connector.cache.corridors? or forceUpdate is on
-					Connector.getClient (client, done)->
+				if not @connector.cache.corridors? or forceUpdate is on
+					@connector.getClient (client, done)=>
 						query = client.query queryText
 						result = []
 
 						query.on 'row', (row)-> result.push row.couloir
 
-						query.on 'end', ->
+						query.on 'end', =>
 							callback(result)
 							done()
-							Connector.cache.corridors = result
+							@connector.cache.corridors = result
 
 						query.on 'error', (err) -> console.log(err)
 
 				else
-					callback(Connector.cache.corridors)
+					callback(@connector.cache.corridors)
 
 		# Get an Array of Events from db
 		# @param forceUpdate [Boolean] ignore cache and update it
-		@getEvents : (callback, forceUpdate)->
+		getEvents : (callback, forceUpdate)->
 			queryText = "
 				SELECT codeapp, couloir, codetype, start_time, seen, deleted, old_value, value, diff_stddev, type, id
 				FROM ccol.metric_events
 				GROUP BY start_time, codeapp, couloir, type, codetype, seen, deleted, old_value, value, diff_stddev, type, id
 				ORDER BY start_time DESC;
 			"
-			if not Connector.cache.events? or forceUpdate is on
-				Connector.getClient (client, done)->
+			if not @connector.cache.events? or forceUpdate is on
+				@connector.getClient (client, done)=>
 					query = client.query queryText
 					result = []
 
 					query.on 'row', (row)-> result.push new Event(row)
 
-					query.on 'end', ->
+					query.on 'end', =>
 						callback(result)
 						done()
-						Connector.cache.events = result
+						@connector.cache.events = result
 
 					query.on 'error', (err) -> console.log(err)
 
 			else
-				callback(Connector.cache.events)
+				callback(@connector.cache.events)
 		
 
 		# UPDATE an event in database, tracking by event.id
 		#
 		# Only event.seen and event.deleted are UPDATEed
 		# @param event [Object] Event to persist
-		@setEvent : (callback, event) ->
+		setEvent : (callback, event) ->
 
 			queryText = "
 				UPDATE ccol.metric_events
@@ -165,13 +164,13 @@ class Connector
 			"
 
 			
-			Connector.getClient (client, done)->
+			@connector.getClient (client, done)=>
 				query = client.query queryText, [event.seen, event.deleted, event.id]		
 		
-				query.on 'end', (result)->
+				query.on 'end', (result)=>
 					
 					callback(result.rowCount > 0)				
-					delete Connector.cache.events
+					delete @connector.cache.events
 					done()
 		
 				query.on 'error', (err)->
@@ -179,7 +178,7 @@ class Connector
 			
 		# Get an OverviewData Object from database
 		# @param forceUpdate [Boolean] ignore cache and update it
-		@getOverviewData : (callback, forceUpdate)->
+		getOverviewData : (callback, forceUpdate)->
 			queryText = "
 				SELECT mv.codeapp, mv.couloir, mv.codetype, mv.start_time, SUM(mv.value) AS value, ms.sante
 				FROM metric_value mv,  metric_stats ms
@@ -194,10 +193,10 @@ class Connector
 				;
 			"
 
-			if Connector.cache.overviewData? and not forceUpdate?
-				callback(Connector.cache.overviewData)
+			if @connector.cache.overviewData? and not forceUpdate?
+				callback(@connector.cache.overviewData)
 			else
-				Connector.getClient (client, done)->
+				@connector.getClient (client, done)=>
 					query = client.query(queryText)
 					result = []
 
@@ -218,7 +217,7 @@ class Connector
 
 					return max
 
-				groupByApplication = (data)->
+				groupByApplication = (data)=>
 					mapper = {}
 					listResult = []
 					types = {}
@@ -266,7 +265,7 @@ class Connector
 							listResult.push(mapper[codeapp])
 
 						callback(listResult)
-						Connector.cache.overviewData = listResult
+						@connector.cache.overviewData = listResult
 					
 
 		# Get an array of Values
@@ -274,7 +273,7 @@ class Connector
 		# @param options [Object]
 		# @option app [String] app's name
 		# @option corridor [String] corridor's name
-		@getHistory : (callback, forceUpdate, options)->
+		getHistory : (callback, forceUpdate, options)->
 
 			if options.app is 'all' and options.corridor is 'all'
 				options.app = '%'
@@ -295,8 +294,8 @@ class Connector
 					;
 				"
 
-			getRecords = (next)->
-				Connector.getClient (client, done)->
+			getRecords = (next)=>
+				@connector.getClient (client, done)=>
 					query = client.query(queryTextRecords, [options.app, options.corridor, options.limit])
 					result = []
 
@@ -318,8 +317,8 @@ class Connector
 				;
 			"
 
-			getCalls = (next)->
-				Connector.getClient (client, done)->
+			getCalls = (next)=>
+				@connector.getClient (client, done)->
 					query = client.query(queryTextCalls, [options.app, options.corridor, options.limit])
 					result = []
 
@@ -360,7 +359,7 @@ class Connector
 		# @param options [Object]
 		# @option app [String] app's name
 		# @option corridor [String] corridor's name
-		@getTrend : (callback, forceUpdate, options)->
+		getTrend : (callback, forceUpdate, options)->
 
 			queryText = " 
 				SELECT codetype, start_time as starttime, somme, average, stddev, sante
@@ -370,7 +369,7 @@ class Connector
 				;
 			"
 
-			Connector.getClient (client, done)->
+			@connector.getClient (client, done)=>
 				query = client.query(queryText, [options.app, options.corridor])
 				result = []
 
@@ -401,7 +400,7 @@ class Connector
 
 		# Get a callTree
 		# @param forceUpdate [Boolean] ignore cache and update it	
-		@getCalls : (callback, forceUpdate)->
+		getCalls : (callback, forceUpdate)->
 			queryText = "
 				SELECT codeapp, code, couloir, sum(value) as value, codetype, extract(epoch FROM date_trunc('day',  start_time))*1000::bigint as starttime
 				FROM metric_value
@@ -412,10 +411,10 @@ class Connector
 				;
 			"
 
-			if Connector.cache.calls? and not forceUpdate?
-				callback(Connector.cache.calls)
+			if @connector.cache.calls? and not forceUpdate?
+				callback(@connector.cache.calls)
 			else
-				Connector.getClient (client, done)->
+				@connector.getClient (client, done)=>
 					query = client.query(queryText)
 					result = []
 
@@ -436,7 +435,7 @@ class Connector
 
 				createCallTree(calls)
 
-			createCallTree = (calls)->
+			createCallTree = (calls)=>
 				nodes = {}
 				links = {}
 
@@ -511,7 +510,7 @@ class Connector
 					links: linksArray
 
 				callback(mapper)
-				Connector.cache.calls = mapper
+				@connector.cache.calls = mapper
 
 
-module.exports = Connector.init
+module.exports = Connector.PostgresConnector

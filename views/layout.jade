@@ -3,7 +3,6 @@ html(ng-app='Choregraphie')
 	head
 		meta(http-equiv='X-UA-Compatible', content='IE=Edge')
 		meta(charset='utf-8')
-		title= 'Chorégraphie - ' + title
 		link(rel='stylesheet', type='text/css', href='/stylesheets/bootstrap/bootstrap.min.css')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/weather-icons.min.css')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/js/snap.css')
@@ -11,7 +10,11 @@ html(ng-app='Choregraphie')
 		link(rel='stylesheet', type='text/css', href='/stylesheets/main.css')
 		link(href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,500', rel='stylesheet', type='text/css')
 		if tests
+			title= 'Chorégraphie - Tests'
 			link(rel="stylesheet", href="/stylesheets/js/mocha.css")
+
+		else
+			title= 'Chorégraphie'
 
 	body
 		block content

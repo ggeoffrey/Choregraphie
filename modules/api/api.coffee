@@ -13,13 +13,18 @@ Corridor  = require './Corridor'
 
 
 
+
+
 #
 #	# Central API access. A database connector proxy 
 #
 class Api
 
 	# @property Specify the connector to use
-	@connector : require '../postgresConnector'
+	constructor : ->
+
+		@connector = require '../postgresConnector'
+		
 
 	#
 	# Fetch applications from the connector AND the restrictedData.json file (union)
@@ -27,7 +32,7 @@ class Api
 	#
 	# @return [undefined]
 	#
-	@getApplications :  (callback) ->
+	getApplications :  (callback) ->
 		if not callback?
 			throw 'bad arguments'
 
@@ -56,7 +61,7 @@ class Api
 	#
 	# @return [undefined]
 	#
-	@addApplication : (app, callback)=>
+	addApplication : (app, callback)=>
 		if not app? or typeof app isnt 'string'
 			throw 'bad arguments: expected \'app\' <string>'
 		if not callback?
@@ -78,7 +83,7 @@ class Api
 	#
 	# @return [undefined]
 	#
-	@deleteApplication : (app, callback)=>
+	deleteApplication : (app, callback)=>
 		if not app? or typeof app isnt 'string'
 			throw 'bad arguments: expected \'app\' <string>'
 		if not callback?
@@ -102,7 +107,7 @@ class Api
 	#
 	# @return [undefined]
 	#
-	@getCorridors :  (callback) =>
+	getCorridors :  (callback) =>
 		if not callback?
 			throw 'bad arguments'
 
@@ -130,7 +135,7 @@ class Api
 	#
 	# @return [undefined]
 	#
-	@addCorridor : (corridor, callback)=>
+	addCorridor : (corridor, callback)=>
 		if not corridor? or typeof corridor isnt 'string'
 			throw 'bad arguments: expected \'corridor\' <string>'
 		if not callback?
@@ -152,7 +157,7 @@ class Api
 	#
 	# @return [undefined]
 	#
-	@deleteCorridor : (corridor, callback)=>
+	deleteCorridor : (corridor, callback)=>
 		if not corridor? or typeof corridor isnt 'string'
 			throw 'bad arguments: expected \'corridor\' <string>'
 		if not callback?
@@ -172,7 +177,7 @@ class Api
 	# @param [Function] callback Array&lt;Event&gt;
 	# @return [undefined]
 	#
-	@getEvents :  (callback) =>
+	getEvents :  (callback) =>
 		if not callback?
 			throw 'bad arguments'
 		@connector.getEvents(callback)
@@ -185,7 +190,7 @@ class Api
 	# @param [Event] event to UPDATE
 	# @return [undefined]
 	#
-	@setEvent : (callback, event)=>
+	setEvent : (callback, event)=>
 		if not callback? or typeof event?.seen isnt 'boolean' or typeof event?.deleted isnt 'boolean'
 			throw 'bad arguments'
 		@connector.setEvent(callback, event)
@@ -195,7 +200,7 @@ class Api
 	# Fetch OverviewData from the connector
 	# @see Connector module
 	#
-	@getOverviewData :  (callback) =>
+	getOverviewData :  (callback) =>
 		if not callback?
 			throw 'bad arguments'
 		@connector.getOverviewData(callback)
@@ -209,7 +214,7 @@ class Api
 	# 
 	# @param callback [Function] Array&lt;Values&gt;
 	#
-	@getHistory :  (callback, options) =>
+	getHistory :  (callback, options) =>
 
 		if not callback? or typeof options?.app isnt 'string' or typeof options?.corridor isnt 'string'
 			throw new Error('bad arguments')
@@ -223,7 +228,7 @@ class Api
 	# 
 	# @param callback [Function] Array&lt;Values&gt;
 	#
-	@getTrend :  (callback, options) =>
+	getTrend :  (callback, options) =>
 		if not callback? or typeof options?.app isnt 'string' or typeof options?.corridor isnt 'string'
 			throw 'invalid params'
 		@connector.getTrend(callback, false, options)
@@ -233,7 +238,7 @@ class Api
 	# 
 	# @param callback [Function] [CallTree]
 	#
-	@getCalls :  (callback) =>
+	getCalls :  (callback) =>
 		if not callback?
 			throw 'invalid params'
 		@connector.getCalls(callback, false)
@@ -243,7 +248,4 @@ class Api
 
 
 
-
-
-	
-module.exports = Api
+module.exports = new Api()

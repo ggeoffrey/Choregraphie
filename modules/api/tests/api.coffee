@@ -13,12 +13,12 @@ describe 'Api', ->
 		describe 'getApplications', ->
 			it 'should be a Function', ->
 				api.getApplications.should.be.a.Function
-			it 'should return an array of strings ', (done)->
+			it 'should return an array of objects ', (done)->
 				
-				api.getApplications (stringArray) ->
-					stringArray.should.be.an.Array.and.should.not.be.empty
-					for supposedString in stringArray
-						supposedString.should.be.a.String
+				api.getApplications (objArray) ->
+					objArray.should.be.an.Array.and.should.not.be.empty
+					for supposedObject in objArray
+						supposedObject.should.have.keys [ 'name', 'type' ]
 
 					done()
 
@@ -31,10 +31,10 @@ describe 'Api', ->
 
 			it 'should return an array of strings ', (done)->
 				
-				api.getCorridors (stringArray) ->
-					stringArray.should.be.an.Array.and.should.not.be.empty
-					for supposedString in stringArray
-						supposedString.should.be.a.String
+				api.getCorridors (objArray) ->
+					objArray.should.be.an.Array.and.should.not.be.empty
+					for supposedObject in objArray
+						supposedObject.should.have.keys [ 'name', 'type' ]
 					done()
 
 			it 'should throw an exception on bad params ', ->

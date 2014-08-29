@@ -1,5 +1,6 @@
 config = require './config'
 
-PGConnector = require('./PostgresConnector')(config)
+PGConnector = require('./PostgresConnector')
 
-module.exports = PGConnector
+
+module.exports = new PGConnector(config)

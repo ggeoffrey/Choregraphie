@@ -36,7 +36,7 @@ describe('Database', function(){
 			window.Database.getApplications((data)=>{
 				Should(data).be.an.Array.and.not.empty;
 				data.forEach((value)=>{
-					Should(value).be.a.String;
+					Should(value).have.keys(['name', 'type']);
 					});
 				done();
 				});
@@ -57,7 +57,7 @@ describe('Database', function(){
 			window.Database.getCorridors((data)=>{
 				Should(data).be.an.Array.and.not.empty;
 				data.forEach((value)=>{
-					Should(value).be.a.String;
+					Should(value).have.keys(['name', 'type']);
 					});
 				done();
 				});

@@ -21,8 +21,9 @@ http.listen config.port
 io = require 'socket.io'
 
 restApi = require('./modules/restApi')
-socketManager = require('./modules/socketManager')(io, http)
-socketManager.listenToSockets()
+SocketManagerClass = require('./modules/socketManager')
+socketManager = new SocketManagerClass(io, http)
+
 # -----------------------------
 	
 

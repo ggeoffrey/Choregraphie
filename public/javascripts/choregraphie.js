@@ -108812,7 +108812,7 @@ describe('Database', function () {
             window.Database.getApplications(function (data) {
                 Should(data).be.an.Array.and.not.empty;
                 data.forEach(function (value) {
-                    Should(value).be.a.String;
+                    Should(value).have.keys(['name', 'type']);
                 });
                 done();
             });
@@ -108832,7 +108832,7 @@ describe('Database', function () {
             window.Database.getCorridors(function (data) {
                 Should(data).be.an.Array.and.not.empty;
                 data.forEach(function (value) {
-                    Should(value).be.a.String;
+                    Should(value).have.keys(['name', 'type']);
                 });
                 done();
             });

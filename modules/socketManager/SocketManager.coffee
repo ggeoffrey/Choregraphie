@@ -18,35 +18,34 @@ api = require '../api'
 #
 class SocketManager
 
-	@io : null
-
 	# Create a socket instance
 	# @param socketIOInstance [Object] Socket.io module
 	# @param httpServer [Object] Node Http Server to listen to
 	# @return [SocketManager]
-	@init : (socketIOInstance, httpServer) =>
+	constructor : (socketIOInstance, httpServer)->
 		###
 			Configure Socket.IO here
 		###
 
 		{websocketsOpts} = require '../../config'
+		@io = new socketIOInstance httpServer, websocketsOpts
 
-		if not @io?
-			@io = new socketIOInstance httpServer, websocketsOpts
-		return @
+		@listenToSockets()
+
+	
 
 
 	# Compress any object to a LZ base 64 encoded string
 	# @return [String]
-	@compress : ( object ) ->
+	compress : ( object ) ->
 		#return object
 		json = JSON.stringify object
 		lzString.compressToBase64 json
 
 
 	# Bind sockets listeners with Api methods
-	@listenToSockets : ->
-		@io.on 'connection', (socket)->
+	listenToSockets : ->
+		@io.on 'connection', (socket)=>
 
 			socket.on 'getApplications', (data, callback) =>
 				api.getApplications (data) =>
@@ -118,4 +117,4 @@ class SocketManager
 
 
 
-module.exports = SocketManager.init
+module.exports = SocketManager

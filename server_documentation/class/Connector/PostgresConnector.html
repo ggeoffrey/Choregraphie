@@ -37,16 +37,16 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Hold all the methods used to comunicate with database.</p><p>These methods are, except a few of them, the same as API methods</p>
+  <p>Hold all the methods used to communicate with database.</p><p>These methods are, except a few of them, the same as API methods</p>
 </div>
 <div class='tags'>
 </div>
-      <h2>Class Method Summary</h2>
+      <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#getApplications-static'>
-        .
+      <a href='#getApplications-dynamic'>
+        #
 (void)
 <b>getApplications</b><span>(callback, forceUpdate)</span>
       </a>
@@ -57,8 +57,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#getCorridors-static'>
-        .
+      <a href='#getCorridors-dynamic'>
+        #
 (void)
 <b>getCorridors</b><span>(callback, forceUpdate)</span>
       </a>
@@ -69,8 +69,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#getEvents-static'>
-        .
+      <a href='#getEvents-dynamic'>
+        #
 (void)
 <b>getEvents</b><span>(callback, forceUpdate)</span>
       </a>
@@ -81,8 +81,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#setEvent-static'>
-        .
+      <a href='#setEvent-dynamic'>
+        #
 (void)
 <b>setEvent</b><span>(callback, event)</span>
       </a>
@@ -93,8 +93,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#getOverviewData-static'>
-        .
+      <a href='#getOverviewData-dynamic'>
+        #
 (void)
 <b>getOverviewData</b><span>(callback, forceUpdate)</span>
       </a>
@@ -105,8 +105,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#getHistory-static'>
-        .
+      <a href='#getHistory-dynamic'>
+        #
 (void)
 <b>getHistory</b><span>(callback, forceUpdate, options)</span>
       </a>
@@ -117,8 +117,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#getTrend-static'>
-        .
+      <a href='#getTrend-dynamic'>
+        #
 (void)
 <b>getTrend</b><span>(callback, forceUpdate, options)</span>
       </a>
@@ -129,8 +129,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#getCalls-static'>
-        .
+      <a href='#getCalls-dynamic'>
+        #
 (void)
 <b>getCalls</b><span>(callback, forceUpdate)</span>
       </a>
@@ -140,11 +140,27 @@
     </span>
   </li>
 </ul>
-      <h2>Class Method Details</h2>
+      <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='getApplications-static'>
-      .
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(config)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Create a PostgresConnector containing a raw node-pg instance</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='getApplications-dynamic'>
+      #
 (void)
 <b>getApplications</b><span>(callback, forceUpdate)</span>
       <br>
@@ -169,8 +185,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getCorridors-static'>
-      .
+    <p class='signature' id='getCorridors-dynamic'>
+      #
 (void)
 <b>getCorridors</b><span>(callback, forceUpdate)</span>
       <br>
@@ -195,8 +211,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getEvents-static'>
-      .
+    <p class='signature' id='getEvents-dynamic'>
+      #
 (void)
 <b>getEvents</b><span>(callback, forceUpdate)</span>
       <br>
@@ -221,8 +237,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='setEvent-static'>
-      .
+    <p class='signature' id='setEvent-dynamic'>
+      #
 (void)
 <b>setEvent</b><span>(callback, event)</span>
       <br>
@@ -247,8 +263,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getOverviewData-static'>
-      .
+    <p class='signature' id='getOverviewData-dynamic'>
+      #
 (void)
 <b>getOverviewData</b><span>(callback, forceUpdate)</span>
       <br>
@@ -273,8 +289,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getHistory-static'>
-      .
+    <p class='signature' id='getHistory-dynamic'>
+      #
 (void)
 <b>getHistory</b><span>(callback, forceUpdate, options)</span>
       <br>
@@ -339,8 +355,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getTrend-static'>
-      .
+    <p class='signature' id='getTrend-dynamic'>
+      #
 (void)
 <b>getTrend</b><span>(callback, forceUpdate, options)</span>
       <br>
@@ -405,8 +421,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getCalls-static'>
-      .
+    <p class='signature' id='getCalls-dynamic'>
+      #
 (void)
 <b>getCalls</b><span>(callback, forceUpdate)</span>
       <br>
@@ -433,7 +449,7 @@
 </div>
     </div>
     <div id='footer'>
-  August 28, 14 18:03:30 by
+  August 29, 14 11:26:14 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

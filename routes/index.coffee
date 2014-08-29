@@ -9,14 +9,11 @@ router.get '/', (req, res)->
 	
 		
 		params = 
-			title: 'Express'
+			title: ''
 			config: config
 
-		if req.query.tests is 'true'
-			params = 
-				title: 'Tests'
-				tests: true
-
+		params.tests = on   if req.query.tests is 'true'
+		
 		res.render 'index', params
 
 
