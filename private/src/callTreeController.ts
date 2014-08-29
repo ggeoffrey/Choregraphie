@@ -655,7 +655,7 @@ module CallTree {
 		*/
 		constructor(private $scope, $http) {
 
-			this.http = $http;
+			//this.http = $http;
 
 			/*
 				Liaison avec angular

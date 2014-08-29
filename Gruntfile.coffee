@@ -168,6 +168,21 @@ module.exports = (grunt)->
 					readme: 'README-Client.md'
 				src: ['./private/src/*']
 
+		codo:
+			base:
+				options:
+					name : '<%= pkg.name %>'
+					title: '<%= pkg.name %>' + " - Server"
+					readme: 'README-Server.md'
+					undocumented: yes
+					privates: yes
+					stats: yes
+					extra: [ "LICENSE" ]
+				src : [
+					'routes'
+					'modules'							
+				]
+				dest: 'server_documentation'
 				
 
 	grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -179,12 +194,14 @@ module.exports = (grunt)->
 	grunt.loadNpmTasks 'grunt-express-server'
 	grunt.loadNpmTasks 'grunt-mocha-test'
 	grunt.loadNpmTasks 'grunt-typedoc'
+	grunt.loadNpmTasks 'grunt-codo' # CO ffee DOc
 
 	grunt.registerTask('prod', ['clean:prod', 'typescript:client', 'concat:dev', 'concat:prod', 'uglify', 'copy:jscss', 'clean:final'])
 	grunt.registerTask('preprod', ['clean:prod', 'typescript:preprod', 'concat:test', 'concat:prod', 'copy:jscss'])
-	grunt.registerTask('dev', ['clean:dev', 'typescript:client', 'concat:dev', 'copy:jscss'])
+	
 	
 	grunt.registerTask 'test', ['mochaTest:server']
+	grunt.registerTask 'doc', ['typedoc', 'codo']
 
 	grunt.registerTask('default', ['prod'])
 

@@ -2,22 +2,44 @@ fs = require 'fs'
 path = require 'path'
 
 
-
+#
+#  Manage global configuration.
+#
+#  Configuration is a set of two files:
+#   - config.coffee
+#   - restrictedData.json
+#  
+#  They are both placed at the root of the Chorégraphie project
+#
 class ConfigManager
 
-	@lastEditedConfig = 0
-	@lastEditedConfigData = 0
+	# @property lastEditedConfig [Number] last modification time of the config.coffee file
+	@lastEditedConfig : 0
+	# @property lastEditedConfigData [Number] last modification time of the restrictedData.json file
+	@lastEditedConfigData : 0
 
-	@configPath = '../../config'
-	@dataPath = '../../restrictedData.json'
+	# Path to the config.coffee file
+	@configPath : '../../config'
 
-	@fullConfigPath = path.normalize "#{__dirname}/#{@configPath}"
-	@fullConfigDataPath = path.normalize "#{__dirname}/#{@dataPath}"
+	#
+	# Path to the restrictedData.json file
+	@dataPath : '../../restrictedData.json'
+
+	# Normalized (full) path to config.coffee
+	@fullConfigPath : path.normalize "#{__dirname}/#{@configPath}"
+
+	# Normalized (full) path to restrictedData.json
+	@fullConfigDataPath : path.normalize "#{__dirname}/#{@dataPath}"
 
 
 
-
-	@getConfig = (callback)->
+	# @return [object] the config object
+	# 
+	# If on of the two files has changed, the config is re-parsed from these files
+	#
+	# @param callback [Function] [object]
+	#
+	@getConfig : (callback)->
 
 		actualConfig = require @configPath
 		fs.stat @fullConfigPath, (errConf, statConf)=>
@@ -37,7 +59,12 @@ class ConfigManager
 				else
 					callback actualConfig
 
-
+	#
+	# Serialize and write the config on disk
+	# @param config [object] the modifed config object to save
+	# @param callback [Function] called after write on disk is done
+	# @return [undefined]
+	#
 	@saveConfig = (config, callback)=>
 		newData = 
 			apps: config.apps

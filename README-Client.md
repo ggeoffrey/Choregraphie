@@ -3,24 +3,24 @@ Chorégraphie - Client
 
 # Language
 
-The client part of Chorégraphie is writen in [TypeScript](http://www.typescriptlang.org/).
+The client part of Chorégraphie is written in [TypeScript](http://www.typescriptlang.org/).
 
-TypeScript has been choosen for some reasons:
+TypeScript has been chosen for some reasons:
 
 * It's **open source**.
 * It's backed by Microsoft.
 * It looks like Java / C#.
-* It's well structured & (optionaly) staticaly typed
-* It's cross-browser compilant.
+* It's well structured & (optionally) statically typed
+* It's cross-browser compliant.
 
 As Chorégraphie runs as a web application, the client part have to be well coded, strong and fast. When you load several thousands values in a chart, if you have slow algorithms and spaghetti code, the browser may slow or freeze.
-This is the main reason why TypeScript has been choosen: **keep your code easy to understand, modular and strict**.
+This is the main reason why TypeScript has been chosen: **keep your code easy to understand, modular and strict**.
 
 # Framework
 
 The client part is built with [AngularJS](https://angularjs.org/). 
 
-Angular has been shoosen cause:
+Angular has been chosen cause:
 
 * It's open source
 * It's backed by Google
@@ -31,10 +31,10 @@ Angular help you to keep your data and your DOM up to date. With TypeScript and 
 
 # Dependencies & links
 
-* [D3js](http://d3js.org/) :  **D**ata **D**riven **D**ocuments. A low level library that help you to build absolutely everything in SVG (or not). D3js take your raw data as input and help you to build something visual (A chart is an example). D3 keep your visualisation synced with your data.
+* [D3js](http://d3js.org/) :  **D**ata **D**riven **D**ocuments. A low level library that help you to build absolutely everything in SVG (or not). D3js take your raw data as input and help you to build something visual (A chart is an example). D3 keep your visualization synced with your data.
 * [JQuery](http://jquery.com/):  If you never heard about JQuery, maybe you're on the wrong project :(
-* [MomentJS](http://momentjs.com/):  Parse, validate, manipulate, and display dates in javascript. An example? *moment(new Date()).timeago() -> 'Just now'*
-* [SnapJS](http://jakiestfu.github.io/Snap.js/demo/apps/toggles.html):  Put some side pannels in your page. Like an Android app.
+* [MomentJS](http://momentjs.com/):  Parse, validate, manipulate, and display dates in JavaScript. An example? *moment(new Date()).timeago() -> 'Just now'*
+* [SnapJS](http://jakiestfu.github.io/Snap.js/demo/apps/toggles.html):  Put some side panels in your page. Like an Android app.
 * [ThreeJS](http://threejs.org/):  If D3js is THE good library to plot data, ThreeJS is THE good library to build **3D** apps, games, charts and everything. Shaders, particles, collisions, fluid simulations, etc...
 * [Underscore](http://underscorejs.org/):  When jQuery's symbol is **$**, Underscore is **_**. Underscore is the programmer's swiss knife. It contains everything you need to filter, reduce, map, group, wrap, sort, zip, find, clone and manipulate your data.
 * [LZ-String](http://pieroxy.net/blog/pages/lz-string/index.html) A string compression/decompression library. Used to reduce data size on network.
@@ -59,3 +59,16 @@ Angular help you to keep your data and your DOM up to date. With TypeScript and 
 * Server TS module
 	* Database controller
 * Some global utilities & functions
+
+
+# Tools
+
+
+To run tests, add **?tests=true** in the URL, before **`#/`**
+
+To debug this application you should:
+
+* Generate an uncompressed client app (see server documentation)
+* Use the browser's console and dev tools.
+
+If you want to debugg the network tools (sockets), see [Socket.io debug](http://socket.io/docs/logging-and-debugging/)

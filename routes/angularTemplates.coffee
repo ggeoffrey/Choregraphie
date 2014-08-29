@@ -3,15 +3,21 @@ jade = require 'jade'
 fs = require 'fs'
 
 
-# GET angular template.
 
 
-router.get '/:templateName', (req, res) ->
 
+
+
+#  GET an angular template by name
+#   
+#  @param [String] templateName  name of the file containing the template
+#
+serveTemplate = (req, res)->
 	file = "./views/angularTemplates/#{req.params.templateName}.jade"
 	fs.exists file, (exists)->
 		if exists
 			res.render "angularTemplates/#{req.params.templateName}", {}
 
 
-module.exports = router;
+router.get '/:templateName', serveTemplate
+module.exports = router

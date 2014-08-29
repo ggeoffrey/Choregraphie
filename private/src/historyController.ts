@@ -10,6 +10,7 @@
 	Should be named just `History` but named HistoryModule cause an other History module already exists.
 
 	@should be partialy rewritten & cleaned. Too much spaghetti code.
+	@should be translated
 */
 module HistoryModule {
 
@@ -258,126 +259,279 @@ module HistoryModule {
 
 
 	/**
-		Angular controller 
-	Controlleur Angular de la section Cas-Par-Cas
+		History section Angular controller 
+	
 
-		Les données sont ((COULOIR*APPLICATION) where DATE >min) intersection ((COULOIR*APPLICATION) where DATE < max)
+		Data are 
 
-		Le fonctionnement est particulier:
-			- Les données sont récupérées
-			- Si il y en a, on les parse manuellement, car Angular ne parse pas les dates venant de NOTRE base,
-				 puis on les sauvegardent en JSON
-			- On construit l'histogramme, sa fonction filtre les données et les formatent
-			- Un thread est créé pour construire le tableau avec les données filtrées par l'histogramme
-			- La fonction du tableau synthetise les données
-			- Un second thread est créé par le tableau pour construire le PieChart, recevant les données du tableau
+		((corridor*application) where DATE >min) intersection ((corridor*application) where DATE < max)
 
-		La consruction des éléments visuels se fait donc en parallèle aussi tôt que les données sont prêtes
-		Chaque diagramme filtre et épure les données avant de les passer au voisin.
-		Cela limite les traitements répétitifs et évite de stocker des données partielles, de plus
-				la consistance des données est préservée: on est sûr que le PieChart affiche un résumé
-				de l'histogramme au travers du tableau.
+		There is a unusual behaviour:
 
+		- Data are fetched
+		- If there is data, we parse it manualy, then we save them in JSON.
+		- The line chart is built, data are filtered
+		- A parallel task is started to build the table with these new filtered data
+		- These data are filtered again by the table
+		- An other parallel task is started to build the chart with these filtered-filtered-data
+			
 
+		Visual elements building is made in parallel execution, as soon as data are ready.
+		Each diagram filter and select data, then give then to the following.
 		
-
+		This execution avoid repetitiv work and partialy-filtered data storage.
+		
 	*/
 
 	export class HistoryController {
 
 		private scope: ng.IScope;
+
+		/**
+			@Deprecated
+		*/
 		private http: ng.IHttpService;
 		private routeParams: RouteParams;
 
-		/*
-			Empeche le choix d'un item temps que les données ne sont pas chargées
-			Le choix est donc possible ici
-			Il est bloqué pendant les chargements
+		/**
+			Avoid item selection before the end of loading
+			@usedBy Angular ng-disabled
+			@should be translated
 		*/
-
 		public bloqueCouloirs: boolean;
+		/**
+			@should be translated
+			@usedBy Angular ng-disabled
+		*/
 		public bloqueApplications: boolean;
 
-		public histogram : JQuery;
-		
+		/**
+			jQuery object pointing to the div#histogram
+		*/
+		public histogram : JQuery;	
 
+		/**
+			Current selected corridor
+		*/
 		public couloir: string;
+		/**
+			Current selected app
+		*/
 		public application: string;
 
+		/**
+			List of corridors available
+			@usedBy ng-repeat in select element
+		*/
 		public couloirs: Array<string>;
+
+		/**
+			List of applications available
+			@usedBy ng-repeat in select element
+		*/
 		public applications: Array<string>;
 
+		/**
+			the pair (app x corridor) is compatible and have been chosen?
+		*/
 		public chosen:boolean;
+
+		/**
+			the pair (app x corridor) isn't compatible ?
+		*/
 		public noMatches: boolean;
 
+		/**
+			Fetched values
+		*/
 		private data: Array<Record>;
+
+		/**
+			JSON string used to backup data.
+		*/
 		private dataBackup: string; // json
+
+		/**
+			Fetch trend values
+		*/
 		private trend: {[index:string]: Array<Record>};
+
+		/**
+			JSON string used to backup data.
+		*/
 		private trendBackup: string; // json
 
 
-		private start: any; // déut de la plage de données
+		/**
+			Start time selected with the brush
+		*/
+		private start: any;
+		/**
+			End time selected with the brush
+		*/
 		private stop: any; //  type Date ?
 
 
+		/**
+			Should the dots be visible on the line chart ?
+			@Deprecated circles now shown by default
+		*/
 		private circles: boolean;
+		/**
+			If the line interpolation supports it, this variable hold the tension factor.
+			@see D3js SVG>Line documentation
+		*/
 		private tension : number;
+
+		/**
+			Line interpolation type
+			@see D3js SVG>Line documentation
+		*/
 		private interpolation: string;
 
 		// tooltip
+
+		/**
+			Raw error name visible if mouse over a data point
+			@useBy Angular in tooltip
+		*/
 		private histogramNomRapport: string;
+		/**
+			Value visible if mouse over a data point
+			@useBy Angular in tooltip
+		*/
 		private histogramValeurRapport: number;
+
+		/**
+			Date visible if mouse over a data point
+			@useBy Angular in tooltip
+		*/
 		private histogramDateRapport: string;
 		// --------
 
 
 		// Pie chart
 
-		public pieChartType: string; // IN {'Calls', 'Err (%)'}
+		/**
+			Mixing calls and errors in the pie chart is possible. But it's a nonsense.
+			If the Pie contain at least 1 http statistic. The pie chart type is 'Calls'
+			IN {'Calls', 'Err (%)'}
+
+			@should use an Enum
+		*/
+		public pieChartType: string;
+
+		/**
+			Does the pie chart contains http value ?
+		*/
 		private pieChartContainsHttpValues: boolean;
 
 
 		// ------
 
 
+		/**
+			Filtered data extracted from full data
+
+			Filtered by date
+		*/
 		private fdata: Array<Record>;
+
+		/**
+			Index is error type
+			Value is an array of records
+			Usefull to filter errors by types
+		*/
 		private unfilteredReports: {[index:string]: Array<Record>} = {};
+
+		/**
+			Where the brush should start (not the selection)
+		*/
 		private minDate: Date;
+
+		/**
+			Used to adapt the linear interpolation reduction to make the line fit in the chart.
+		*/
 		private maxValue: number;
 
+		/**
+			Height of the brush element in the DOM. (px)
+		*/
 		private heightBrush: number;
 
 
 
-		// Définis depuis la vue
+		
 
+		/**
+			Table array representation
+			@usedBy Angular ng-repeat in div#table
+		*/
 		public tableau: Statistique[];
+
+		/**
+			A message under the line chart showing information about particular values
+			@usedBy Angular
+		*/
 		public messageHistogramme: string;
+
+		/**
+			Should the line chart update on mousemove ?
+			@Deprecated now always on
+		*/
 		public realtime: boolean;
+
+		/**
+			Block the 'resize button' while the line chart is rendering
+			@usedBy Angular ng-disabled
+		*/
 		public resizeDisabled: boolean = true;
 
+		/**
+			Map&lt;string, boolean&gt; allowing to select lines in table.
+			String key is data error type.
+			This Map is used to include or exclude data of the filtered data.
+		*/
 		public lignesSelectionees: {[index:string]: boolean};
 
 
 		// Outils globaux
 
-        private colorBuilder; // d3.scale.categoryXX();
+		/**
+			d3.scale.categoryXX();
+			Mapping error type with a color.
+			@see D3js documentation
+		*/
+        private colorBuilder; 
 
 
         // Gestionnaire d'évenements
 
+        /**
+			Events.eventsController instance used to fetch events corresponding to (app x corridor)
+        */
         private eventsController: Events.EventsController;
-        private events: Array<Events.Event>;
-        private filteredEvents: Array<Events.Event>; // Filtré par la brush
 
+        /**
+        	List of events fetched
+        */
+        private events: Array<Events.Event>;
+
+        /**
+        	Filtered with the brush. ie: Events between dateMin and dateMax
+        */
+        private filteredEvents: Array<Events.Event>;
+
+
+        /**
+			@param $http Deprecated
+        */
 		constructor($scope, $http, $routeParams, eventsController : Events.EventsController) {
 			this.scope = $scope;
 			this.http = $http;
             this.routeParams = $routeParams;
 
-            this.eventsController = eventsController;
-
-            
+            this.eventsController = eventsController;            
 
 			this.bloqueCouloirs = false;
 			this.bloqueApplications = false;
@@ -389,10 +543,12 @@ module HistoryModule {
 
 			this.heightBrush = 80;
 
-            this.init();
-            
+            this.init();            
 		}
 
+		/**
+			Get params from url or from user choice and fetch apps and corridors list.
+		*/
 		private init = (): void=>{
 			if(this.routeParams.codeapp){
 				this.couloir = this.routeParams.couloir;
@@ -432,14 +588,11 @@ module HistoryModule {
 			var listeApp : string;
 			listeApp = window.sessionStorage.getItem('listeApp');
 
-			if(false /*listeApp*/){
-				nextApp(JSON.parse(listeApp));
-			}
-			else{
+			
 				window.Database.getApplications((data:any)=>{
 					nextApp(data);
 				});
-			}
+			
 
 
 			// traitement des couloirs
@@ -461,15 +614,11 @@ module HistoryModule {
 			window.startLoader();
 
 			var listeCouloirs: string;
-			//listeCouloirs = window.sessionStorage.getItem('listeCouloirs');
-			if(false /*listeCouloirs*/){
-				nextCouloirs(JSON.parse(listeCouloirs));
-			}
-			else{
+			
 				window.Database.getCorridors((data:any)=>{
 					nextCouloirs(data);
 				});
-			}
+			
 
             //On charge les évenements en premier comme ça, on les à pour toute la suite
             this.eventsController.getByCouple(this.application, this.couloir, (events) => {
@@ -479,6 +628,9 @@ module HistoryModule {
 
 		}
 
+		/**
+			Load data for (app x corridor)
+		*/
 		private load = (): void => {
 			if(this.application && this.couloir){
 				var dataLoaded: boolean = false;
@@ -595,6 +747,9 @@ module HistoryModule {
 		}
 
 
+		/**
+			Initialise brush min and max date
+		*/
 		private initRangePicker = (): void => {
 			var minDate : Date = new Date();
 			minDate.setFullYear(minDate.getFullYear()-1);
@@ -604,7 +759,9 @@ module HistoryModule {
 			this.stop = new Date();
 		}
 
-
+		/**
+			Parse data not parsed automaticaly by Angluar
+		*/
 		private parseInData = (data: Array<Record>) : Array<Record> =>{
 			var tempStr: string;
 			data.forEach(function(item: Record, inex: number){
@@ -618,6 +775,15 @@ module HistoryModule {
 			return data;
 		}
 
+		/**
+			Trigger a full rebuild of the line chart width new min and max
+
+			@param skipOtherDiagrams used to refresh the line chart without refreshing the others. This param is usefull for some reasons:
+			* The biggest and slowest part of the code is used for the line chart construction.
+			* Triggering one time a (at the page load) a construction of the diagramm allows the Javascript virtual machine to optimise the slowest pârts of the code.
+			 The others charts ar fasts and do not need to be processed at the page loading.
+		*/
+
 		private updateHistogram = (bornes?: any, skipOtherDiagrams?: boolean): void=> {
 			if(bornes){
 				var min : any = bornes.values.min;
@@ -630,11 +796,17 @@ module HistoryModule {
 			this.buildHistogram(null, skipOtherDiagrams);
 		}
 
+		/**
+			Safe alias to updateHistogram with a public visibility
+			@usedBy Angular
+		*/
 		public externalUpdateHistogram = (skipOtherDiagrams): void => {
 			this.updateHistogram(null, skipOtherDiagrams);
 		}
 
-
+		/**
+			Extract all the values between this.start and this.stop
+		*/
 		private filterData = (data: Array<Record>): Array<Record> => {
 			
 
@@ -647,16 +819,19 @@ module HistoryModule {
 		}
 
 
-		/*
-			Cherche une date dans le champs array[n].starttime par dichotomie récursive
-			renvoi la valeur la plus proche si non trouvée
-			renvoi -1 si erreur
-			@param array [Array] Les données triées à parcourir
-			@param date_recherche [Date] La date à rechercher
-			@param start [Number] la borne inf de départ
-			@param stop [Number] la borne sup de départ
+		/**
+			Find a value by recursive dichotomy on the date field
+			
+			@returns Value's position in data containing date date_recherche
+			@returns nearest Value's position if date_recherche isn't found.
+			@returns -1 if error
+			
+			@param array Data, sorted by date ascendingly
+			@param date_recherche date to find
+			@param start left boundary
+			@param stop right boundary
 
-			@return [Number] Position de l'élément recherché ou voisin le plus proche
+			
 		*/
 
 		private findStartTimeSorted = (array: Array<Record>, date_recherche:any, start?: number, stop?:number): number => {
@@ -710,9 +885,20 @@ module HistoryModule {
 		}
 
 
+		/**
+			D3 linear scale for the brush width
+		*/
 		private scalerBrushX;
+
+		/**
+			jQuery object pointing to the brush element
+		*/
 		private brush; // sauvegarde des éléments de la brush.
 
+
+		/**
+			Build and draw the brush in the .brush element
+		*/
 		private buildBrush = (mustRefresh?: boolean): void => {
 
 			var svg = d3.select('#histogram > .svg > svg ');
@@ -840,6 +1026,11 @@ module HistoryModule {
             
 		}
 
+		/**
+			Build and drow the line chart
+			@param skipRendering execute without drawing the chart. Usefull to initilaise global values and to let the JIT compiler run
+			without impatcting performances. Build the line chart isn't slow but SVG rendering is.
+		*/
 		private buildHistogram = (data?: Array<Record>, skipOtherDiagrams?: boolean, skipRendering?: boolean, optionalCallback? : ()=> void ) => {
 			/*
 				skipRendering semble être inutile mais que nenni!
@@ -854,7 +1045,13 @@ module HistoryModule {
 				 De plus le compiateur JIT aura le temps de déterminer, en arrière plan, quoi faire de cette fonction.
 			*/
 
+			/**
+				filtered data
+			*/
 			var fdata: Array<Record> = [];
+			/**
+				Filtered trend
+			*/
 			var ftrend: {[index:string]: Array<Record>};
 
 			var target : JQuery =  this.histogram;
@@ -895,7 +1092,7 @@ module HistoryModule {
 						this.buildTable(tableauVide);
 				}, 1);
 
-				this.messageHistogramme = "Aucune données dans cette plage.";
+				this.messageHistogramme = "No data in this range.";
 
 
 			}
@@ -975,21 +1172,19 @@ module HistoryModule {
 			if(ffdata.length > 1)
 				plural_ffdata = 's';
 
-			this.messageHistogramme = fdata.length +" valeur"+ plural_fdata;
+			this.messageHistogramme = fdata.length +" valus"+ plural_fdata;
 
 			if(ffdata.length !== fdata.length){
-				this.messageHistogramme += " dont "+ (fdata.length-ffdata.length) +" trop faible"
-					+ plural_ffdata + " pour être affichée"+ plural_ffdata
-					+"(<"+pct+"% soit "+seuil+")";
+				this.messageHistogramme += " including "+ (fdata.length-ffdata.length) +" too small"
+					+ plural_ffdata + " to be shown"
+					+"(<"+pct+"% -> "+seuil+")";
 			}
 
 			var first_value : Record = ffdata[0];
 			var last_value : Record = ffdata[ffdata.length-1];
 
 			/*
-				Nous avons nos données filtrées, on les passe au tableau via un thread.
-				Oui les VM JavasScript comme V8, SpiderMonkey, ou Chakra crée un ChildProcess pour chaque action asynchrone.
-				C'est un thread bas niveau qui interviens après compilation du code JS.
+				Here our data are filtered. We can give them to the next chart (the table)
 			*/
 
 
@@ -1335,6 +1530,9 @@ module HistoryModule {
 
 		}
 
+		/**
+			Initialize a Map for lignesSelectionees allowing to click on lines in the table
+		*/
 		private initLignesSelectionees = (stats) => {
 			this.lignesSelectionees = {};
 
@@ -1347,11 +1545,15 @@ module HistoryModule {
 				else
 					this.lignesSelectionees[code] = false;
 			}
-
-
-
 		}
 
+		/**
+			Toggle the state (selected/unselected) of a line in the table.
+
+			@param name error type
+
+			@usedBy Angular ng-click in ng-repeat
+		*/
 		public select_ligne = (name: string) : void => {
 			//for(var name in this.lignesSelectionees){
 			//	this.lignesSelectionees[name] = false;
@@ -1365,6 +1567,14 @@ module HistoryModule {
 			this.updateScope();
 		}
 
+
+		/**
+			Give an RGB color oposite color.  eg: [blue] <-> [orange]
+
+			@param color string matching `rgb(x,y,z)`
+			@returns string matching `rgba(i,j,k)`
+		*/
+
 		private invertRGBColor = (color:string) : string => {
 			var rgb : any = [].slice.call(arguments).join(",").replace(/rgb\(|\)|rgba\(|\)|\s/gi, '').split(',')
 
@@ -1376,6 +1586,16 @@ module HistoryModule {
 			return 'rgb(' + rgb.join(", ").replace(', NaN', '')+ ')';
 		}
 
+
+		/**
+			Build a table filed with stats.
+			Rendering is Angular's job
+
+			@param data Deprecated should be removed carefully
+			@param ffdata comming from buildHistogram method
+
+			@usedBy buildHistogram private method
+		*/
 		private buildTable = ( data : {[index:string]: Array<Record>}, ffdata?: Record[] ): void => {
 
 			var stats : {[index:string]: Statistique} = {};
@@ -1435,7 +1655,14 @@ module HistoryModule {
 		}
 
 
-		private $arc;
+
+		/**
+			Build a pie chart in the #pie element
+
+			@param stats comming from buildTable private method
+			@usedBy buildTable private method
+		*/
+
 		private buildPie = (stats: {[index:string]: Statistique}) :  void =>{
 			var liste : Statistique[] = [];
 			var total : number = 0;
@@ -1639,8 +1866,21 @@ module HistoryModule {
 		}
 
 
-
+		/**
+			Specify if the line chart is full-width or not
+		*/
 		private full : boolean = false;
+
+		/**
+			First call
+			@should be translated !
+				
+			Use to replace the pie chart correctly after the line chart has be drawn.
+
+			If this is the first call, the pie chart is translated to it's own origine point.
+
+			This solve some css positioning (absolute/relative) problems on firefox & IE
+		*/
 		private premierAppel: boolean = true;
 		public resizeHistogram = () => {
 
@@ -1696,12 +1936,18 @@ module HistoryModule {
 
 		}
 
+		/**
+			Force angular to rewatch models
+		*/
 		private updateScope = () : void => {
 			if(!this.scope.$$phase)
 				this.scope.$apply();
 		}
 
 
+		/**
+			Save the table as CSV
+		*/
 		public exportCSVTableau = (): void =>{
 			var data = this.tableau;
 
@@ -1732,7 +1978,7 @@ module HistoryModule {
 			var $link: JQuery = $('.btn-export-csv-tableau');
 			$link.attr('href', uri);
 
-			var filename = 'Choregraphie_stats_tableau';
+			var filename = 'Choregraphie_table_stats';
 
 			var date: string = new Date()
 								.toLocaleString()
@@ -1752,6 +1998,9 @@ module HistoryModule {
 
 		}
 
+		/**
+			Save the selected line chart values as CSV
+		*/
 		public exportCSVHistogramme = () : void => {
 			var data = this.fdata;
 

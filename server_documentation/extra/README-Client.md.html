@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Choregraphie - Server</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/README-Client.md.html' title='Choregraphie'>
+      Choregraphie
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>README-Client.md</span>
+  </div>
+</div>
+    <div id='content'>
+      <nav class='toc'>
+        <p class='title'>
+          <a class='hide_toc' href='#'>
+            <strong>Table of Contents</strong>
+          </a>
+          <small>
+            (<a class='float_toc' href='#'>left</a>)
+          </small>
+        </p>
+      </nav>
+      <div id='filecontents'>
+        <h1 id="chor-graphie-client">Chorégraphie - Client</h1>
+<h1 id="language">Language</h1><p>The client part of Chorégraphie is writen in <a href="http://www.typescriptlang.org/">TypeScript</a>.</p><p>TypeScript has been choosen for some reasons:</p><ul>
+<li>It&#39;s <strong>open source</strong>.</li>
+<li>It&#39;s backed by Microsoft.</li>
+<li>It looks like Java / C#.</li>
+<li>It&#39;s well structured &amp; (optionaly) staticaly typed</li>
+<li>It&#39;s cross-browser compilant.</li>
+</ul><p>As Chorégraphie runs as a web application, the client part have to be well coded, strong and fast. When you load several thousands values in a chart, if you have slow algorithms and spaghetti code, the browser may slow or freeze.
+This is the main reason why TypeScript has been choosen: <strong>keep your code easy to understand, modular and strict</strong>.</p><h1 id="framework">Framework</h1><p>The client part is built with <a href="https://angularjs.org/">AngularJS</a>. </p><p>Angular has been shoosen cause:</p><ul>
+<li>It&#39;s open source</li>
+<li>It&#39;s backed by Google</li>
+<li>It fits well with a class oriented language like TypeScript</li>
+</ul><p>Angular help you to keep your data and your DOM up to date. With TypeScript and some library such D3js, you have here the best cocktail to build data driven and dynamic applications.</p><h1 id="dependencies-links">Dependencies &amp; links</h1>
+<ul>
+<li><a href="http://d3js.org/">D3js</a> :  <strong>D</strong>ata <strong>D</strong>riven <strong>D</strong>ocuments. A low level library that help you to build absolutely everything in SVG (or not). D3js take your raw data as input and help you to build something visual (A chart is an example). D3 keep your visualisation synced with your data.</li>
+<li><a href="http://jquery.com/">JQuery</a>:  If you never heard about JQuery, maybe you&#39;re on the wrong project :(</li>
+<li><a href="http://momentjs.com/">MomentJS</a>:  Parse, validate, manipulate, and display dates in javascript. An example? <em>moment(new Date()).timeago() -&gt; &#39;Just now&#39;</em></li>
+<li><a href="http://jakiestfu.github.io/Snap.js/demo/apps/toggles.html">SnapJS</a>:  Put some side pannels in your page. Like an Android app.</li>
+<li><a href="http://threejs.org/">ThreeJS</a>:  If D3js is THE good library to plot data, ThreeJS is THE good library to build <strong>3D</strong> apps, games, charts and everything. Shaders, particles, collisions, fluid simulations, etc...</li>
+<li><a href="http://underscorejs.org/">Underscore</a>:  When jQuery&#39;s symbol is <strong>$</strong>, Underscore is <strong>_</strong>. Underscore is the programmer&#39;s swiss knife. It contains everything you need to filter, reduce, map, group, wrap, sort, zip, find, clone and manipulate your data.</li>
+<li><a href="http://pieroxy.net/blog/pages/lz-string/index.html">LZ-String</a> A string compression/decompression library. Used to reduce data size on network.</li>
+<li><a href="http://socket.io/">Socket.io</a> Socket.IO enables real-time bidirectional event-based communication. THE alternative to AJAX.</li>
+<li><a href="http://www.createjs.com/#!/TweenJS">TweenJS</a> Animate anything.</li>
+</ul>
+<h1 id="overview-of-the-app-structure">Overview of the app structure</h1>
+<ul>
+<li>Angular module <code>Choregraphie</code><ul>
+<li>A little bit of configuration</li>
+<li>Main TypeScript module<ul>
+<li>MainController</li>
+<li>ConfigurationController</li>
+</ul>
+</li>
+<li>Overview TS module<ul>
+<li>OverviewController</li>
+</ul>
+</li>
+<li>Events TS module<ul>
+<li>EventsController</li>
+</ul>
+</li>
+<li>HistoryModule TS module <ul>
+<li>HistoryController</li>
+</ul>
+</li>
+<li>CallTree TS module<ul>
+<li>CallTreeController</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Server TS module<ul>
+<li>Database controller</li>
+</ul>
+</li>
+<li>Some global utilities &amp; functions</li>
+</ul>
+
+      </div>
+    </div>
+    <div id='footer'>
+  August 28, 14 16:51:54 by
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.9
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

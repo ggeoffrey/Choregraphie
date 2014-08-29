@@ -9,29 +9,42 @@ Event = require './Event'
 appConfig = require '../../config'
 
 
-
+#
+# Connect to a PostgreSQL database according to the local config file.
+#
 class Connector
+
+	# Build from the config params
 	@connectionString : null
+
+	# A local cache to improve perfs
 	@cache : {}
 
+	# Read config, connect to Postgre and ensure the cache is flushed at least every 10 minutes
+	# @param config [Object] config given by index.coffee
+	# @return a PostgresConnector static object
 	@init : ( config ) ->
+
+		
 		
 		if not Connector.connectionString?
-			Connector.connectionString = "postgres://#{config.user}"
+			@connectionString = "postgres://#{config.user}"
 			
 			if config.pass?
-				Connector.connectionString += ":#{config.pass}"
+				@connectionString += ":#{config.pass}"
 
-			Connector.connectionString += "@#{config.host}/#{config.databaseName}"
+			@connectionString += "@#{config.host}/#{config.databaseName}"
 
 			# Emty cache every 10 minutes
 			setInterval ->
 					cache = {}
 				, 600
 		
-		return Connector.PgConnector
+		return @PostgresConnector
 
 
+	# Get a client from the connections pool
+	# @param callback [Function] callback called with **[client, doneCallback]**. Call the doneCallback to release the connexion to te pool.
 	@getClient : (callback)->
 		
 		pg.connect Connector.connectionString, (err, client, done)->
@@ -41,8 +54,14 @@ class Connector
 				callback(client, done)
 
 
-	class @PgConnector
+	#
+	# Hold all the methods used to comunicate with database.
+	#
+	# These methods are, except a few of them, the same as API methods
+	class @PostgresConnector
 
+		# Get applications from database
+		# @param forceUpdate [Boolean] ignore cache and update it
 		@getApplications : (callback, forceUpdate) ->
 
 			# Read from config if data are limited to it
@@ -72,6 +91,8 @@ class Connector
 				else
 					callback(Connector.cache.applications)
 
+		# Get an array of corridors name from database
+		# @param forceUpdate [Boolean] ignore cache and update it
 		@getCorridors : (callback, forceUpdate)->
 
 			# Read from config if data are limited to it
@@ -103,6 +124,8 @@ class Connector
 				else
 					callback(Connector.cache.corridors)
 
+		# Get an Array of Events from db
+		# @param forceUpdate [Boolean] ignore cache and update it
 		@getEvents : (callback, forceUpdate)->
 			queryText = "
 				SELECT codeapp, couloir, codetype, start_time, seen, deleted, old_value, value, diff_stddev, type, id
@@ -127,6 +150,11 @@ class Connector
 			else
 				callback(Connector.cache.events)
 		
+
+		# UPDATE an event in database, tracking by event.id
+		#
+		# Only event.seen and event.deleted are UPDATEed
+		# @param event [Object] Event to persist
 		@setEvent : (callback, event) ->
 
 			queryText = "
@@ -149,11 +177,8 @@ class Connector
 				query.on 'error', (err)->
 					throw err
 			
-				
-
-
-
-		
+		# Get an OverviewData Object from database
+		# @param forceUpdate [Boolean] ignore cache and update it
 		@getOverviewData : (callback, forceUpdate)->
 			queryText = "
 				SELECT mv.codeapp, mv.couloir, mv.codetype, mv.start_time, SUM(mv.value) AS value, ms.sante
@@ -244,6 +269,11 @@ class Connector
 						Connector.cache.overviewData = listResult
 					
 
+		# Get an array of Values
+		# @param forceUpdate [Boolean] ignore cache and update it
+		# @param options [Object]
+		# @option app [String] app's name
+		# @option corridor [String] corridor's name
 		@getHistory : (callback, forceUpdate, options)->
 
 			if options.app is 'all' and options.corridor is 'all'
@@ -325,6 +355,11 @@ class Connector
 					callback(reports)
 
 
+		# Get an array of Values
+		# @param forceUpdate [Boolean] ignore cache and update it
+		# @param options [Object]
+		# @option app [String] app's name
+		# @option corridor [String] corridor's name
 		@getTrend : (callback, forceUpdate, options)->
 
 			queryText = " 
@@ -364,6 +399,8 @@ class Connector
 
 				callback(mapper)
 
+		# Get a callTree
+		# @param forceUpdate [Boolean] ignore cache and update it	
 		@getCalls : (callback, forceUpdate)->
 			queryText = "
 				SELECT codeapp, code, couloir, sum(value) as value, codetype, extract(epoch FROM date_trunc('day',  start_time))*1000::bigint as starttime
@@ -477,5 +514,4 @@ class Connector
 				Connector.cache.calls = mapper
 
 
-module.exports = Connector.init;
-
+module.exports = Connector.init

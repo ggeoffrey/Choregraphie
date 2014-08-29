@@ -105764,7 +105764,6 @@ var CallTree;
         function CallTreeController($scope, $http) {
             var _this = this;
             this.$scope = $scope;
-            this.$http = $http;
             this.rawLinks = new Array();
             this.links = new Array();
             this.linkToApplications = new Array();
@@ -107180,15 +107179,13 @@ var CallTree;
 
 var Events;
 (function (Events) {
+    
+
+    
+
     var EventsController = (function () {
         function EventsController($scope, $http, $routeParams, $window) {
             var _this = this;
-            this.init = function () {
-                _this.load();
-            };
-            this.toggle = function () {
-                _this.window.toggleEvents();
-            };
             this.scope = $scope;
             this.http = $http;
             this.routeParams = $routeParams;
@@ -107196,9 +107193,7 @@ var Events;
 
             this.colorBuilder = d3.scale.category20();
 
-            this.displayedEvents = [];
-
-            this.init();
+            this.load();
 
             window.Database.socket.on('eventChanged', function (event) {
                 _this.updateEvent(event);
@@ -107317,11 +107312,11 @@ var Events;
         EventsController.prototype.getDescriptionOf = function (event) {
             var description = "";
             if (event.type === 'erreurs') {
-                description += ": Nbr d'erreurs inhabituel";
+                description += ": Unusual error amount";
             } else if (event.type === 'appels') {
-                description += ": Nbr de transactions inhabituel";
+                description += ": Unusual transactions amount";
             } else if (event.type === 'tendance') {
-                description += " a changé de comportement";
+                description += "'s behaviour has changed";
             }
             return description;
         };
@@ -107435,7 +107430,6 @@ var Events;
 })();
 var HistoryModule;
 (function (HistoryModule) {
-    var Months = ["Jan", "Fev", "Mar", "Avr", "Mai", "Ju", "Jui", "Aou", "Sept", "Oct", "Nov", "Dec"];
     var nullSymbol = '\u2015';
 
     var Statistique = (function () {
@@ -107587,6 +107581,10 @@ var HistoryModule;
     })();
     HistoryModule.Statistique = Statistique;
 
+    
+
+    
+
     var HistoryController = (function () {
         function HistoryController($scope, $http, $routeParams, eventsController) {
             var _this = this;
@@ -107628,13 +107626,9 @@ var HistoryModule;
                 var listeApp;
                 listeApp = window.sessionStorage.getItem('listeApp');
 
-                if (false) {
-                    nextApp(JSON.parse(listeApp));
-                } else {
-                    window.Database.getApplications(function (data) {
-                        nextApp(data);
-                    });
-                }
+                window.Database.getApplications(function (data) {
+                    nextApp(data);
+                });
 
                 var nextCouloirs = function (data) {
                     _this.couloirs = data;
@@ -107652,13 +107646,9 @@ var HistoryModule;
 
                 var listeCouloirs;
 
-                if (false) {
-                    nextCouloirs(JSON.parse(listeCouloirs));
-                } else {
-                    window.Database.getCorridors(function (data) {
-                        nextCouloirs(data);
-                    });
-                }
+                window.Database.getCorridors(function (data) {
+                    nextCouloirs(data);
+                });
 
                 _this.eventsController.getByCouple(_this.application, _this.couloir, function (events) {
                     _this.events = events;
@@ -107919,6 +107909,7 @@ var HistoryModule;
             };
             this.buildHistogram = function (data, skipOtherDiagrams, skipRendering, optionalCallback) {
                 var fdata = [];
+
                 var ftrend;
 
                 var target = _this.histogram;
@@ -107953,7 +107944,7 @@ var HistoryModule;
                             _this.buildTable(tableauVide);
                     }, 1);
 
-                    _this.messageHistogramme = "Aucune données dans cette plage.";
+                    _this.messageHistogramme = "No data in this range.";
                 }
 
                 var reports = {};
@@ -108023,10 +108014,10 @@ var HistoryModule;
                 if (ffdata.length > 1)
                     plural_ffdata = 's';
 
-                _this.messageHistogramme = fdata.length + " valeur" + plural_fdata;
+                _this.messageHistogramme = fdata.length + " valus" + plural_fdata;
 
                 if (ffdata.length !== fdata.length) {
-                    _this.messageHistogramme += " dont " + (fdata.length - ffdata.length) + " trop faible" + plural_ffdata + " pour être affichée" + plural_ffdata + "(<" + pct + "% soit " + seuil + ")";
+                    _this.messageHistogramme += " including " + (fdata.length - ffdata.length) + " too small" + plural_ffdata + " to be shown" + "(<" + pct + "% -> " + seuil + ")";
                 }
 
                 var first_value = ffdata[0];
@@ -108384,7 +108375,6 @@ var HistoryModule;
                     }
                 }
 
-                console.log(_this.pieChartContainsHttpValues);
                 _this.pieChartType = (_this.pieChartContainsHttpValues ? 'Calls' : 'Err (%)');
 
                 for (codetype in stats) {
@@ -108575,7 +108565,7 @@ var HistoryModule;
                 var $link = $('.btn-export-csv-tableau');
                 $link.attr('href', uri);
 
-                var filename = 'Choregraphie_stats_tableau';
+                var filename = 'Choregraphie_table_stats';
 
                 var date = new Date().toLocaleString().replace(/\//g, '-').replace(/\s/g, '_');
 
@@ -108637,6 +108627,10 @@ var HistoryModule;
 })();
 var Overview;
 (function (Overview) {
+    
+
+    
+
     var Statistique = (function () {
         function Statistique() {
             this.nb_app = 0;
@@ -108682,26 +108676,18 @@ var Overview;
             var _this = this;
             window.startLoader();
 
-            var cache = sessionStorage.getItem('overview');
-            if (false) {
-                var data = JSON.parse(cache);
-                this.data = data;
-                this.makeStats();
+            window.Database.getOverviewData(function (data) {
+                if (_.isArray(data)) {
+                    _this.data = data;
+                    _this.makeStats();
+                } else {
+                    _this.data = [];
+                }
                 window.stopLoader();
-            } else {
-                window.Database.getOverviewData(function (data) {
-                    if (_.isArray(data)) {
-                        _this.data = data;
-                        _this.makeStats();
-                    } else {
-                        _this.data = [];
-                    }
-                    window.stopLoader();
 
-                    if (!_this.$scope.$$phase)
-                        _this.$scope.$apply();
-                });
-            }
+                if (!_this.$scope.$$phase)
+                    _this.$scope.$apply();
+            });
         };
 
         OverviewController.prototype.getHref = function (record) {
@@ -108743,7 +108729,7 @@ var Overview;
         };
 
         OverviewController.prototype.update = function () {
-            sessionStorage.removeItem('overview');
+            Database.clearCache('overview');
             this.init();
 
             if (!this.$scope.$$phase)
@@ -108751,7 +108737,7 @@ var Overview;
         };
 
         OverviewController.prototype.toolbarActive = function () {
-            $(".links a[href='#/casParCas']").parent().addClass('active').siblings().removeClass('active');
+            $(".links a[href='#/overview']").parent().addClass('active').siblings().removeClass('active');
         };
 
         OverviewController.prototype.getClassWithHealth = function (sante) {

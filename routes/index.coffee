@@ -7,6 +7,7 @@ router.get '/', (req, res)->
 
 	ConfigManager.getConfig (config)->
 	
+		
 		params = 
 			title: 'Express'
 			config: config

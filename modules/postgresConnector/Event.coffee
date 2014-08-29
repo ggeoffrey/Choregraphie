@@ -1,4 +1,15 @@
-class Event
+# @nodoc
+class Connector
+
+
+#
+# Real object for manipulating Events
+# ** SHOULD ** be translated
+class Connector.Event
+	# 
+	# Extract usefull informations from an Event
+	# @param rawEvent [object] And object comming from the database
+	#
 	constructor: (rawEvent) ->
 		{
 			@id,
@@ -15,4 +26,4 @@ class Event
 		} = rawEvent
 
 
-module.exports = Event
+module.exports = Connector.Event
