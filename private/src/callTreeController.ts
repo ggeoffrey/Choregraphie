@@ -68,7 +68,7 @@ module CallTree {
 
 
 	/**
-		A node can be anything: An application, a service, a methode, a car, anything. 
+		A node can be anything: An application, a service, a method, a car, anything. 
 
 		This is **NOT** the shape of a node to implement in your code. This class is used to structure the CallTreeController.
 
@@ -104,7 +104,7 @@ module CallTree {
 		*/
 		public parents: Array<LienNoeud>;
 		/**
-			Just like parents, but for childrens
+			Just like parents, but for children
 		*/
 		public children: Array<LienNoeud>;
 
@@ -121,14 +121,14 @@ module CallTree {
 			Is the node selected ?
 			A node can be selected by a Double-Click or via the nodes list.
 		*/
-		public selected: boolean; // si noeud est sélectionné par la liste des noeuds
+		public selected: boolean; 
 
 		/**
-			Usefull to know if the node has already been selected as a parents.
+			Useful to know if the node has already been selected as a parents.
 
 			@usedBy CallTreeController.selectParents to avoid infinite recursion.
 		*/
-		public linksSelected: boolean; // si les liens du noeud sont sélectionnés, évite la récursion infinie
+		public linksSelected: boolean; 
 
 		/**
 			The THREEJS 3D object representing this node
@@ -160,7 +160,7 @@ module CallTree {
 
 	/**
 		A link built by transforming a LienBrut
-		You **don't** have to impleent this shape in your code.
+		You **don't** have to implement this shape in your code.
 		@should be rewritten in English.
 	*/
 
@@ -187,7 +187,7 @@ module CallTree {
 		*/
 		selected: boolean;
 		/**
-			When the call has happend
+			When the call happened
 		*/
 		date: Date;
 	}
@@ -235,9 +235,9 @@ module CallTree {
 				// on récupère le premier grand parent
 				for (parentName in called.parents) {
 					called = called.parents[parentName];
-					this.service = called.name; // on le parent (le service)
+					this.service = called.name; //le parent (le service)
 					for (parentName in called.parents) {
-						called = called.parents[parentName];	// on a le grand parent(l'appli)
+						called = called.parents[parentName];	// le grand parent(l'appli)
 						break;
 					}
 					break;
@@ -271,16 +271,16 @@ module CallTree {
 		## Warning:
 
 		The render loop should be as light and as fast as possible:
-				- immediatly deffer with setTimeout when possible
-				- use while loops whith length--
+				- immediately deffer with setTimeout when possible
+				- use while loops with length--
 				- or for with cached length decreasing
 
-				- Tasks that doesn't need to be computed every time should be deffered with a %
+				- Tasks that doesn't need to be computed every time should be deferred with a %
 
 				- don't use switches
 				- don't use try catch
 				- don't use 'new'
-				- don't acces the prototype chain
+				- don't access the prototype chain
 				- limit 'if' as much as possible
 				- limit loops as much as possible
 
@@ -299,7 +299,7 @@ module CallTree {
 		private color;
 		/**
 			D3js force layout
-			Used to aniamte nodes like a molecule
+			Used to animate nodes like a molecule
 		*/
 		private force;
 
@@ -354,16 +354,16 @@ module CallTree {
 		private linkToApplications: Array<Lien> = new Array();
 
 		/**
-			D3js zoom behaviour
-			@Deprecated since THREEJS is used and provide a zoom via THREEJS.Camera
+			D3js zoom behavior
+			@Deprecated since THREEJS is used and provide a zoom via THREEJS.Control
 			@should be removed carefully
 		*/
-		private zoom; // Le gestionnaire de zoom D3js
+		private zoom; 
 
 		/**
 			@Deprecated since THREEJS is used
 		*/
-		private svgRoot; // le groupe g racine de l'élément svg
+		private svgRoot; 
 
 
 		
@@ -388,8 +388,8 @@ module CallTree {
 
 		/**
 			List of strings.
-			Usefull to show the stack trace line by line with ng-repeate
-			@usedBy ng-repeate in the stack trace panel.
+			Useful to show the stack trace line by line with ng-repeat
+			@usedBy ng-repeat in the stack trace panel.
 		*/
 		private stackTrace: any[];
 
@@ -400,7 +400,7 @@ module CallTree {
 			View mode 
 			in : {'2D', '3D'}
 		*/
-		private mode: string; // '2D' ou '3D'
+		private mode: string;
 
 		/**
 			THREEJS Scene object
@@ -411,7 +411,7 @@ module CallTree {
 		*/
 		private camera: any;
 		/**
-			Javascript classic object with x & y.
+			JavaScript classic object with x & y.
 			Updated every time the mouse is moved.
 		*/
 		private mouse: any;
@@ -422,7 +422,7 @@ module CallTree {
 		private controls: any;
 
 		/**
-			The classic (no filter, webgl) renderer.
+			The classic (no filter, WebGl) renderer.
 		*/
 		private classicRenderer: any;
 		/**
@@ -446,7 +446,7 @@ module CallTree {
 		/**
 			A THREEJS raycaster object.
 
-			Used to detect intersactions between mouse and an object.
+			Used to detect intersections between mouse and an object.
 
 			@explanation When you want to detect a click in a 2D world, you check to mouse coordinates and your objects sizes and coordinate.
 			If the mouse pointer is *in* the object, you consider the mouse is over it.
@@ -464,7 +464,7 @@ module CallTree {
 		/**
 			ALL the scene is wrapped in a THREEJS.Object3D.
 
-			@explanation the camera is centrerd to look at (0,0,0). But our nodes are placed by D3js. D3 use (0,0,0) at the "top left corner".
+			@explanation the camera is centered to look at (0,0,0). But our nodes are placed by D3js. D3 use (0,0,0) at the "top left corner".
 			Our camera is centered with the scene but not with the objects. the simpler way (and the best for performances) is to put all the objects
 			in an invisible, shapeless Object3D and to move this object to (-width/2, -heigth/2, -depth/2). By this way, our scene is centered
 		*/
@@ -476,7 +476,7 @@ module CallTree {
 		private rootContainerPosition: any;
 
 		/**
-			@Deprecated since the bakground world is black
+			@Deprecated since the background world is black
 		*/
 		private rootSphere: any;
 
@@ -487,7 +487,7 @@ module CallTree {
 
 
 		/**
-			A invisible plan object faceing to the camera.
+			A invisible plan object facing to the camera.
 			@see raycaster
 		*/
 		private projectionPlan: any;
@@ -547,7 +547,7 @@ module CallTree {
 			List of links between nodes.
 			Owned only by D3js
 
-			@explanation D3js doesn't care about a line. D3js only care about coordonates
+			@explanation D3js doesn't care about a line. D3js only care about coordinates
 		*/
 		private links3DList: Array<any>;
 		/**
@@ -570,11 +570,11 @@ module CallTree {
 
 		/**
 			A D3js color scale.
-			@usedBy Angluar ng-repeate & THREEJS
+			@usedBy Angular ng-repeat & THREEJS
 		*/
 		private colorBuilder: any; 
 		/**
-			d3.scale.linear
+			D3.scale.linear
 			[smallest link .. strongest link] => [n particles .. m particles]
 		*/
 		private particlesCountRange: any; // 
@@ -605,7 +605,7 @@ module CallTree {
 
 		/**
 			Current selected object
-			Used to kepp an node selected
+			Used to keep an node selected
 		*/
 		private selectedObjectClick: any;
 
@@ -684,7 +684,7 @@ module CallTree {
 
 			$scope.exportCSV = this.exportCSV;
 			/*
-				Initialisation
+				Initialization
 			*/
 
 			this.textVisible = false;
@@ -876,7 +876,7 @@ module CallTree {
 
 
 					var minDateBrush = new Date(maxDate.getTime());
-			minDateBrush.setDate(minDateBrush.getDate() - 1);   // Pas = un jour
+			minDateBrush.setDate(minDateBrush.getDate() - 1);   // Step = 1 day
 
 			var brush = <any>d3.svg.brush()
 				.x(timeScale)
@@ -989,7 +989,7 @@ module CallTree {
 			x = this.rootContainerPosition.x / 2;
 			y = this.rootContainerPosition.x / 2;
 			z = this.rootContainerPosition.x / 2;
-			// on ne fait pas x = y =z= rootCubeWidth/2; à cause des effet de bord.
+			
 			this.addLight(x, y, z, false, '1 1 1');
 
 			x = -x;
@@ -1100,7 +1100,7 @@ module CallTree {
 		private auraAnimationTime: number = 1000;
 
 		/**
-			Usee as global variable to animate aura
+			Used as global variable to animate aura
 		*/
 		private originalAura: any;
 		/**
@@ -1205,7 +1205,7 @@ module CallTree {
 
 
 		/**
-			Count how many loops has been executed. Used to deffer parral tasks when refreshCount % X == ?  
+			Count how many loops has been executed. Used to deffer parallel tasks when refreshCount % X == ?  
 		*/
 		private refreshCount: number = 0;
 
@@ -1371,7 +1371,7 @@ module CallTree {
 
 		/**
 			Return the first INTERSECTION object with the projection plan
-			Used to move and obkect on the surface of this plan
+			Used to move and object on the surface of this plan
 		*/
 
 		private getPlanIntersection(): any {
@@ -1555,7 +1555,7 @@ module CallTree {
 		/**
 			Select a 3D node
 			@param allReadySeleted is used to select a node from the nodes list.
-			If the node is allready selected, it's parents aren't serached again.
+			If the node is already selected, it's parents aren't searched again.
 		*/
 		private selectNode3D(node3D: any, allReadySeleted?: any): void {
 			this.texts.forEach((text3D) => {
@@ -1852,7 +1852,7 @@ module CallTree {
 		}
 
 		/**
-			Initialise D3js 3D force diagram
+			Initialize D3js 3D force diagram
 		*/
 		private initForce3D() {
 			this.force3D = d3.layout.force3d()
@@ -1870,7 +1870,7 @@ module CallTree {
 		}
 
 		/**
-			Ease the huge force at the beging of the animation.
+			Ease the huge force at the beginning of the animation.
 		*/
 		private skipForceEnter() {
 			var k = 0;
@@ -1887,9 +1887,9 @@ module CallTree {
 
 			- Replace camera.
 			- Disable rotation
-			- Switch Nodes material to a flat coloured texture
+			- Switch Nodes material to a flat colored texture
 			- Disable lights
-			- Make nodes a litle bit transparent
+			- Make nodes a little bit transparent
 			- Save z index for each nodes an set z to 0
 		*/
 		public switch2D() {
@@ -2108,7 +2108,7 @@ module CallTree {
 		}
 
 		/**
-			Toogles lables in the 3D view
+			Toggle labels in the 3D view
 		*/
 		public toggleText(): void {
 			this.textVisible = !this.textVisible;
@@ -2119,7 +2119,7 @@ module CallTree {
 		}
 
 		/**
-			Show/hide a kind of nodes with a gracefull animation
+			Show/hide a kind of nodes with a graceful animation
 		*/
 		public toggleNodes(type: string, optionalCallback?: any): void {
 
@@ -2443,7 +2443,7 @@ module CallTree {
 
 
 		/**
-			Show/hide the 'find' pannel
+			Show/hide the 'find' panel
 			@should be translated
 		*/
 		public toggleListeNoeuds() {
@@ -2451,7 +2451,7 @@ module CallTree {
 		}
 
 		/**
-			Show/hide the 'Stack' pannel
+			Show/hide the 'Stack' panel
 		*/
 		public toggleStackTrace() {
 			$('.stackTrace').toggle();
@@ -3055,7 +3055,7 @@ module CallTree {
 
 
 		/**
-			Draw some lambert shapes for debugging purposes
+			Draw some Lambert shapes for debugging purposes
 		*/
 		private drawTestShapes(): void {
 			var geometry = new THREEJS.BoxGeometry(20, 20, 20);
