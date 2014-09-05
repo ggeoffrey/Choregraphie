@@ -5,7 +5,7 @@ _ = require 'underscore'
 
 
 
-ConfigManager = require '../ConfigManager'
+ConfigManager = require '../configManager'
 
 Application  = require './Application'
 Corridor  = require './Corridor'
