@@ -1,5 +1,5 @@
 router = require('express').Router()
-ConfigManager = require '../modules/ConfigManager'
+ConfigManager = require '../modules/configManager'
 # GET home page.
 
 
