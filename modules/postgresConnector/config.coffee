@@ -22,7 +22,7 @@ class Connector.Config
 		@host = 'localhost'
 		@user = 'ccol'
 		@pass = 'ccol'
-		@databaseName = 'ccol'
+		@databaseName = 'choregraphie'
 
 
 

@@ -40,6 +40,11 @@ div
 						a.btn.btn-default.btn-callTree(href='', ng-click='vm.toggleText()', title='Étendre tout')
 							span.glyphicon(ng-class='vm.textVisible ? \'glyphicon-eye-open\' : \'glyphicon-eye-close\'')
 							| Labels
+
+						input(type="number",size="4", style="width: 4em", placeholder="Charge", ng-model="vm.charge", ng-change="vm.updateCharge()")
+						input(type="number", size="4", style="width: 4em", placeholder="Gravity", ng-model="vm.gravity", ng-change="vm.updateGravity()")
+						
+
 						span.push-right
 								a.btn.btn-default.btn-callTree.btn-export-csv(href='', ng-click='vm.exportCSV()')
 									span.glyphicon.glyphicon-save

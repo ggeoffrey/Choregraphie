@@ -533,6 +533,9 @@ module CallTree {
 		*/
 		private force3D: any;
 
+		public charge: number;
+		public gravity: number;
+
 		/**
 			List of 3D Nodes
 
@@ -699,6 +702,9 @@ module CallTree {
 			$stackTrace.height($(window).height() * 0.8);
 
 			this.colorBuilder = d3.scale.category10();
+
+			this.charge = -400;
+			this.gravity = 0.05;
 
 			this.load(() => {
 
@@ -1632,8 +1638,9 @@ module CallTree {
 				var nodeText = this.generateText(nodeName, color);
 				var decallageText = this.nodeDefaultSize;
 				nodeText.position = new THREEJS.Vector3(decallageText, decallageText, decallageText * 2);
-				node3D.add(nodeText);
-				node3D.text3D = nodeText;
+				if (nodeText) 
+					node3D.add(nodeText);
+				node3D.text3D = nodeText || {};
 
 
 
@@ -1851,14 +1858,29 @@ module CallTree {
 			this.initForce3D();
 		}
 
+		public updateCharge(): void {
+			this.force3D
+				.charge(this.charge)
+				.resume();
+		}
+		public updateGravity(): void {
+			this.force3D
+				.gravity(this.gravity)
+				.resume();
+		}
+
+
 		/**
 			Initialize D3js 3D force diagram
 		*/
 		private initForce3D() {
 			this.force3D = d3.layout.force3d()
-				.charge(-240)
-				.linkDistance(160)
-				.gravity(0.05)
+				.charge(this.charge)
+				.linkDistance(function(link){
+					var min = (link.source.weight < link.target.weight) ? link.source.weight : link.target.weight;
+					return min + 160;
+				})
+				.gravity(this.gravity)
 				.size([
 					this.rootContainerPosition.x,
 					this.rootContainerPosition.y
@@ -2073,38 +2095,27 @@ module CallTree {
 		private generateText(text: string, color: any): any {
 
 
+			try{
+				var textMaterial = new THREE.MeshBasicMaterial({ color: color });
+				var materialSide = new THREE.MeshBasicMaterial({ color: 0xffffff });
+				var materialArray = [textMaterial, materialSide];
+				var textGeom = new THREE.TextGeometry(text,
+					{
+						size: 15, height: 1, curveSegments: 3,
+						font: "helvetiker", weight: "normal", style: "normal",
+						bevelThickness: 1, bevelSize: 1, bevelEnabled: false,
+						material: 0, extrudeMaterial: 0
+					});
+				// font: helvetiker, gentilis, droid sans, droid serif, optimer
+				// weight: normal, bold
+				var textFaceMaterial = new THREE.MeshFaceMaterial(materialArray);
+				var textMesh = new THREEJS.Mesh(textGeom, textFaceMaterial);
+				textMesh.visible = false;
+				this.texts.push(textMesh);
+			}
+			catch(e){}
 
-			var textMaterial = new THREE.MeshBasicMaterial({ color: color });
-			var materialSide = new THREE.MeshBasicMaterial({ color: 0xffffff });
-			var materialArray = [textMaterial, materialSide];
-			var textGeom = new THREE.TextGeometry(text,
-				{
-					size: 15, height: 1, curveSegments: 3,
-					font: "helvetiker", weight: "normal", style: "normal",
-					bevelThickness: 1, bevelSize: 1, bevelEnabled: false,
-					material: 0, extrudeMaterial: 0
-				});
-			// font: helvetiker, gentilis, droid sans, droid serif, optimer
-			// weight: normal, bold
-			var textFaceMaterial = new THREE.MeshFaceMaterial(materialArray);
-			var textMesh = new THREEJS.Mesh(textGeom, textFaceMaterial);
-			textMesh.visible = false;
-
-			// Fond du texte
-
-			//var widthBG = 60;
-			//var heightBG = 20;
-			//var textBGGeo = new THREE.PlaneGeometry(widthBG,heightBG);
-			//var textBGMat = new THREE.MeshBasicMaterial({color:0xffffff, transparent: true, opacity:0.75});
-			//var textBG = new THREE.Mesh(textBGGeo, textBGMat);
-			//textBG.position.set(widthBG/2-2.5, heightBG/2-2.5, 0);
-			//textBG.visible = textMesh.visible;
-			//textMesh.add(textBG);
-			//textMesh.background = textBG;
-
-
-			this.texts.push(textMesh);
-			return textMesh;
+			return textMesh || {};
 		}
 
 		/**
