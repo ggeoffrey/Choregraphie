@@ -106547,7 +106547,7 @@ var CallTree;
                 var lengthLine = sourceNode3D.position.distanceTo(targetNode3D.position);
                 var particles = new THREE.Geometry();
 
-                var particleColor = particleCount == 1 ? 'darkslategray' : this.particlesColor;
+                var particleColor = particleCount == 1 ? 0x2F4F4F : this.particlesColor;
                 var particlesMat = new THREEJS.ParticleBasicMaterial({
                     color: particleColor,
                     size: 60,
@@ -106615,14 +106615,6 @@ var CallTree;
         };
         CallTreeController.prototype.updateGravity = function () {
             this.force3D.gravity(this.gravity).resume();
-        };
-
-        CallTreeController.prototype.gravityWave = function () {
-            while (this.force3D.alpha() > 0) {
-                this.force3D.tick();
-            }
-            this.force3D.stop();
-            this.force3D.start();
         };
 
         CallTreeController.prototype.initForce3D = function () {
@@ -107284,6 +107276,9 @@ var Events;
         };
 
         EventsController.prototype.filterEvents = function () {
+            if (!this.grouper) {
+                return;
+            }
             var newGroup = {};
 
             var limit = this.limitShownFilter || 100;

@@ -270,6 +270,9 @@ module Events {
             Use Angular filters to filter events and popular filteredGroup.
         */
         public filterEvents(): void { //  {[index:stringDate]: Event[]}
+            if (! this.grouper){
+                return; // avoid angular parser to filter a non-existing yet object
+            }
             var newGroup: any = {}; // {[index:stringDate]: Event[]}
 
             var limit = this.limitShownFilter || 100;

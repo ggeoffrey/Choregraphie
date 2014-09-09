@@ -1768,7 +1768,7 @@ module CallTree {
 				var lengthLine = sourceNode3D.position.distanceTo(targetNode3D.position);
 				var particles = new THREE.Geometry();
 
-				var particleColor: any = particleCount == 1 ? 'darkslategray' : this.particlesColor;
+				var particleColor: any = particleCount == 1 ? 0x2F4F4F : this.particlesColor;
 				var particlesMat = new THREEJS.ParticleBasicMaterial({
 					//color: 0x154492, // blue
 					color: particleColor, // red
